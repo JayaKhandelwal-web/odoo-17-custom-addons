@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Odoo
+*.pyc
+*.pyo
+.idea/
+*.swp
+*~
+
+# Logs
+*.log
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.project
+.pydevproject
+
+# OS
+.DS_Store
+Thumbs.db

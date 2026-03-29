@@ -1,0 +1,42 @@
+version: '3.1'
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    environment:
+      - HOST=db
+      - USER=odoo
+      - LIMIT_TIME_CPU=600
+      - LIMIT_TIME_REAL=1200
+      - LIMIT_MEMORY_HARD=2684354560
+      - LIMIT_MEMORY_SOFT=2147483648
+    volumes:
+      - odoo-web-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+      - ./odoo.conf:/etc/odoo/odoo.conf
+    restart: always
+  db:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_DB=postgres
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    restart: always
+volumes:
+  odoo-web-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/ssd-odoo/odoo-web-data
+  odoo-db-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/ssd-odoo/odoo-db-data
