@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- FleetX Vehicle Tree View -->
+        <record id="view_fleetx_vehicle_tree" model="ir.ui.view">
+            <field name="name">fleetx.vehicle.tree</field>
+            <field name="model">fleetx.vehicle</field>
+            <field name="arch" type="xml">
+                <tree string="FleetX Vehicles" decoration-success="current_status=='RUNNING'" decoration-warning="current_status=='IDLE'" decoration-info="current_status=='PARKED'" decoration-danger="current_status in ['UNREACHABLE','NO_POWER','BATTERY_DISCHARGED']">
+                    <field name="vehicle_number"/>
+                    <field name="vehicle_name"/>
+                    <field name="vehicle_make"/>
+                    <field name="vehicle_model"/>
+                    <field name="current_status"/>
+                    <field name="speed"/>
+                    <field name="fuel_percentage" widget="percentage"/>
+                    <field name="driver_name"/>
+                    <field name="last_updated_at"/>
+                    <field name="address"/>
+                    <field name="is_moving" widget="boolean"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FleetX Vehicle Kanban View -->
+        <record id="view_fleetx_vehicle_kanban" model="ir.ui.view">
+            <field name="name">fleetx.vehicle.kanban</field>
+            <field name="model">fleetx.vehicle</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="vehicle_number"/>
+                    <field name="vehicle_name"/>
+                    <field name="current_status"/>
+                    <field name="speed"/>
+                    <field name="fuel_percentage"/>
+                    <field name="status_color"/>
+                    <field name="is_moving"/>
+                    <field name="location_link"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_card_header">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary">
+                                            <strong><field name="vehicle_number"/></strong>
+                                        </div>
+                                        <div class="o_secondary">
+                                            <field name="vehicle_name"/>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_manage_button_section">
+                                        <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v"/></a>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_content">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="object" name="action_open_location" class="btn btn-primary btn-sm" t-if="record.location_link.raw_value">
+                                                <i class="fa fa-map-marker"/> Location
+                                            </button>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <span class="badge" t-attf-style="background-color: #{record.status_color.raw_value}">
+                                                <field name="current_status"/>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-12">
+                                            <div class="progress" style="height: 10px;">
+                                                <div class="progress-bar bg-info" role="progressbar" t-attf-style="width: #{record.fuel_percentage.raw_value}%" t-attf-aria-valuenow="#{record.fuel_percentage.raw_value}" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <small>Fuel: <field name="fuel_percentage"/>%</small>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-6">
+                                            <small><i class="fa fa-tachometer"/> <field name="speed"/> km/h</small>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <span t-if="record.is_moving.raw_value" class="text-success">
+                                                <i class="fa fa-circle"/> Moving
+                                            </span>
+                                            <span t-if="!record.is_moving.raw_value" class="text-muted">
+                                                <i class="fa fa-circle"/> Stopped
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <a type="edit" role="menuitem" class="dropdown-item">Edit</a>
+                                    <a type="delete" role="menuitem" class="dropdown-item">Delete</a>
+                                    <a name="action_refresh_data" type="object" role="menuitem" class="dropdown-item">Refresh Data</a>
+                                    <a name="action_open_location" type="object" role="menuitem" class="dropdown-item">View Location</a>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- FleetX Vehicle Form View -->
+        <record id="view_fleetx_vehicle_form" model="ir.ui.view">
+            <field name="name">fleetx.vehicle.form</field>
+            <field name="model">fleetx.vehicle</field>
+            <field name="arch" type="xml">
+                <form string="FleetX Vehicle">
+                    <header>
+                        <button name="action_refresh_data" string="Refresh Data" type="object" class="btn-primary"/>
+                        <button name="action_open_location" string="View Location" type="object" class="btn-secondary" invisible="not location_link"/>
+                        <field name="current_status" widget="badge" decoration-success="current_status=='RUNNING'" decoration-warning="current_status=='IDLE'" decoration-info="current_status=='PARKED'" decoration-danger="current_status in ['UNREACHABLE','NO_POWER','BATTERY_DISCHARGED']"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_open_location" icon="fa-map-marker" invisible="not location_link">
+                                <field string="Location" name="address" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group string="Basic Information">
+                                <field name="vehicle_number"/>
+                                <field name="vehicle_name"/>
+                                <field name="vehicle_id"/>
+                                <field name="vehicle_make"/>
+                                <field name="vehicle_model"/>
+                                <field name="vehicle_year"/>
+                                <field name="vehicle_type_value"/>
+                                <field name="fuel_type"/>
+                            </group>
+                            <group string="Status Information">
+                                <field name="status"/>
+                                <field name="speed"/>
+                                <field name="is_moving"/>
+                                <field name="last_updated_at"/>
+                                <field name="last_status_time"/>
+                                <field name="last_acc_on"/>
+                                <field name="duration_engine_on"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Location" name="location">
+                                <group>
+                                    <group>
+                                        <field name="latitude"/>
+                                        <field name="longitude"/>
+                                        <field name="address"/>
+                                        <field name="location_link" widget="url"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Fuel Information" name="fuel">
+                                <group>
+                                    <group>
+                                        <field name="current_fuel"/>
+                                        <field name="fuel_tank_capacity"/>
+                                        <field name="fuel_percentage" widget="percentage"/>
+                                        <field name="fuel_sensor_status"/>
+                                        <field name="total_fuel_consumption"/>
+                                        <field name="mileage"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Odometer" name="odometer">
+                                <group>
+                                    <group>
+                                        <field name="total_odometer"/>
+                                        <field name="current_km"/>
+                                        <field name="trip_odometer"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Driver Information" name="driver">
+                                <group>
+                                    <group>
+                                        <field name="driver_name"/>
+                                        <field name="driver_id"/>
+                                        <field name="secondary_driver_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Device Information" name="device">
+                                <group>
+                                    <group>
+                                        <field name="device_id"/>
+                                        <field name="device_type"/>
+                                        <field name="provider_code"/>
+                                        <field name="account_id"/>
+                                        <field name="group_id"/>
+                                        <field name="tag_ids_list"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Technical Details" name="technical">
+                                <field name="other_attributes" widget="ace" options="{'mode': 'json'}"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- FleetX Vehicle Search View -->
+        <record id="view_fleetx_vehicle_search" model="ir.ui.view">
+            <field name="name">fleetx.vehicle.search</field>
+            <field name="model">fleetx.vehicle</field>
+            <field name="arch" type="xml">
+                <search string="FleetX Vehicles">
+                    <field name="vehicle_number"/>
+                    <field name="vehicle_name"/>
+                    <field name="vehicle_make"/>
+                    <field name="vehicle_model"/>
+                    <field name="driver_name"/>
+                    <field name="address"/>
+                    <filter string="Running" name="running" domain="[('current_status', '=', 'RUNNING')]"/>
+                    <filter string="Idle" name="idle" domain="[('current_status', '=', 'IDLE')]"/>
+                    <filter string="Parked" name="parked" domain="[('current_status', '=', 'PARKED')]"/>
+                    <filter string="Moving" name="moving" domain="[('is_moving', '=', True)]"/>
+                    <separator/>
+                    <filter string="Unreachable" name="unreachable" domain="[('current_status', '=', 'UNREACHABLE')]"/>
+                    <filter string="No Power" name="no_power" domain="[('current_status', '=', 'NO_POWER')]"/>
+                    <filter string="Battery Discharged" name="battery_discharged" domain="[('current_status', '=', 'BATTERY_DISCHARGED')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_status" context="{'group_by': 'current_status'}"/>
+                        <filter string="Make" name="group_make" context="{'group_by': 'vehicle_make'}"/>
+                        <filter string="Model" name="group_model" context="{'group_by': 'vehicle_model'}"/>
+                        <filter string="Type" name="group_type" context="{'group_by': 'vehicle_type_value'}"/>
+                        <filter string="Configuration" name="group_config" context="{'group_by': 'config_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_fleetx_vehicle_tree" model="ir.actions.act_window">
+            <field name="name">All Vehicles</field>
+            <field name="res_model">fleetx.vehicle</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref="view_fleetx_vehicle_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No vehicles found!
+                </p>
+                <p>
+                    Sync your FleetX data to see vehicles here.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_fleetx_vehicle_running" model="ir.actions.act_window">
+            <field name="name">Running Vehicles</field>
+            <field name="res_model">fleetx.vehicle</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('current_status', '=', 'RUNNING')]</field>
+            <field name="context">{'search_default_running': 1}</field>
+            <field name="search_view_id" ref="view_fleetx_vehicle_search"/>
+        </record>
+
+        <record id="action_fleetx_vehicle_idle" model="ir.actions.act_window">
+            <field name="name">Idle Vehicles</field>
+            <field name="res_model">fleetx.vehicle</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('current_status', '=', 'IDLE')]</field>
+            <field name="context">{'search_default_idle': 1}</field>
+            <field name="search_view_id" ref="view_fleetx_vehicle_search"/>
+        </record>
+
+        <record id="action_fleetx_vehicle_parked" model="ir.actions.act_window">
+            <field name="name">Parked Vehicles</field>
+            <field name="res_model">fleetx.vehicle</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('current_status', '=', 'PARKED')]</field>
+            <field name="context">{'search_default_parked': 1}</field>
+            <field name="search_view_id" ref="view_fleetx_vehicle_search"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Default Template Categories -->
+    <record id="template_category_business" model="gmail.template.category">
+        <field name="name">Business</field>
+        <field name="description">Business and professional email templates</field>
+        <field name="sequence">10</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="template_category_marketing" model="gmail.template.category">
+        <field name="name">Marketing</field>
+        <field name="description">Marketing and promotional email templates</field>
+        <field name="sequence">20</field>
+        <field name="color">3</field>
+    </record>
+
+    <record id="template_category_support" model="gmail.template.category">
+        <field name="name">Support</field>
+        <field name="description">Customer support and service templates</field>
+        <field name="sequence">30</field>
+        <field name="color">5</field>
+    </record>
+
+    <record id="template_category_followup" model="gmail.template.category">
+        <field name="name">Follow-up</field>
+        <field name="description">Follow-up and reminder templates</field>
+        <field name="sequence">40</field>
+        <field name="color">7</field>
+    </record>
+
+    <!-- Default System Templates -->
+    <record id="template_welcome_email" model="gmail.template">
+        <field name="name">Welcome Email</field>
+        <field name="subject">Welcome to {{company_name}}!</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
+                    <h1 style="color: #007bff; margin: 0;">Welcome to {{company_name}}!</h1>
+                </div>
+                <div style="padding: 30px 20px;">
+                    <p>Hello {{contact_name}},</p>
+                    <p>We're excited to welcome you to {{company_name}}! Thank you for choosing us.</p>
+                    <p>Here's what you can expect:</p>
+                    <ul>
+                        <li>Excellent customer service and support</li>
+                        <li>Regular updates about our products and services</li>
+                        <li>Special offers and exclusive content</li>
+                    </ul>
+                    <p>If you have any questions, feel free to reach out to us at any time.</p>
+                    <p>Best regards,<br/>
+                    {{user_name}}<br/>
+                    {{company_name}}</p>
+                </div>
+                <div style="background-color: #e9ecef; padding: 15px; text-align: center; font-size: 12px; color: #6c757d;">
+                    <p>This email was sent on {{current_date}} by {{company_name}}</p>
+                </div>
+            </div>
+        ]]></field>
+        <field name="body_plain">Hello {{contact_name}},
+
+We're excited to welcome you to {{company_name}}! Thank you for choosing us.
+
+Here's what you can expect:
+- Excellent customer service and support
+- Regular updates about our products and services
+- Special offers and exclusive content
+
+If you have any questions, feel free to reach out to us at any time.
+
+Best regards,
+{{user_name}}
+{{company_name}}</field>
+        <field name="template_type">email</field>
+        <field name="category_id" ref="template_category_business"/>
+        <field name="is_system">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="template_meeting_followup" model="gmail.template">
+        <field name="name">Meeting Follow-up</field>
+        <field name="subject">Follow-up: {{meeting_subject}}</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="padding: 20px;">
+                    <p>Hello {{contact_name}},</p>
+                    <p>Thank you for taking the time to meet with us regarding <strong>{{meeting_subject}}</strong>.</p>
+                    <p>As discussed during our meeting, here are the key points and next steps:</p>
+                    <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #007bff; margin: 20px 0;">
+                        <h3 style="margin-top: 0; color: #007bff;">Next Steps:</h3>
+                        <ul>
+                            <li>{{next_step_1}}</li>
+                            <li>{{next_step_2}}</li>
+                            <li>{{next_step_3}}</li>
+                        </ul>
+                    </div>
+                    <p>Please let me know if you have any questions or if there's anything else I can help you with.</p>
+                    <p>Looking forward to our continued collaboration!</p>
+                    <p>Best regards,<br/>
+                    {{user_name}}<br/>
+                    {{company_name}}</p>
+                </div>
+            </div>
+        ]]></field>
+        <field name="body_plain">Hello {{contact_name}},
+
+Thank you for taking the time to meet with us regarding {{meeting_subject}}.
+
+As discussed during our meeting, here are the key points and next steps:
+
+Next Steps:
+- {{next_step_1}}
+- {{next_step_2}}
+- {{next_step_3}}
+
+Please let me know if you have any questions or if there's anything else I can help you with.
+
+Looking forward to our continued collaboration!
+
+Best regards,
+{{user_name}}
+{{company_name}}</field>
+        <field name="template_type">email</field>
+        <field name="category_id" ref="template_category_followup"/>
+        <field name="is_system">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="template_thank_you_reply" model="gmail.template">
+        <field name="name">Thank You Reply</field>
+        <field name="subject">Re: {{original_subject}}</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="padding: 20px;">
+                    <p>Hello {{contact_name}},</p>
+                    <p>Thank you for your email.</p>
+                    <div style="background-color: #d4edda; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                        <p style="margin: 0;">{{custom_message}}</p>
+                    </div>
+                    <p>If you need any further assistance, please don't hesitate to reach out.</p>
+                    <p>Best regards,<br/>
+                    {{user_name}}<br/>
+                    {{company_name}}</p>
+                </div>
+            </div>
+        ]]></field>
+        <field name="body_plain">Hello {{contact_name}},
+
+Thank you for your email.
+
+{{custom_message}}
+
+If you need any further assistance, please don't hesitate to reach out.
+
+Best regards,
+{{user_name}}
+{{company_name}}</field>
+        <field name="template_type">reply</field>
+        <field name="category_id" ref="template_category_business"/>
+        <field name="is_system">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="template_support_response" model="gmail.template">
+        <field name="name">Support Response</field>
+        <field name="subject">Re: {{ticket_subject}} - Support Ticket #{{ticket_number}}</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background-color: #007bff; color: white; padding: 15px; text-align: center;">
+                    <h2 style="margin: 0;">{{company_name}} Support</h2>
+                </div>
+                <div style="padding: 20px;">
+                    <p>Hello {{contact_name}},</p>
+                    <p>Thank you for contacting our support team regarding: <strong>{{ticket_subject}}</strong></p>
+                    <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; margin: 15px 0;">
+                        <strong>Ticket Details:</strong><br/>
+                        Ticket Number: #{{ticket_number}}<br/>
+                        Priority: {{priority}}<br/>
+                        Status: {{status}}
+                    </div>
+                    <p>{{support_response}}</p>
+                    <p>If this resolves your issue, please let us know. Otherwise, feel free to reply to this email with any additional questions.</p>
+                    <p>Best regards,<br/>
+                    {{user_name}}<br/>
+                    Support Team<br/>
+                    {{company_name}}</p>
+                </div>
+                <div style="background-color: #e9ecef; padding: 10px; text-align: center; font-size: 12px;">
+                    <p>Support Hours: Monday-Friday, 9 AM - 6 PM</p>
+                </div>
+            </div>
+        ]]></field>
+        <field name="body_plain">Hello {{contact_name}},
+
+Thank you for contacting our support team regarding: {{ticket_subject}}
+
+Ticket Details:
+Ticket Number: #{{ticket_number}}
+Priority: {{priority}}
+Status: {{status}}
+
+{{support_response}}
+
+If this resolves your issue, please let us know. Otherwise, feel free to reply to this email with any additional questions.
+
+Best regards,
+{{user_name}}
+Support Team
+{{company_name}}
+
+Support Hours: Monday-Friday, 9 AM - 6 PM</field>
+        <field name="template_type">reply</field>
+        <field name="category_id" ref="template_category_support"/>
+        <field name="is_system">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <record id="template_promotional_offer" model="gmail.template">
+        <field name="name">Promotional Offer</field>
+        <field name="subject">Special Offer: {{offer_title}} - {{discount_percentage}}% Off!</field>
+        <field name="body_html"><![CDATA[
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center;">
+                    <h1 style="margin: 0; font-size: 28px;">{{offer_title}}</h1>
+                    <h2 style="margin: 10px 0; font-size: 36px; color: #ffd700;">{{discount_percentage}}% OFF</h2>
+                </div>
+                <div style="padding: 30px 20px;">
+                    <p>Hello {{contact_name}},</p>
+                    <p>We have an exciting special offer just for you!</p>
+                    <div style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: center;">
+                        <h3 style="color: #856404; margin-top: 0;">{{offer_description}}</h3>
+                        <p style="font-size: 18px; margin: 15px 0;"><strong>Use code: {{promo_code}}</strong></p>
+                        <p style="color: #856404; margin-bottom: 0;">Valid until {{expiry_date}}</p>
+                    </div>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="{{offer_link}}" style="background-color: #28a745; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold;">Shop Now</a>
+                    </div>
+                    <p>Don't miss out on this limited-time offer!</p>
+                    <p>Best regards,<br/>
+                    {{user_name}}<br/>
+                    {{company_name}}</p>
+                </div>
+                <div style="background-color: #f8f9fa; padding: 15px; text-align: center; font-size: 12px; color: #6c757d;">
+                    <p>You received this email because you're subscribed to our newsletter.</p>
+                    <p><a href="{{unsubscribe_link}}" style="color: #6c757d;">Unsubscribe</a></p>
+                </div>
+            </div>
+        ]]></field>
+        <field name="body_plain">Hello {{contact_name}},
+
+We have an exciting special offer just for you!
+
+{{offer_title}} - {{discount_percentage}}% OFF!
+
+{{offer_description}}
+
+Use code: {{promo_code}}
+Valid until {{expiry_date}}
+
+Shop now at: {{offer_link}}
+
+Don't miss out on this limited-time offer!
+
+Best regards,
+{{user_name}}
+{{company_name}}
+
+You received this email because you're subscribed to our newsletter.
+Unsubscribe: {{unsubscribe_link}}</field>
+        <field name="template_type">email</field>
+        <field name="category_id" ref="template_category_marketing"/>
+        <field name="is_system">True</field>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Template Variables for System Templates -->
+    <record id="var_welcome_contact_name" model="gmail.template.variable">
+        <field name="template_id" ref="template_welcome_email"/>
+        <field name="name">contact_name</field>
+        <field name="description">Name of the contact or recipient</field>
+        <field name="variable_type">text</field>
+        <field name="is_required">True</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="var_meeting_contact_name" model="gmail.template.variable">
+        <field name="template_id" ref="template_meeting_followup"/>
+        <field name="name">contact_name</field>
+        <field name="description">Name of the meeting participant</field>
+        <field name="variable_type">text</field>
+        <field name="is_required">True</field>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="var_meeting_subject" model="gmail.template.variable">
+        <field name="template_id" ref="template_meeting_followup"/>
+        <field name="name">meeting_subject</field>
+        <field name="description">Subject or topic of the meeting</field>
+        <field name="variable_type">text</field>
+        <field name="is_required">True</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="var_next_step_1" model="gmail.template.variable">
+        <field name="template_id" ref="template_meeting_followup"/>
+        <field name="name">next_step_1</field>
+        <field name="description">First next step or action item</field>
+        <field name="variable_type">text</field>
+        <field name="is_required">False</field>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="var_next_step_2" model="gmail.template.variable">
+        <field name="template_id" ref="template_meeting_followup"/>
+        <field name="name">next_step_2</field>
+        <field name="description">Second next step or action item</field>
+        <field name="variable_type">text</field>
+        <field name="is_required">False</field>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="var_next_step_3" model="gmail.template.variable">
+        <field name="template_id" ref="template_meeting_followup"/>
+        <field name="name">next_step_3</field>
+        <field name="description">Third next step or action item</field>
+        <field name="variable_type">text</field>
+        <field name="is_required">False</field>
+        <field name="sequence">5</field>
+    </record>
+
+    <!-- Default Configuration Parameters -->
+    <record id="param_webhook_verification_token" model="ir.config_parameter">
+        <field name="key">gmail_integration.webhook_verification_token</field>
+        <field name="value">gmail_webhook_secret_token_2024</field>
+    </record>
+
+    <record id="param_default_batch_size" model="ir.config_parameter">
+        <field name="key">gmail_integration.default_batch_size</field>
+        <field name="value">50</field>
+    </record>
+
+    <record id="param_default_batch_delay" model="ir.config_parameter">
+        <field name="key">gmail_integration.default_batch_delay</field>
+        <field name="value">5</field>
+    </record>
+
+    <record id="param_sync_cleanup_days" model="ir.config_parameter">
+        <field name="key">gmail_integration.sync_cleanup_days</field>
+        <field name="value">30</field>
+    </record>
+
+    <record id="param_attachment_cleanup_days" model="ir.config_parameter">
+        <field name="key">gmail_integration.attachment_cleanup_days</field>
+        <field name="value">90</field>
+    </record>
+
+    <record id="param_enable_real_time_sync" model="ir.config_parameter">
+        <field name="key">gmail_integration.enable_real_time_sync</field>
+        <field name="value">True</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem 
+        id="menu_zk_devices" 
+        name="Biometric Devices" 
+        parent="hr_attendance.menu_hr_attendance_root" 
+        action="action_zk_device" 
+        sequence="100"/>
+</odoo>

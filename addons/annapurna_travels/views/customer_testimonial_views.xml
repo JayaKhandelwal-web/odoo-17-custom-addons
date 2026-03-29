@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Customer Testimonial Tree View -->
+        <record id="view_customer_testimonial_tree" model="ir.ui.view">
+            <field name="name">customer.testimonial.tree</field>
+            <field name="model">customer.testimonial</field>
+            <field name="arch" type="xml">
+                <tree string="Customer Testimonials" decoration-success="approved==True"
+                      decoration-warning="approved==False" decoration-info="website_published==True">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="designation"/>
+                    <field name="rating"/>
+                    <field name="testimonial_date"/>
+                    <field name="service_type_id"/>
+                    <field name="approved"/>
+                    <field name="website_published"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Customer Testimonial Form View -->
+        <record id="view_customer_testimonial_form" model="ir.ui.view">
+            <field name="name">customer.testimonial.form</field>
+            <field name="model">customer.testimonial</field>
+            <field name="arch" type="xml">
+                <form string="Customer Testimonial">
+                    <header>
+                        <button name="action_approve" type="object" string="Approve"
+                                invisible="approved == True"
+                                class="btn-primary"/>
+                        <button name="action_reject" type="object" string="Reject"
+                                invisible="approved == False"
+                                class="btn-danger"/>
+                        <field name="approved" widget="statusbar" statusbar_visible="0,1"/>
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Customer Name"/>
+                            </h1>
+                            <h3>
+                                <field name="designation" placeholder="Designation/Location"/>
+                            </h3>
+                        </div>
+
+                        <group>
+                            <group string="Customer Information">
+                                <field name="customer_id"/>
+                                <field name="company"/>
+                                <field name="testimonial_date"/>
+                                <field name="sequence"/>
+                            </group>
+                            <group string="Related Information">
+                                <field name="booking_id"/>
+                                <field name="tour_booking_id"/>
+                                <field name="service_type_id"/>
+                                <field name="rating"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Publication Settings">
+                                <field name="website_published"/>
+                                <field name="active"/>
+                            </group>
+                            <group string="Approval Information" invisible="approved == False">
+                                <field name="approved_by" readonly="1"/>
+                                <field name="approved_date" readonly="1"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Testimonial">
+                                <field name="testimonial" widget="text" placeholder="Customer's testimonial..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Customer Testimonial Kanban View (Fixed) -->
+        <record id="view_customer_testimonial_kanban" model="ir.ui.view">
+            <field name="name">customer.testimonial.kanban</field>
+            <field name="model">customer.testimonial</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="designation"/>
+                    <field name="testimonial"/>
+                    <field name="testimonial_excerpt"/>
+                    <field name="rating"/>
+                    <field name="approved"/>
+                    <field name="website_published"/>
+                    <field name="image"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="o_kanban_record_top mb16">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                            <div class="o_kanban_record_subtitle">
+                                                <field name="designation"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        <div class="testimonial-rating mb8">
+                                            <t t-if="record.rating.raw_value == '5'">⭐⭐⭐⭐⭐</t>
+                                            <t t-elif="record.rating.raw_value == '4'">⭐⭐⭐⭐</t>
+                                            <t t-elif="record.rating.raw_value == '3'">⭐⭐⭐</t>
+                                            <t t-elif="record.rating.raw_value == '2'">⭐⭐</t>
+                                            <t t-elif="record.rating.raw_value == '1'">⭐</t>
+                                            <t t-else="">No Rating</t>
+                                        </div>
+                                        <div class="testimonial-excerpt">
+                                            <field name="testimonial_excerpt"/>
+                                        </div>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-if="record.website_published.raw_value" class="badge badge-success">Published</span>
+                                        <span t-if="record.approved.raw_value" class="badge badge-primary">Approved</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Customer Testimonial Search View -->
+        <record id="view_customer_testimonial_search" model="ir.ui.view">
+            <field name="name">customer.testimonial.search</field>
+            <field name="model">customer.testimonial</field>
+            <field name="arch" type="xml">
+                <search string="Search Testimonials">
+                    <field name="name"/>
+                    <field name="designation"/>
+                    <field name="service_type_id"/>
+                    <separator/>
+                    <filter string="Approved" name="approved" domain="[('approved', '=', True)]"/>
+                    <filter string="Pending Approval" name="pending" domain="[('approved', '=', False)]"/>
+                    <filter string="Published on Website" name="published" domain="[('website_published', '=', True)]"/>
+                    <separator/>
+                    <filter string="5 Star" name="five_star" domain="[('rating', '=', '5')]"/>
+                    <filter string="4 Star" name="four_star" domain="[('rating', '=', '4')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Rating" name="group_rating" context="{'group_by': 'rating'}"/>
+                        <filter string="Service Type" name="group_service" context="{'group_by': 'service_type_id'}"/>
+                        <filter string="Approval Status" name="group_approval" context="{'group_by': 'approved'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Customer Testimonial Action -->
+        <record id="action_customer_testimonial" model="ir.actions.act_window">
+            <field name="name">Customer Testimonials</field>
+            <field name="res_model">customer.testimonial</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{
+                'search_default_approved': 1,
+                'search_default_group_approval': 1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add your first customer testimonial!
+                </p>
+                <p>
+                    Collect and manage customer feedback and testimonials to showcase on your website.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

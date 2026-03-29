@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    <template id="square_classic_icard">
+            <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <!-- Hard-coded company logo for maximum reliability -->
+                <t t-set="company_logo_url" t-value="'/web/image/res.company/%s/logo/300x300' % env.company.id"/>
+                
+                <div class="page">
+                    <div style="width:670px;height:965px;background-image:url('/jt_employee_icard/static/src/img/square_front.png');border-bottom:10px solid #0c2340;">
+                        
+                        <!-- CENTERED Logo at top - reduced size and moved to center -->
+                        <div style="text-align:center;padding-top:135px;margin-bottom:40px;">
+                            <img t-att-src="company_logo_url" style="width:280px;height:auto;"/>
+                        </div>
+                        
+                        <!-- Push content down towards bottom of card -->
+                        <div style="margin-top:40px;">
+                            
+                            <!-- Clean, simple photo field with rounded corners - moved down -->
+                            <div style="text-align:center;margin-bottom:30px;">
+                                <t t-if="o.image_1920">
+                                    <img t-att-src="'/web/image/hr.employee/%s/image_1920' % o.id" 
+                                         style="width:250px;height:250px;object-fit:cover;border-radius:15px;"/>
+                                </t>
+                                <t t-else="">
+                                    <div style="width:250px;height:250px;margin:0 auto;border-radius:15px;
+                                                display:flex;align-items:center;justify-content:center;
+                                                border:1px dashed #ccc;">
+                                        <span style="font-size:30px;color:#999;">Photo</span>
+                                    </div>
+                                </t>
+                            </div>
+                                        
+                            <!-- Updated employee name to use navy blue color (#0c2340) to match text fields -->
+                            <div style="text-align:center;">
+                                <p style="font-size:35px;color:#0c2340;font-weight:bold;text-transform:uppercase;font-family:'Segoe UI', Arial, sans-serif;"><span t-field="o.name"/></p>
+                            </div>
+                            <div style="text-align:center;">
+                                <p style="text-transform:uppercase;font-size:30px;margin-top:-25px;color:#0c2340;font-family:'Segoe UI', Arial, sans-serif;"><span t-field="o.job_id"/></p>
+                            </div>
+                            
+                            <!-- Redesigned details section with proper spacing and centered positioning under ADMINISTRATOR -->
+                            <div style="margin:0 auto;width:85%;padding-top:15px;position:relative;">
+                                <!-- Employee ID - Proper spacing and centered under ADMINISTRATOR -->
+                                <div style="position:relative;margin-bottom:25px;font-family:'Segoe UI', Arial, sans-serif;font-size:24px;color:#0c2340;font-weight:600;height:30px;">
+                                    <span style="position:absolute;left:190px;">ID :</span>
+                                    <span style="position:absolute;left:240px;"><span t-field="o.emp_id"/></span>
+                                </div>
+                                
+                                <!-- D.O.B - Proper spacing and centered under ADMINISTRATOR with extra distance after colon -->
+                                <div style="position:relative;margin-bottom:25px;font-family:'Segoe UI', Arial, sans-serif;font-size:24px;color:#0c2340;font-weight:600;height:30px;">
+                                    <span style="position:absolute;left:168px;">D.O.B :</span>
+                                    <span style="position:absolute;left:258px;"><span t-field="o.birthday"/></span>
+                                </div>
+                                
+                                <!-- Mobile - Proper spacing and centered under ADMINISTRATOR with extra distance after colon -->
+                                <div style="position:relative;font-family:'Segoe UI', Arial, sans-serif;font-size:24px;color:#0c2340;font-weight:600;height:30px;">
+                                    <span style="position:absolute;left:160px;">Mobile :</span>
+                                    <span style="position:absolute;left:260px;"><span t-field="o.mobile_phone"/></span>
+                                </div>
+                            </div>
+                        </div> <!-- End of margin-top container -->
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="square_front_idcard" model="report.paperformat">
+        <field name="name">Employee Square Front Icard</field>
+        <field name="default">False</field>
+        <field name="format">custom</field>
+        <field name="page_height">143</field>
+        <field name="page_width">100</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line">False</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+     <record id="square_front_icard_report" model="ir.actions.report">
+        <field name="name">Square Id-Card Report FRONT</field>
+        <field name="model">hr.employee</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">jt_employee_icard.square_classic_icard</field>
+        <field name="report_file">jt_employee_icard.square_classic_icard</field>
+        <field name="binding_model_id" ref="model_hr_employee"/>
+        <field name="print_report_name">object.name</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="jt_employee_icard.square_front_idcard"/>
+    </record>
+    </data>
+</odoo>

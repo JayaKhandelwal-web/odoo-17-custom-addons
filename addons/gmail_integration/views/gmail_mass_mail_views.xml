@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Gmail Mass Mail List View -->
+    <record id="view_gmail_mass_mail_tree" model="ir.ui.view">
+        <field name="name">gmail.mass.mail.tree</field>
+        <field name="model">gmail.mass.mail</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" 
+                  decoration-warning="state == 'scheduled'" 
+                  decoration-success="state == 'sent'"
+                  decoration-danger="state == 'failed'">
+                <field name="name"/>
+                <field name="account_id"/>
+                <field name="subject"/>
+                <field name="state"/>
+                <field name="total_recipients"/>
+                <field name="sent_count"/>
+                <field name="delivery_rate" widget="percentage"/>
+                <field name="open_rate" widget="percentage"/>
+                <field name="schedule_date"/>
+                <field name="sent_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Gmail Mass Mail Form View -->
+    <record id="view_gmail_mass_mail_form" model="ir.ui.view">
+        <field name="name">gmail.mass.mail.form</field>
+        <field name="model">gmail.mass.mail</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_schedule_campaign" type="object" 
+                            string="Schedule Campaign" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_send_now" type="object" 
+                            string="Send Now" class="btn-primary"
+                            invisible="state != 'draft'"
+                            confirm="Are you sure you want to send this campaign immediately?"/>
+                    <button name="action_test_send" type="object" 
+                            string="Send Test" class="btn-secondary"
+                            invisible="state not in ('draft', 'scheduled')"/>
+                    <button name="action_cancel_campaign" type="object" 
+                            string="Cancel" class="btn-warning"
+                            invisible="state not in ('scheduled', 'sending')"
+                            confirm="Are you sure you want to cancel this campaign?"/>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="draft,scheduled,sending,sent"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" 
+                                name="action_view_recipients" icon="fa-users">
+                            <field string="Recipients" name="total_recipients" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" 
+                                name="action_view_sent" icon="fa-paper-plane">
+                            <field string="Sent" name="sent_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" 
+                                name="action_view_delivered" icon="fa-check">
+                            <field string="Delivered" name="delivered_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object" 
+                                name="action_view_opened" icon="fa-envelope-open">
+                            <field string="Opened" name="opened_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Campaign Name"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group name="campaign_info">
+                            <field name="account_id" required="1"/>
+                            <field name="template_id"/>
+                            <field name="state" invisible="1"/>
+                        </group>
+                        <group name="schedule_info">
+                            <field name="schedule_date" invisible="state != 'draft'"/>
+                            <field name="sent_date" readonly="1" invisible="not sent_date"/>
+                            <field name="completed_date" readonly="1" invisible="not completed_date"/>
+                            <field name="estimated_completion" readonly="1" invisible="state != 'sending'"/>
+                        </group>
+                    </group>
+                    
+                    <field name="description" placeholder="Campaign description and notes"/>
+                    
+                    <!-- Simple progress display for sending campaigns -->
+                    <div class="alert alert-info" invisible="state != 'sending'">
+                        <strong>Campaign is sending...</strong>
+                        <p>Progress: <field name="sending_progress" widget="percentage" readonly="1"/></p>
+                    </div>
+                    
+                    <notebook>
+                        <page string="Email Content" name="content">
+                            <group>
+                                <field name="subject" required="1" placeholder="Email subject line"/>
+                            </group>
+                            
+                            <separator string="Email Body"/>
+                            <field name="body_html" widget="html" required="1"
+                                   placeholder="HTML email body (supports variables like {{recipient_name}})"/>
+                            
+                            <separator string="Plain Text Body (Optional)"/>
+                            <field name="body_plain" widget="text" 
+                                   placeholder="Plain text version (will be auto-generated if empty)"/>
+                        </page>
+                        
+                        <page string="Recipients" name="recipients">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button name="action_load_recipients_from_lists" type="object" 
+                                            string="Load from Contact Lists" class="btn-secondary mb16"
+                                            invisible="state != 'draft'"/>
+                                </div>
+                            </div>
+                            
+                            <group name="contact_lists" invisible="state != 'draft'">
+                                <field name="contact_list_ids" widget="many2many_tags"
+                                       placeholder="Select contact lists to include"/>
+                            </group>
+                            
+                            <separator string="Recipients"/>
+                            <field name="recipient_ids" readonly="state != 'draft'">
+                                <tree decoration-success="state == 'sent'" 
+                                      decoration-info="state == 'delivered'"
+                                      decoration-warning="state == 'pending'"
+                                      decoration-danger="state == 'failed'">
+                                    <field name="email"/>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                    <field name="sent_date"/>
+                                    <field name="opened"/>
+                                    <field name="clicked"/>
+                                    <field name="error_message"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Campaign Statistics" name="statistics" 
+                              invisible="state == 'draft'">
+                            <group>
+                                <group name="counts">
+                                    <field name="total_recipients" readonly="1"/>
+                                    <field name="sent_count" readonly="1"/>
+                                    <field name="delivered_count" readonly="1"/>
+                                    <field name="opened_count" readonly="1"/>
+                                    <field name="clicked_count" readonly="1"/>
+                                </group>
+                                <group name="rates">
+                                    <field name="delivery_rate" widget="percentage" readonly="1"/>
+                                    <field name="open_rate" widget="percentage" readonly="1"/>
+                                    <field name="click_rate" widget="percentage" readonly="1"/>
+                                    <field name="bounce_rate" widget="percentage" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Additional Statistics"/>
+                            <group>
+                                <group>
+                                    <field name="bounced_count" readonly="1"/>
+                                    <field name="failed_count" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="unsubscribed_count" readonly="1"/>
+                                    <field name="sending_progress" widget="percentage" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Sending Configuration" name="sending_config">
+                            <group>
+                                <group name="batch_settings">
+                                    <field name="batch_size"/>
+                                    <field name="batch_delay" widget="integer"/>
+                                    <field name="max_retries"/>
+                                </group>
+                                <group name="send_options">
+                                    <field name="send_now"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Mass Mail Search View -->
+    <record id="view_gmail_mass_mail_search" model="ir.ui.view">
+        <field name="name">gmail.mass.mail.search</field>
+        <field name="model">gmail.mass.mail</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Campaign Name"/>
+                <field name="subject" string="Subject"/>
+                <field name="account_id" string="Gmail Account"/>
+                <separator/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Scheduled" name="scheduled" domain="[('state', '=', 'scheduled')]"/>
+                <filter string="Sending" name="sending" domain="[('state', '=', 'sending')]"/>
+                <filter string="Sent" name="sent" domain="[('state', '=', 'sent')]"/>
+                <filter string="Failed" name="failed" domain="[('state', '=', 'failed')]"/>
+                <separator/>
+                <filter string="This Week" name="week" 
+                        domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="month" 
+                        domain="[('create_date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_status" context="{'group_by': 'state'}"/>
+                    <filter string="Gmail Account" name="group_account" context="{'group_by': 'account_id'}"/>
+                    <filter string="Creation Date" name="group_create_date" context="{'group_by': 'create_date:month'}"/>
+                    <filter string="Send Date" name="group_send_date" context="{'group_by': 'sent_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Gmail Mass Mail Kanban View -->
+    <record id="view_gmail_mass_mail_kanban" model="ir.ui.view">
+        <field name="name">gmail.mass.mail.kanban</field>
+        <field name="model">gmail.mass.mail</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="state"/>
+                <field name="total_recipients"/>
+                <field name="sent_count"/>
+                <field name="delivery_rate"/>
+                <field name="open_rate"/>
+                <field name="schedule_date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="row">
+                                    <div class="col-10">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <div class="text-muted">
+                                            <field name="subject"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 text-right">
+                                        <span class="badge" t-attf-class="badge-#{record.state.raw_value == 'sent' ? 'success' : (record.state.raw_value == 'failed' ? 'danger' : (record.state.raw_value == 'sending' ? 'warning' : 'secondary'))}">
+                                            <field name="state"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row mt8">
+                                    <div class="col-6">
+                                        <small class="text-muted">Recipients:</small>
+                                        <field name="total_recipients"/>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <small class="text-muted">Sent:</small>
+                                        <field name="sent_count"/>
+                                    </div>
+                                </div>
+                                <div class="row mt4" t-if="record.state.raw_value != 'draft'">
+                                    <div class="col-6">
+                                        <small class="text-muted">Delivery:</small>
+                                        <field name="delivery_rate"/>%
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <small class="text-muted">Opens:</small>
+                                        <field name="open_rate"/>%
+                                    </div>
+                                </div>
+                                <div class="row mt4" t-if="record.schedule_date.raw_value">
+                                    <div class="col-12">
+                                        <small class="text-muted">Scheduled:</small>
+                                        <field name="schedule_date" widget="datetime"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Gmail Mass Mail Recipient Tree View -->
+    <record id="view_gmail_mass_mail_recipient_tree" model="ir.ui.view">
+        <field name="name">gmail.mass.mail.recipient.tree</field>
+        <field name="model">gmail.mass.mail.recipient</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="state == 'sent'" 
+                  decoration-info="state == 'delivered'"
+                  decoration-warning="state == 'pending'"
+                  decoration-danger="state == 'failed'">
+                <field name="campaign_id"/>
+                <field name="email"/>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="sent_date"/>
+                <field name="opened"/>
+                <field name="clicked"/>
+                <field name="retry_count"/>
+                <field name="error_message"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Gmail Mass Mail Recipient Form View -->
+    <record id="view_gmail_mass_mail_recipient_form" model="ir.ui.view">
+        <field name="name">gmail.mass.mail.recipient.form</field>
+        <field name="model">gmail.mass.mail.recipient</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" 
+                           statusbar_visible="pending,sending,sent,delivered"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="email" class="oe_edit_only"/>
+                        <h1><field name="email"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="campaign_id"/>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                            <field name="gmail_message_id" readonly="1"/>
+                            <field name="is_test"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Sending Details" name="sending">
+                            <group>
+                                <group name="dates">
+                                    <field name="sent_date" readonly="1"/>
+                                    <field name="delivered_date" readonly="1"/>
+                                    <field name="opened_date" readonly="1"/>
+                                    <field name="clicked_date" readonly="1"/>
+                                </group>
+                                <group name="tracking">
+                                    <field name="opened" readonly="1"/>
+                                    <field name="clicked" readonly="1"/>
+                                    <field name="unsubscribed" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Error Information" name="errors" 
+                              invisible="not error_message">
+                            <group>
+                                <field name="retry_count" readonly="1"/>
+                                <field name="error_message" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_gmail_mass_mail" model="ir.actions.act_window">
+        <field name="name">Mass Mail Campaigns</field>
+        <field name="res_model">gmail.mass.mail</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="view_gmail_mass_mail_kanban"/>
+        <field name="search_view_id" ref="view_gmail_mass_mail_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first mass mail campaign
+            </p>
+            <p>
+                Send personalized emails to multiple recipients using Gmail.
+                Track delivery, opens, and clicks for better engagement.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_gmail_mass_mail_recipient" model="ir.actions.act_window">
+        <field name="name">Campaign Recipients</field>
+        <field name="res_model">gmail.mass.mail.recipient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_mass_mail_recipient_tree"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Gmail Email Sync Cron Job -->
+    <record id="ir_cron_sync_gmail_emails" model="ir.cron">
+        <field name="name">Gmail: Sync Emails</field>
+        <field name="model_id" ref="model_gmail_account"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sync_emails()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15))"/>
+        <field name="priority">5</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail Token Refresh Cron Job -->
+    <record id="ir_cron_refresh_gmail_tokens" model="ir.cron">
+        <field name="name">Gmail: Refresh OAuth Tokens</field>
+        <field name="model_id" ref="model_gmail_account"/>
+        <field name="state">code</field>
+        <field name="code">
+accounts = model.search([
+    ('status', '=', 'connected'),
+    ('token_expires_at', '!=', False),
+    ('token_expires_at', '&lt;=', fields.Datetime.now() + timedelta(days=1))
+])
+for account in accounts:
+    try:
+        account._refresh_access_token()
+    except Exception as e:
+        log('Failed to refresh token for %s: %s' % (account.email_address, str(e)))
+        </field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=6))"/>
+        <field name="priority">3</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail Mass Mail Sending Cron Job -->
+    <record id="ir_cron_send_mass_mail" model="ir.cron">
+        <field name="name">Gmail: Send Scheduled Mass Mail</field>
+        <field name="model_id" ref="model_gmail_mass_mail"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_send_scheduled_campaigns()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=5))"/>
+        <field name="priority">4</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail Mass Mail Batch Sending Cron Job -->
+    <record id="ir_cron_send_mass_mail_batch" model="ir.cron">
+        <field name="name">Gmail: Send Mass Mail Batch</field>
+        <field name="model_id" ref="model_gmail_mass_mail"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_send_next_batch()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">1</field>
+        <field name="active">False</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=1))"/>
+        <field name="priority">2</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail Sync Logs Cleanup Cron Job -->
+    <record id="ir_cron_cleanup_sync_logs" model="ir.cron">
+        <field name="name">Gmail: Cleanup Old Sync Logs</field>
+        <field name="model_id" ref="model_gmail_sync_log"/>
+        <field name="state">code</field>
+        <field name="code">
+cleanup_days = int(env['ir.config_parameter'].sudo().get_param('gmail_integration.sync_cleanup_days', '30'))
+model.cleanup_old_logs(days=cleanup_days)
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=1))"/>
+        <field name="priority">10</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail Attachments Cleanup Cron Job -->
+    <record id="ir_cron_cleanup_attachments" model="ir.cron">
+        <field name="name">Gmail: Cleanup Old Attachments</field>
+        <field name="model_id" ref="model_gmail_attachment"/>
+        <field name="state">code</field>
+        <field name="code">
+cleanup_days = int(env['ir.config_parameter'].sudo().get_param('gmail_integration.attachment_cleanup_days', '90'))
+model.cleanup_old_attachments(days=cleanup_days)
+        </field>
+        <field name="interval_number">7</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=7))"/>
+        <field name="priority">10</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail Messages Cleanup Cron Job -->
+    <record id="ir_cron_cleanup_messages" model="ir.cron">
+        <field name="name">Gmail: Cleanup Old Messages</field>
+        <field name="model_id" ref="model_gmail_message"/>
+        <field name="state">code</field>
+        <field name="code">model.cleanup_old_messages(days=30)</field>
+        <field name="interval_number">3</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(days=3))"/>
+        <field name="priority">10</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Gmail API Quota Reset Cron Job -->
+    <record id="ir_cron_reset_api_quota" model="ir.cron">
+        <field name="name">Gmail: Reset API Quota Counter</field>
+        <field name="model_id" ref="model_gmail_account"/>
+        <field name="state">code</field>
+        <field name="code">
+accounts = model.search([])
+accounts.write({
+    'daily_quota_used': 0,
+    'quota_reset_date': fields.Date.today(),
+})
+        </field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now().replace(hour=0, minute=0, second=0) + timedelta(days=1))"/>
+        <field name="priority">8</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- NEW: Gmail Watch Auto-Renewal Cron Job -->
+    <record id="ir_cron_renew_gmail_watches" model="ir.cron">
+        <field name="name">Gmail: Auto-Renew Watch Requests</field>
+        <field name="model_id" ref="model_gmail_account"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_renew_gmail_watches()</field>
+        <field name="interval_number">12</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="nextcall" eval="(DateTime.now() + timedelta(hours=12))"/>
+        <field name="priority">6</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+</odoo>

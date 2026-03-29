@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_cctv_dashboard" model="ir.ui.view">
+        <field name="name">cctv.dashboard</field>
+        <field name="model">cctv.camera</field>
+        <field name="arch" type="xml">
+            <tree string="CCTV Dashboard" create="false">
+                <!-- This is overridden by JS dashboard widget -->
+                <field name="name"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_cctv_dashboard" model="ir.actions.client">
+        <field name="name">CCTV Dashboard</field>
+        <field name="tag">cctv_dashboard</field>
+    </record>
+
+</odoo>

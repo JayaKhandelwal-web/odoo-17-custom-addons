@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annapurna Travels - Odoo Module</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .feature-card h3 {
+            color: #e74c3c;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+        }
+
+        .feature-card li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-card li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .tech-stack h3 {
+            margin-bottom: 1rem;
+            color: #ecf0f1;
+        }
+
+        .tech-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .tech-item {
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+        }
+
+        .installation {
+            background: #e8f5e8;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .installation h3 {
+            color: #27ae60;
+            margin-bottom: 1rem;
+        }
+
+        .installation ol {
+            padding-left: 2rem;
+        }
+
+        .installation li {
+            margin-bottom: 0.5rem;
+        }
+
+        .screenshots {
+            margin: 2rem 0;
+        }
+
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .screenshot-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            color: #6c757d;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: #e74c3c;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .version-info {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏔️ Annapurna Travels</h1>
+            <p class="tagline">Complete Travel Management System for Odoo 17</p>
+        </div>
+
+        <div class="content">
+            <h2>Luxurious Journey with Care</h2>
+            <p>
+                A comprehensive Odoo 17 module designed specifically for travel and transportation businesses.
+                Manage your bus fleet, bookings, tour packages, and customer relationships all in one integrated system.
+            </p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🚌 Fleet Management</h3>
+                    <ul>
+                        <li>Bus categories and specifications</li>
+                        <li>Real-time availability tracking</li>
+                        <li>Maintenance scheduling</li>
+                        <li>Driver and staff management</li>
+                        <li>Vehicle documentation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📅 Booking System</h3>
+                    <ul>
+                        <li>Online booking integration</li>
+                        <li>Automated pricing calculation</li>
+                        <li>Customer management</li>
+                        <li>Payment tracking</li>
+                        <li>Booking status workflow</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🗺️ Tour Packages</h3>
+                    <ul>
+                        <li>Package creation and management</li>
+                        <li>Destination database</li>
+                        <li>Itinerary planning</li>
+                        <li>Pricing and availability</li>
+                        <li>Group booking support</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>🌐 Website Integration</h3>
+                    <ul>
+                        <li>Modern responsive design</li>
+                        <li>Online booking form</li>
+                        <li>Service showcase</li>
+                        <li>Customer testimonials</li>
+                        <li>Contact management</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>💼 Service Types</h3>
+                    <ul>
+                        <li>Corporate travel solutions</li>
+                        <li>Marriage and event transportation</li>
+                        <li>School bus services</li>
+                        <li>Airport transfers</li>
+                        <li>Outstation travel</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3>📊 Reports & Analytics</h3>
+                    <ul>
+                        <li>Booking reports</li>
+                        <li>Revenue tracking</li>
+                        <li>Fleet utilization</li>
+                        <li>Customer analytics</li>
+                        <li>Performance metrics</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tech-stack">
+                <h3>🔧 Technology Stack</h3>
+                <div class="tech-items">
+                    <span class="tech-item">Odoo 17</span>
+                    <span class="tech-item">Python 3.8+</span>
+                    <span class="tech-item">JavaScript ES6</span>
+                    <span class="tech-item">Bootstrap 5</span>
+                    <span class="tech-item">Font Awesome</span>
+                    <span class="tech-item">PostgreSQL</span>
+                    <span class="tech-item">XML Templates</span>
+                    <span class="tech-item">CSS3</span>
+                </div>
+            </div>
+
+            <div class="installation">
+                <h3>📦 Installation Instructions</h3>
+                <ol>
+                    <li>Copy the <code>annapurna_travels</code> folder to your Odoo addons directory</li>
+                    <li>Restart your Odoo server</li>
+                    <li>Go to Apps menu and update the apps list</li>
+                    <li>Search for "Annapurna Travels" and click Install</li>
+                    <li>Configure your services, fleet, and packages</li>
+                    <li>Enable website features if needed</li>
+                </ol>
+            </div>
+
+            <div class="screenshots">
+                <h3>📸 Module Screenshots</h3>
+                <div class="screenshot-grid">
+                    <div class="screenshot-placeholder">
+                        <div>📊</div>
+                        <p>Dashboard View</p>
+                    </div>
+                    <div class="screenshot-placeholder">
+                        <div>🚌</div>
+                        <p>Fleet Management</p>
+                    </div>
+                    <div class="screenshot-placeholder">
+                        <div>📅</div>
+                        <p>Booking System</p>
+                    </div>
+                    <div class="screenshot-placeholder">
+                        <div>🌐</div>
+                        <p>Website Frontend</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>✨ Key Benefits</h3>
+            <ul style="padding-left: 2rem; margin: 1rem 0;">
+                <li><strong>Streamlined Operations:</strong> Manage all aspects of your travel business in one system</li>
+                <li><strong>Professional Website:</strong> Modern, mobile-friendly online presence</li>
+                <li><strong>Automated Workflows:</strong> Reduce manual work with intelligent automation</li>
+                <li><strong>Customer Satisfaction:</strong> Enhance customer experience with better service delivery</li>
+                <li><strong>Business Growth:</strong> Scale your operations with comprehensive reporting and analytics</li>
+                <li><strong>Cost Effective:</strong> Reduce operational costs through efficient management</li>
+            </ul>
+
+            <h3>🎯 Target Audience</h3>
+            <p>This module is perfect for:</p>
+            <ul style="padding-left: 2rem; margin: 1rem 0;">
+                <li>Travel and transportation companies</li>
+                <li>Bus rental services</li>
+                <li>Tour operators</li>
+                <li>Corporate transportation providers</li>
+                <li>Event management companies</li>
+                <li>School transportation services</li>
+            </ul>
+
+            <div class="contact-info">
+                <h3>📞 Support & Contact</h3>
+                <p>Developed specifically for Annapurna Travels, Bhopal</p>
+                <p>For support and customizations, contact our development team</p>
+                <a href="mailto:info@annapurnatravels.co.in" class="btn">Contact Support</a>
+                <a href="https://annapurnatravels.co.in" class="btn">Visit Website</a>
+            </div>
+
+            <div class="version-info">
+                <p><strong>Version:</strong> 1.0.0 | <strong>Compatible with:</strong> Odoo 17.0+ | <strong>License:</strong> LGPL-3</p>
+                <p><strong>Last Updated:</strong> September 2025</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

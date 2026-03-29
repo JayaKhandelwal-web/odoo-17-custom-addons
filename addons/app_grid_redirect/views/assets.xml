@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Create a web asset bundle directly -->
+    <template id="app_grid_assets" name="App Grid Assets">
+        <script type="text/javascript">
+            $(document).ready(function() {
+                // Function to check URL and redirect if needed
+                function checkAndRedirect() {
+                    // Only redirect if we're on the main web page with no specific action
+                    if (window.location.pathname === '/web' &amp;&amp; 
+                        (window.location.hash === '' || 
+                         window.location.hash === '#' || 
+                         window.location.hash === '#home')) {
+                        
+                        // Redirect to the apps menu
+                        window.location.hash = 'menu_id=apps';
+                    }
+                }
+                
+                // First check - might miss if Odoo is still loading
+                checkAndRedirect();
+                
+                // Second check - after a delay to ensure Odoo is fully loaded
+                setTimeout(checkAndRedirect, 500);
+            });
+        </script>
+    </template>
+
+    <!-- Include our asset bundle in the backend -->
+    <template id="webclient_bootstrap" name="App Grid Bootstrap" inherit_id="web.webclient_bootstrap">
+        <xpath expr="//head" position="inside">
+            <t t-call="app_grid_redirect.app_grid_assets"/>
+        </xpath>
+    </template>
+</odoo>

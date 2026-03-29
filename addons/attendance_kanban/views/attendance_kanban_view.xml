@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Step 1: Kanban View defined FIRST -->
+    <record id="hr_attendance_kanban_view" model="ir.ui.view">
+        <field name="name">hr.attendance.kanban</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <kanban
+                class="o_attendance_kanban"
+                sample="1"
+                quick_create="false"
+                records_draggable="false"
+                default_order="check_in desc">
+
+                <field name="employee_id"/>
+                <field name="check_in"/>
+                <field name="check_out"/>
+                <field name="worked_hours"/>
+                <field name="overtime_hours" optional="true"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="is_missing" t-value="!record.check_out.raw_value"/>
+
+                        <div t-attf-class="o_attn_card #{is_missing ? 'card_missing' : 'card_complete'}">
+
+                            <!-- Top: Avatar + Name + Badge -->
+                            <div class="o_attn_top">
+                                <img
+                                    t-att-src="kanban_image('hr.employee', 'image_128', record.employee_id.raw_value)"
+                                    t-att-alt="record.employee_id.value"
+                                    class="o_attn_avatar"/>
+                                <span class="o_attn_name">
+                                    <t t-esc="record.employee_id.value"/>
+                                </span>
+                                <t t-if="is_missing">
+                                    <span class="o_attn_badge badge_missing">
+                                        <i class="fa fa-exclamation-circle"/> Working
+                                    </span>
+                                </t>
+                                <t t-else="">
+                                    <span class="o_attn_badge badge_done">
+                                        <i class="fa fa-check-circle"/> Done
+                                    </span>
+                                </t>
+                            </div>
+
+                            <!-- Times: stacked vertically to prevent overlap -->
+                            <div class="o_attn_times">
+                                <div class="o_attn_time_item">
+                                    <i class="fa fa-sign-in text-success"/>
+                                    <span class="o_attn_lbl">Check In</span>
+                                    <t t-if="record.check_in.raw_value">
+                                        <span class="o_attn_val text-success">
+                                            <t t-esc="record.check_in.value"/>
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="o_attn_val text-muted">&#8212;</span>
+                                    </t>
+                                </div>
+                                <div class="o_attn_time_item">
+                                    <i class="fa fa-sign-out text-danger"/>
+                                    <span class="o_attn_lbl">Check Out</span>
+                                    <t t-if="record.check_out.raw_value">
+                                        <span class="o_attn_val text-danger">
+                                            <t t-esc="record.check_out.value"/>
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <span class="o_attn_val missing_value">Not Checked Out</span>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Footer: Work Hours + Overtime -->
+                            <div class="o_attn_footer">
+                                <div class="o_attn_stat">
+                                    <i class="fa fa-clock-o"/>
+                                    <span class="o_attn_lbl">Work Hrs</span>
+                                    <span t-attf-class="o_attn_val #{record.worked_hours.raw_value > 0 ? 'text-primary' : 'text-danger'}">
+                                        <t t-esc="record.worked_hours.value or '0.00'"/>
+                                    </span>
+                                </div>
+                                <div class="o_attn_stat_sep"/>
+                                <div class="o_attn_stat">
+                                    <i class="fa fa-bolt"/>
+                                    <span class="o_attn_lbl">OT</span>
+                                    <span t-attf-class="o_attn_val #{record.overtime_hours.raw_value > 0 ? 'text-warning' : 'text-muted'}">
+                                        <t t-esc="record.overtime_hours.value or '0.00'"/>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Step 2: Update existing attendance action -->
+    <record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Step 3: Link kanban view to the attendance action -->
+    <record id="hr_attendance_action_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence">1</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="hr_attendance_kanban_view"/>
+        <field name="act_window_id" ref="hr_attendance.hr_attendance_action"/>
+    </record>
+
+</odoo>

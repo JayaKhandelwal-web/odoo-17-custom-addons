@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_myoperator_config,myoperator.config,model_myoperator_config,,1,1,1,1
+access_myoperator_call_log,myoperator.call.log,model_myoperator_call_log,,1,1,1,1
+access_myoperator_user,myoperator.user,model_myoperator_user,,1,1,1,1
+access_myoperator_chat_config,myoperator.chat.config,model_myoperator_chat_config,,1,1,1,1
+access_myoperator_conversation,myoperator.conversation,model_myoperator_conversation,,1,1,1,1
+access_myoperator_message,myoperator.message,model_myoperator_message,,1,1,1,1
+access_callback_wizard,callback.wizard,model_callback_wizard,,1,1,1,1
+access_sync_call_logs_wizard,sync.call.logs.wizard,model_sync_call_logs_wizard,,1,1,1,1
+access_myoperator_send_message_wizard,myoperator.send.message.wizard,model_myoperator_send_message_wizard,,1,1,1,1
+access_myoperator_dashboard,myoperator.dashboard,model_myoperator_dashboard,,1,1,1,1
+access_dashboard_config_wizard,dashboard.config.wizard,model_dashboard_config_wizard,,1,1,1,1

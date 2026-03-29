@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- NEW: Confirmation Template with Image Header -->
+        <record id="template_confirmation" model="interakt.template">
+            <field name="name">confirm</field>
+            <field name="display_name_field">Booking Confirmation</field>
+            <field name="template_code">confirm</field>
+            <field name="language_code">en</field>
+            <field name="sequence">10</field>
+            <field name="description">Order confirmation template sent when booking is confirmed</field>
+            <field name="header_type">IMAGE</field>
+            <field name="body_text">Hello {{1}},
+Your vehicle booking has been confirmed successfully.
+
+Booking ID: {{2}}
+Service Date: {{3}}
+Reporting Time: {{4}}
+Pickup Location: {{5}}
+
+Thank you for choosing Annapurna Travels.</field>
+            <field name="footer_text">Annapurna Travels</field>
+            <field name="body_variable_count">5</field>
+            <field name="body_variable_names">Customer Name,Booking ID,Service Date,Reporting Time,Pickup Location</field>
+            <field name="example_body_values">["Raja Kumar", "FB-2024-001", "December 1, 2025", "10:00 AM", "Bhopal Railway Station"]</field>
+            <field name="example_header_url">https://interaktprodmediastorage.blob.core.windows.net/mediaprodstoragecontainer/d609fe61-1955-4a98-9f1d-6a2b83f9b915/message_template_media/v7bo9SErsdKm/confirm.jpeg?se=2030-12-26T05%3A48%3A41Z&amp;sp=rt&amp;sv=2019-12-12&amp;sr=b&amp;sig=104sMcSLU4pH0K6/urSFfztFHFy0e53k7sRUvVLvTxA%3D</field>
+            <field name="trigger_model">fleet.booking</field>
+            <field name="trigger_field">state</field>
+            <field name="trigger_value">confirmed</field>
+            <field name="auto_send">True</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- NEW: Confirmation Receipt Template with PDF -->
+        <record id="template_confirmation_receipt" model="interakt.template">
+            <field name="name">confirm_receipt</field>
+            <field name="display_name_field">Confirmation Receipt PDF</field>
+            <field name="template_code">confirm_receipt</field>
+            <field name="language_code">en</field>
+            <field name="sequence">11</field>
+            <field name="description">Booking receipt PDF sent 5 seconds after confirmation</field>
+            <field name="header_type">DOCUMENT</field>
+            <field name="body_text">Hello {{1}},
+Your booking with Annapurna Travels is confirmed ✅
+📄 Booking Receipt (PDF) is attached above for download.
+For any help, just reply to this message. 🙏</field>
+            <field name="footer_text">Annapurna Travels</field>
+            <field name="body_variable_count">1</field>
+            <field name="body_variable_names">Customer Name</field>
+            <field name="example_body_values">["Raja Kumar"]</field>
+            <field name="example_header_url">https://example.com/receipt.pdf</field>
+            <field name="trigger_model">fleet.booking</field>
+            <field name="trigger_field">state</field>
+            <field name="trigger_value">confirmed</field>
+            <field name="auto_send">False</field>
+            <field name="active">True</field>
+        </record>
+
+        <!-- NEW: Quotation Template -->
+        <record id="template_quotation" model="interakt.template">
+            <field name="name">quotation_temp</field>
+            <field name="display_name_field">Quotation PDF</field>
+            <field name="template_code">quotation_temp</field>
+            <field name="language_code">en</field>
+            <field name="sequence">5</field>
+            <field name="description">Quotation template sent when quotation is created with PDF attachment</field>
+            <field name="header_type">DOCUMENT</field>
+            <field name="body_text">Hello {{1}}, Greetings from Annapurna Travels! 🙏 Thank you for your interest in our travel services. You can view/download your detailed quotation PDF from the attachment above.</field>
+            <field name="footer_text">Annapurnatravels.co.in</field>
+            <field name="body_variable_count">1</field>
+            <field name="body_variable_names">Customer Name</field>
+            <field name="example_body_values">["Raja Kumar"]</field>
+            <field name="example_header_url">https://example.com/quotation.pdf</field>
+            <field name="trigger_model">fleet.booking</field>
+            <field name="trigger_field">state</field>
+            <field name="trigger_value">quotation</field>
+            <field name="auto_send">True</field>
+            <field name="active">True</field>
+        </record>
+        <!-- NEW: Follow Up Template -->
+        <record id="template_followup" model="interakt.template">
+            <field name="name">followup</field>
+            <field name="display_name_field">Follow Up Reminder</field>
+            <field name="template_code">followup</field>
+            <field name="language_code">en</field>
+            <field name="sequence">7</field>
+            <field name="description">Follow up template sent when booking moves to follow up stage with interactive buttons</field>
+            <field name="header_type">IMAGE</field>
+            <field name="body_text">Hi {{1}} 😊 Hope you are doing well. We wanted to check if you are planning to go ahead with the booking or need any assistance from our side. Please update us when convenient.</field>
+            <field name="footer_text">Annapurna Travels</field>
+            <field name="body_variable_count">1</field>
+            <field name="body_variable_names">Customer Name</field>
+            <field name="example_body_values">["Raja Kumar"]</field>
+            <field name="example_header_url">https://interaktprodmediastorage.blob.core.windows.net/mediaprodstoragecontainer/d609fe61-1955-4a98-9f1d-6a2b83f9b915/message_template_media/s2zPodsOLWpw/feedback.png</field>
+            <field name="trigger_model">fleet.booking</field>
+            <field name="trigger_field">state</field>
+            <field name="trigger_value">followup</field>
+            <field name="auto_send">True</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Corporate Travel Service -->
+        <record id="service_corporate" model="service.type">
+            <field name="name">Corporate Travel</field>
+            <field name="code">CORPORATE</field>
+            <field name="sequence">10</field>
+            <field name="description">Professional transportation services for companies, office staff, and business travelers.</field>
+            <field name="icon">fa-building</field>
+            <field name="base_price">5000</field>
+            <field name="price_per_km">15</field>
+            <field name="price_per_day">3000</field>
+            <field name="includes_driver">1</field>
+            <field name="includes_fuel">1</field>
+            <field name="includes_toll">0</field>
+            <field name="includes_parking">0</field>
+            <field name="website_published">1</field>
+            <field name="website_description"><![CDATA[
+                <p>Safe and secure transportation for students with trained drivers.</p>
+                <ul>
+                    <li>GPS tracking for student safety</li>
+                    <li>Trained and verified drivers</li>
+                    <li>Emergency contact system</li>
+                    <li>Regular safety inspections</li>
+                    <li>Comfortable seating arrangements</li>
+                </ul>
+            ]]></field>
+        </record>
+
+        <!-- Tour Package Service -->
+        <record id="service_tour" model="service.type">
+            <field name="name">Tour Packages</field>
+            <field name="code">TOUR</field>
+            <field name="sequence">40</field>
+            <field name="description">Complete tour packages with accommodation, meals, and sightseeing.</field>
+            <field name="icon">fa-map-marker</field>
+            <field name="base_price">10000</field>
+            <field name="price_per_km">18</field>
+            <field name="price_per_day">4000</field>
+            <field name="includes_driver">1</field>
+            <field name="includes_fuel">1</field>
+            <field name="includes_toll">1</field>
+            <field name="includes_parking">1</field>
+            <field name="website_published">1</field>
+            <field name="website_description"><![CDATA[
+                <p>Explore amazing destinations with our comprehensive tour packages.</p>
+                <ul>
+                    <li>Comfortable AC coaches for long journeys</li>
+                    <li>Experienced tour guides</li>
+                    <li>Hotel bookings and meal arrangements</li>
+                    <li>Sightseeing and local attractions</li>
+                    <li>Customizable itineraries</li>
+                </ul>
+            ]]></field>
+        </record>
+
+        <!-- Airport Transfer Service -->
+        <record id="service_airport" model="service.type">
+            <field name="name">Airport Transfer</field>
+            <field name="code">AIRPORT</field>
+            <field name="sequence">50</field>
+            <field name="description">Convenient pickup and drop services to/from airports.</field>
+            <field name="icon">fa-plane</field>
+            <field name="base_price">2000</field>
+            <field name="price_per_km">25</field>
+            <field name="price_per_day">0</field>
+            <field name="includes_driver">1</field>
+            <field name="includes_fuel">1</field>
+            <field name="includes_toll">1</field>
+            <field name="includes_parking">1</field>
+            <field name="website_published">1</field>
+            <field name="website_description"><![CDATA[
+                <p>Hassle-free airport transfers with punctual and professional service.</p>
+                <ul>
+                    <li>On-time pickup and drop services</li>
+                    <li>Flight tracking for delays</li>
+                    <li>Comfortable and clean vehicles</li>
+                    <li>Luggage assistance</li>
+                    <li>24/7 availability</li>
+                </ul>
+            ]]></field>
+        </record>
+
+        <!-- Outstation Travel Service -->
+        <record id="service_outstation" model="service.type">
+            <field name="name">Outstation Travel</field>
+            <field name="code">OUTSTATION</field>
+            <field name="sequence">60</field>
+            <field name="description">Long-distance comfortable travel to other cities and states.</field>
+            <field name="icon">fa-road</field>
+            <field name="base_price">6000</field>
+            <field name="price_per_km">16</field>
+            <field name="price_per_day">3500</field>
+            <field name="includes_driver">1</field>
+            <field name="includes_fuel">1</field>
+            <field name="includes_toll">0</field>
+            <field name="includes_parking">0</field>
+            <field name="website_published">1</field>
+            <field name="website_description"><![CDATA[
+                <p>Comfortable long-distance travel with experienced drivers and well-maintained buses.</p>
+                <ul>
+                    <li>Luxury AC coaches for long journeys</li>
+                    <li>Experienced interstate drivers</li>
+                    <li>Rest stops and refreshment breaks</li>
+                    <li>Entertainment facilities</li>
+                    <li>Safety and comfort assured</li>
+                </ul>
+            ]]></field>
+        </record>
+
+    </data>
+</odoo>

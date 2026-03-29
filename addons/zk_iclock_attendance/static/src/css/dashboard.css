@@ -1,0 +1,21 @@
+/* ZKTeco iClock Attendance Dashboard Styles */
+
+.zk_dashboard_container {
+    padding: 20px;
+}
+
+.zk_device_status {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.zk_device_connected {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.zk_device_disconnected {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}

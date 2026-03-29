@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Gmail OAuth Wizard Form View -->
+    <record id="view_gmail_oauth_wizard_form" model="ir.ui.view">
+        <field name="name">gmail.oauth.wizard.form</field>
+        <field name="model">gmail.oauth.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Gmail OAuth Authorization">
+                <header>
+                    <button name="action_open_auth_url" 
+                            string="Open Authorization URL" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="state != 'step1'"/>
+                    
+                    <button name="action_copy_auth_url" 
+                            string="Copy URL to Clipboard" 
+                            type="object" 
+                            class="btn-secondary"
+                            invisible="state != 'step1'"/>
+                    
+                    <button name="action_verify_code" 
+                            string="Verify Authorization Code" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="not authorization_code"/>
+                    
+                    <button name="action_test_connection" 
+                            string="Test Connection" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="not is_authorized"/>
+                    
+                    <button name="action_restart_authorization" 
+                            string="Restart Process" 
+                            type="object" 
+                            class="btn-warning"
+                            invisible="state == 'step1'"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="step1,step2,step3"/>
+                </header>
+                
+                <sheet>
+                    <!-- Hidden fields for invisible conditions -->
+                    <field name="is_authorized" invisible="1"/>
+                    <field name="authorization_code" invisible="1"/>
+                    <field name="error_message" invisible="1"/>
+                    <field name="status_message" invisible="1"/>
+                    <field name="token_info" invisible="1"/>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="account_name" readonly="1"/>
+                        </h1>
+                        <h3>
+                            <field name="email_address" readonly="1"/>
+                        </h3>
+                    </div>
+                    
+                    <!-- Step 1: OAuth Configuration -->
+                    <group string="OAuth Configuration" invisible="state not in ['step1', 'step2']">
+                        <group>
+                            <field name="client_id" readonly="1"/>
+                            <field name="redirect_uri" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Step 1: Authorization URL -->
+                    <group string="Step 1: Get Authorization Code" invisible="state != 'step1'">
+                        <field name="auth_url" readonly="1" widget="text" nolabel="1"/>
+                        <div class="alert alert-info" role="alert">
+                            <strong>Instructions:</strong>
+                            <ol>
+                                <li>Click "Open Authorization URL" to open Google's authorization page</li>
+                                <li>Sign in to your Gmail account and grant permissions</li>
+                                <li>Copy the authorization code from the result page</li>
+                                <li>Paste the code below and click "Verify Authorization Code"</li>
+                            </ol>
+                        </div>
+                    </group>
+                    
+                    <!-- Step 2: Code Entry -->
+                    <group string="Step 2: Enter Authorization Code" invisible="state == 'step3'">
+                        <field name="authorization_code" 
+                               widget="text" 
+                               placeholder="Paste the authorization code from Google here..."
+                               required="state == 'step2'"
+                               invisible="0"/>
+                        <div class="alert alert-warning" role="alert" invisible="authorization_code">
+                            <strong>Waiting for authorization code...</strong><br/>
+                            Please complete the authorization process and paste the code above.
+                        </div>
+                    </group>
+                    
+                    <!-- Step 3: Success Information -->
+                    <group string="Authorization Complete" invisible="state != 'step3'">
+                        <field name="token_info" widget="text" readonly="1" nolabel="1" invisible="0"/>
+                        <div class="alert alert-success" role="alert" invisible="not is_authorized">
+                            <i class="fa fa-check-circle"></i>
+                            <strong>Success!</strong> Your Gmail account is now connected and ready to use.
+                        </div>
+                    </group>
+                    
+                    <!-- Status Messages -->
+                    <group string="Status" invisible="not status_message">
+                        <field name="status_message" widget="text" readonly="1" nolabel="1" invisible="0"/>
+                    </group>
+                    
+                    <!-- Error Messages -->
+                    <group string="Error Details" invisible="not error_message">
+                        <field name="error_message" widget="text" readonly="1" nolabel="1" invisible="0"/>
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            <strong>Error occurred during authorization.</strong> Please check the details above and try again.
+                        </div>
+                    </group>
+                    
+                    <!-- Help and Troubleshooting -->
+                    <group string="Troubleshooting" invisible="not error_message">
+                        <div class="alert alert-info" role="alert">
+                            <strong>Common Issues:</strong>
+                            <ul>
+                                <li><strong>Invalid authorization code:</strong> Make sure you copied the complete code</li>
+                                <li><strong>Code expired:</strong> Authorization codes expire quickly, get a new one</li>
+                                <li><strong>OAuth configuration error:</strong> Check Client ID and Client Secret</li>
+                                <li><strong>Redirect URI mismatch:</strong> Verify redirect URI in Google Cloud Console</li>
+                                <li><strong>API not enabled:</strong> Enable Gmail API in Google Cloud Console</li>
+                            </ul>
+                        </div>
+                    </group>
+                </sheet>
+                
+                <footer>
+                    <button string="Close" special="cancel" class="btn-secondary"/>
+                    <button name="action_open_account" 
+                            string="Open Account" 
+                            type="object" 
+                            class="btn-primary"
+                            invisible="not is_authorized"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail OAuth Wizard Action -->
+    <record id="action_gmail_oauth_wizard" model="ir.actions.act_window">
+        <field name="name">Gmail OAuth Authorization</field>
+        <field name="res_model">gmail.oauth.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_account_id': active_id}</field>
+    </record>
+
+    <!-- Gmail Account Form View - Add Manual OAuth Button -->
+    <record id="view_gmail_account_form_oauth_button" model="ir.ui.view">
+        <field name="name">gmail.account.form.oauth.button</field>
+        <field name="model">gmail.account</field>
+        <field name="inherit_id" ref="gmail_integration.view_gmail_account_form"/>
+        <field name="arch" type="xml">
+            <button name="action_connect_gmail" position="after">
+                <button name="%(action_gmail_oauth_wizard)d" 
+                        string="Manual OAuth Setup" 
+                        type="action" 
+                        class="btn-secondary"
+                        invisible="status == 'connected'"
+                        help="Use this if automatic OAuth redirect doesn't work"/>
+            </button>
+        </field>
+    </record>
+
+    <!-- Gmail OAuth Setup Guide Action -->
+    <record id="action_gmail_oauth_setup_guide" model="ir.actions.act_url">
+        <field name="name">Gmail OAuth Setup Guide</field>
+        <field name="url">/gmail/auth/setup_guide</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

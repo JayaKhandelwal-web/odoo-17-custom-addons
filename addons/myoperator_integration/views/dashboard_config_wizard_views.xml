@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Configuration Wizard Form -->
+    <record id="view_dashboard_config_wizard_form" model="ir.ui.view">
+        <field name="name">dashboard.config.wizard.form</field>
+        <field name="model">dashboard.config.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Configure Dashboard">
+                <header>
+                    <button name="action_quick_insights" type="object" string="Quick Insights"
+                            class="btn-info" icon="fa-lightbulb-o"/>
+                </header>
+
+                <group>
+                    <group name="date_range" string="Date Range">
+                        <field name="date_range" widget="radio"/>
+                        <field name="date_from" invisible="date_range != 'custom'"
+                               required="date_range == 'custom'"/>
+                        <field name="date_to" invisible="date_range != 'custom'"
+                               required="date_range == 'custom'"/>
+                    </group>
+
+                    <group name="dashboard_options" string="Dashboard Options">
+                        <field name="include_call_analytics"/>
+                        <field name="include_chat_analytics"/>
+                        <field name="include_performance_metrics"/>
+                        <field name="include_agent_performance"/>
+                    </group>
+                </group>
+
+                <group>
+                    <group name="customization" string="Customization">
+                        <field name="chart_style"/>
+                        <field name="auto_refresh"/>
+                    </group>
+
+                    <group name="export_options" string="Export Options">
+                        <field name="export_format"/>
+                    </group>
+                </group>
+
+                <!-- Quick Stats Preview -->
+                <group string="Preview Information">
+                    <div class="alert alert-info" role="alert">
+                        <strong><i class="fa fa-info-circle"/> Dashboard Preview:</strong>
+                        <ul class="mt-2">
+                            <li>
+                                <span invisible="include_call_analytics == False">Call analytics charts and metrics</span>
+                            </li>
+                            <li>
+                                <span invisible="include_chat_analytics == False">WhatsApp conversation analysis</span>
+                            </li>
+                            <li>
+                                <span invisible="include_performance_metrics == False">Performance KPIs and trends</span>
+                            </li>
+                            <li>
+                                <span invisible="include_agent_performance == False">Agent productivity analysis</span>
+                            </li>
+                        </ul>
+                        <p class="mb-0">
+                            <strong>Selected Period:</strong>
+                            <span invisible="date_range == 'custom'">
+                                <field name="date_range" readonly="1" nolabel="1"/>
+                            </span>
+                            <span invisible="date_range != 'custom'">Custom Range</span>
+                        </p>
+                    </div>
+                </group>
+
+                <footer>
+                    <button name="action_open_dashboard" type="object" string="Open Dashboard"
+                            class="btn-primary" icon="fa-dashboard"/>
+                    <button name="action_export_data" type="object" string="Export Data"
+                            class="btn-secondary" icon="fa-download"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" icon="fa-times"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Dashboard Configuration Wizard Action -->
+    <record id="action_dashboard_config_wizard" model="ir.actions.act_window">
+        <field name="name">Configure Dashboard</field>
+        <field name="res_model">dashboard.config.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu Item for Dashboard Wizard -->
+    <menuitem id="menu_dashboard_config" name="Configure Dashboard"
+              parent="menu_myoperator_root"
+              action="action_dashboard_config_wizard" sequence="6"/>
+</odoo>

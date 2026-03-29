@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Email Template: Approval Request to Manager                  -->
+    <!-- ============================================================ -->
+    <record id="email_template_employee_approval" model="mail.template">
+        <field name="name">Employee Approval - Request to Manager</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">New Employee Approval Required: {{ object.name }}</field>
+        <field name="email_to">{{ object.parent_id.work_email or object.parent_id.user_id.email or '' }}</field>
+        <field name="email_from">{{ (user.email_formatted or user.email) }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+
+    <!-- Header -->
+    <div style="background: #875A7B; padding: 20px; text-align: center;">
+        <h2 style="color: white; margin: 0;">Employee Approval Required</h2>
+    </div>
+
+    <!-- Body -->
+    <div style="padding: 24px; background: #f9f9f9;">
+        <p style="font-size: 15px;">
+            Dear <strong><t t-out="object.parent_id.name or 'Manager'"/></strong>,
+        </p>
+        <p>A new employee has been created and requires your <strong>approval</strong> before becoming active in the system.</p>
+
+        <!-- Employee Details Table -->
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0; background: white; border-radius: 6px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">
+            <tr style="background: #875A7B; color: white;">
+                <td colspan="2" style="padding: 12px 16px; font-weight: bold; font-size: 14px;">Employee Details</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: bold; width: 40%; color: #555;">Name</td>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee;">
+                    <t t-out="object.name or 'N/A'"/>
+                </td>
+            </tr>
+            <tr style="background: #fafafa;">
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: bold; color: #555;">Job Position</td>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee;">
+                    <t t-out="object.job_id.name or 'N/A'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: bold; color: #555;">Department</td>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee;">
+                    <t t-out="object.department_id.name or 'N/A'"/>
+                </td>
+            </tr>
+            <tr style="background: #fafafa;">
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: bold; color: #555;">Company</td>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee;">
+                    <t t-out="object.company_id.name or 'N/A'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee; font-weight: bold; color: #555;">Mobile</td>
+                <td style="padding: 10px 16px; border-bottom: 1px solid #eee;">
+                    <t t-out="object.mobile_phone or 'N/A'"/>
+                </td>
+            </tr>
+            <tr style="background: #fafafa;">
+                <td style="padding: 10px 16px; font-weight: bold; color: #555;">Work Email</td>
+                <td style="padding: 10px 16px;">
+                    <t t-out="object.work_email or 'N/A'"/>
+                </td>
+            </tr>
+        </table>
+
+        <p style="color: #e74c3c; font-size: 13px;">
+            &#x26A0;&#xFE0F; This employee is <strong>NOT active</strong> until you approve the request.
+        </p>
+
+        <!-- Action Button -->
+        <div style="text-align: center; margin: 28px 0;">
+		<!-- ✅ CORRECT — t-att-href works in QWeb type="html" templates -->
+		<a t-att-href="'%s/web#id=%s&amp;model=hr.employee&amp;view_type=form' % (object.get_base_url(), object.id)"
+		   style="background: #875A7B; color: white; padding: 12px 30px; border-radius: 6px;
+			  text-decoration: none; font-size: 15px; font-weight: bold; display: inline-block;">
+		    &#x1F449; Review &amp; Approve Employee
+		</a>
+        </div>
+
+        <p style="font-size: 13px; color: #888;">
+            Login to Odoo &#x2192; Go to Employees &#x2192; Find the pending employee &#x2192; Click <strong>Approve</strong> or <strong>Reject</strong>.
+        </p>
+    </div>
+
+    <!-- Footer -->
+    <div style="background: #eee; padding: 12px; text-align: center; font-size: 12px; color: #888;">
+        This is an automated message from <t t-out="object.company_id.name or 'Odoo'"/> Odoo System.
+    </div>
+</div>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Email Template: Approved Notification                        -->
+    <!-- ============================================================ -->
+    <record id="email_template_employee_approved" model="mail.template">
+        <field name="name">Employee Approval - Approved Notification</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">Employee Approved: {{ object.name }}</field>
+        <field name="email_to">{{ object.create_uid.email or '' }}</field>
+        <field name="email_from">{{ (user.email_formatted or user.email) }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+    <div style="background: #27ae60; padding: 20px; text-align: center;">
+        <h2 style="color: white; margin: 0;">&#x2705; Employee Approved!</h2>
+    </div>
+    <div style="padding: 24px;">
+        <p>Dear <strong><t t-out="object.create_uid.name or 'User'"/></strong>,</p>
+        <p>The employee profile for <strong><t t-out="object.name"/></strong> has been
+           <strong style="color: #27ae60;">Approved</strong> by
+           <strong><t t-out="object.approved_by.name or 'Manager'"/></strong>.
+        </p>
+        <table style="width: 100%; border-collapse: collapse; margin: 16px 0;">
+            <tr>
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold; width: 35%;">Employee Name</td>
+                <td style="padding: 8px; border: 1px solid #eee;"><t t-out="object.name"/></td>
+            </tr>
+            <tr style="background: #fafafa;">
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">Department</td>
+                <td style="padding: 8px; border: 1px solid #eee;"><t t-out="object.department_id.name or 'N/A'"/></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">Approved By</td>
+                <td style="padding: 8px; border: 1px solid #eee;"><t t-out="object.approved_by.name or 'N/A'"/></td>
+            </tr>
+            <tr style="background: #fafafa;">
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">Approved On</td>
+                <td style="padding: 8px; border: 1px solid #eee;"><t t-out="object.approved_date"/></td>
+            </tr>
+        </table>
+        <p>The employee is now <strong style="color: #27ae60;">active</strong> in the system.</p>
+    </div>
+    <div style="background: #eee; padding: 12px; text-align: center; font-size: 12px; color: #888;">
+        This is an automated message from <t t-out="object.company_id.name or 'Odoo'"/> Odoo System.
+    </div>
+</div>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Email Template: Rejected Notification                        -->
+    <!-- ============================================================ -->
+    <record id="email_template_employee_rejected" model="mail.template">
+        <field name="name">Employee Approval - Rejected Notification</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="subject">Employee Request Rejected: {{ object.name }}</field>
+        <field name="email_to">{{ object.create_uid.email or '' }}</field>
+        <field name="email_from">{{ (user.email_formatted or user.email) }}</field>
+        <field name="auto_delete" eval="True"/>
+        <field name="body_html" type="html">
+<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+    <div style="background: #e74c3c; padding: 20px; text-align: center;">
+        <h2 style="color: white; margin: 0;">&#x274C; Employee Request Rejected</h2>
+    </div>
+    <div style="padding: 24px;">
+        <p>Dear <strong><t t-out="object.create_uid.name or 'User'"/></strong>,</p>
+        <p>The employee creation request for <strong><t t-out="object.name"/></strong> has been
+           <strong style="color: #e74c3c;">Rejected</strong>.
+        </p>
+        <table style="width:100%; border-collapse: collapse; margin: 16px 0;">
+            <tr>
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold; width: 35%;">Employee</td>
+                <td style="padding: 8px; border: 1px solid #eee;"><t t-out="object.name"/></td>
+            </tr>
+            <tr style="background: #fafafa;">
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">Department</td>
+                <td style="padding: 8px; border: 1px solid #eee;"><t t-out="object.department_id.name or 'N/A'"/></td>
+            </tr>
+            <tr>
+                <td style="padding: 8px; border: 1px solid #eee; font-weight: bold;">Rejection Reason</td>
+                <td style="padding: 8px; border: 1px solid #eee; color: #e74c3c;">
+                    <t t-out="object.rejection_reason or 'No reason provided'"/>
+                </td>
+            </tr>
+        </table>
+        <p>Please contact your HR department for more information.</p>
+    </div>
+    <div style="background: #eee; padding: 12px; text-align: center; font-size: 12px; color: #888;">
+        This is an automated message from <t t-out="object.company_id.name or 'Odoo'"/> Odoo System.
+    </div>
+</div>
+        </field>
+    </record>
+
+</odoo>

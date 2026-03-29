@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Public Invoice Template - Web View -->
+    <template id="public_invoice_template" name="Fleet Booking Public Invoice">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <head>
+                    <title>Invoice - <t t-esc="booking.name"/></title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                    <style>
+                        .public-invoice-container {
+                            max-width: 800px;
+                            margin: 20px auto;
+                            padding: 20px;
+                            background: white;
+                            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                            border-radius: 8px;
+                        }
+                        .invoice-header {
+                            border-bottom: 2px solid #ddd;
+                            margin-bottom: 30px;
+                            padding-bottom: 20px;
+                            position: relative;
+                        }
+                        .company-logo {
+                            max-height: 100px;
+                            margin-bottom: 15px;
+                        }
+                        .invoice-status-ribbon {
+                            position: absolute;
+                            top: 0;
+                            right: 0;
+                            overflow: hidden;
+                            width: 120px;
+                            height: 120px;
+                        }
+                        .invoice-status-ribbon div {
+                            position: absolute;
+                            top: 40px;
+                            right: -40px;
+                            width: 170px;
+                            text-align: center;
+                            transform: rotate(45deg);
+                            background-color: #1ABC9C;
+                            color: white;
+                            padding: 5px 0;
+                            font-weight: bold;
+                            font-size: 14px;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                        }
+                        .status-quotation { background-color: #ff56ff !important; }
+                        .status-confirmed { background-color: #1ABC9C !important; }
+                        .status-completed { background-color: #3498DB !important; }
+                        .status-cancelled { background-color: #E74C3C !important; }
+                        .invoice-actions {
+                            margin: 20px 0;
+                            text-align: center;
+                            border-top: 1px solid #eee;
+                            padding-top: 20px;
+                        }
+                        .btn-invoice-action {
+                            display: inline-block;
+                            margin: 5px;
+                            padding: 8px 16px;
+                            background-color: #007bff;
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 4px;
+                            border: none;
+                            cursor: pointer;
+                        }
+                        .btn-invoice-action:hover {
+                            background-color: #0056b3;
+                            color: white;
+                            text-decoration: none;
+                        }
+                        .btn-print { background-color: #6c757d; }
+                        .btn-pdf { background-color: #dc3545; }
+                        .invoice-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin: 20px 0;
+                        }
+                        .invoice-table th,
+                        .invoice-table td {
+                            padding: 12px;
+                            text-align: left;
+                            border-bottom: 1px solid #ddd;
+                        }
+                        .invoice-table th {
+                            background-color: #f8f9fa;
+                            font-weight: bold;
+                        }
+                        .customer-info-box,
+                        .company-info-box {
+                            border: 1px solid #ddd;
+                            padding: 15px;
+                            margin: 10px 0;
+                            border-radius: 4px;
+                        }
+                        .total-section {
+                            background-color: #f8f9fa;
+                            font-weight: bold;
+                        }
+                        .payment-info {
+                            background-color: #d4edda;
+                            color: #155724;
+                        }
+                        .balance-due {
+                            background-color: #f8d7da;
+                            color: #721c24;
+                        }
+                        .public-invoice-footer {
+                            text-align: center;
+                            margin-top: 30px;
+                            padding-top: 20px;
+                            border-top: 1px solid #ddd;
+                            font-size: 0.9em;
+                            color: #666;
+                        }
+                        @media print {
+                            .invoice-actions,
+                            .no-print {
+                                display: none !important;
+                            }
+                            .public-invoice-container {
+                                box-shadow: none;
+                                margin: 0;
+                                padding: 0;
+                            }
+                        }
+                        .alert-info {
+                            background-color: #d1ecf1;
+                            border: 1px solid #bee5eb;
+                            color: #0c5460;
+                            padding: 12px;
+                            border-radius: 4px;
+                            margin: 15px 0;
+                        }
+                    </style>
+                </head>
+                <div class="public-invoice-container">
+                    <!-- Invoice Header -->
+                    <div class="invoice-header">
+                        <div class="row">
+                            <div class="col-6">
+                                <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="company-logo" alt="Company Logo"/>
+                                <h3 t-esc="company.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Status Ribbon -->
+                        <div class="invoice-status-ribbon">
+                            <div t-attf-class="status-#{booking.state}">
+                                <t t-esc="booking.state.upper() if booking.state else 'STATUS'"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Invoice Actions (Web Only) -->
+                    <div class="invoice-actions no-print">
+                        <a t-attf-href="/fleet/booking/#{booking.id}/invoice/#{access_token}/print"
+                           class="btn-invoice-action btn-print" target="_blank">
+                            <i class="fa fa-print"/> Print View
+                        </a>
+                        <a t-attf-href="/fleet/booking/#{booking.id}/invoice/#{access_token}/pdf"
+                           class="btn-invoice-action btn-pdf" target="_blank">
+                            <i class="fa fa-file-pdf-o"/> Download PDF
+                        </a>
+                    </div>
+
+                    <!-- Company Information -->
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="company-info-box">
+                                <h5>Company Information</h5>
+                                <div><strong t-esc="company.name"/></div>
+                                <div t-field="company.partner_id"
+                                     t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                                <div t-if="company.phone">Phone: <span t-esc="company.phone"/></div>
+                                <div t-if="company.email">Email: <span t-esc="company.email"/></div>
+                                <div t-if="company.website">Website: <span t-esc="company.website"/></div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="customer-info-box">
+                                <h5>Customer Information</h5>
+                                <div><strong t-esc="booking.customer_id.name"/></div>
+                                <div t-if="booking.company_name">Company: <span t-esc="booking.company_name"/></div>
+                                <div t-if="booking.customer_email">Email: <span t-esc="booking.customer_email"/></div>
+                                <div t-if="booking.customer_phone">Phone: <span t-esc="booking.customer_phone"/></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking Information -->
+                    <div class="alert-info">
+                        <h4>
+                            <span t-if="booking.state == 'confirmed'">Confirmed</span>
+                            <span t-elif="booking.state == 'completed'">Completed</span>
+                            <span t-else=""><span t-esc="booking.state.capitalize() if booking.state else ''"/></span>
+                            Order # <span t-esc="booking.name"/>
+                        </h4>
+                        <p t-if="booking.is_cancelled" style="color: #dc3545; font-weight: bold;">
+                            This booking has been cancelled.
+                            <span t-if="booking.cancellation_reason">Reason: <span t-esc="booking.cancellation_reason"/></span>
+                        </p>
+                    </div>
+
+                    <!-- Order Summary Table -->
+                    <h5 style="background-color: #f8f9fa; padding: 10px; margin: 20px 0 10px 0;">Order Summary</h5>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%;">Description</th>
+                                <th style="width: 30%; text-align: right;">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div style="font-weight: bold;">
+                                        <span t-esc="booking.journey_start_date.strftime('%a, %d %b %Y') if booking.journey_start_date else ''"/>
+                                        <span t-esc="booking.journey_start_time or ''"/>
+                                        - Vehicle Type: <span t-esc="dict(booking._fields['vehicle_type'].selection).get(booking.vehicle_type) if booking.vehicle_type else 'Not specified'"/>
+                                    </div>
+                                    <div>From: <span t-esc="booking.journey_start_location"/></div>
+                                    <div>To: <span t-esc="booking.journey_end_location"/></div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span t-esc="booking.journey_price" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                            <!-- Return Journey Details -->
+                            <tr t-if="booking.return_journey_needed and booking.return_journey_date">
+                                <td>
+                                    <div style="font-weight: bold;">
+                                        Return Journey:
+                                        <span t-esc="booking.return_journey_date.strftime('%a, %d %b %Y') if booking.return_journey_date else ''"/>
+                                        <span t-esc="booking.return_journey_time or ''"/>
+                                    </div>
+                                    <div>From: <span t-esc="booking.journey_end_location"/></div>
+                                    <div>To: <span t-esc="booking.journey_start_location"/></div>
+                                </td>
+                                <td style="text-align: right;">
+                                    Included
+                                </td>
+                            </tr>
+                            <!-- GST Row -->
+                            <tr t-if="booking.gst_percentage and booking.gst_percentage != '0'">
+                                <td style="text-align: right;">
+                                    GST @ <span t-esc="booking.gst_percentage"/>%
+                                </td>
+                                <td style="text-align: right;">
+                                    <span t-esc="booking.vat_amount" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-section">
+                                <td style="text-align: right; font-weight: bold;">TOTAL</td>
+                                <td style="text-align: right; font-weight: bold;">
+                                    <span t-esc="booking.total_price" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Payment Information -->
+                    <div t-if="booking.payment_date or booking.amount_paid > 0">
+                        <h5 style="background-color: #f8f9fa; padding: 10px; margin: 20px 0 10px 0;">Payment Information</h5>
+                        <table class="invoice-table">
+                            <tr t-if="booking.payment_date" class="payment-info">
+                                <td style="width: 65%;">
+                                    Payment # <span t-esc="booking.name.replace('BO', 'PAY') if booking.name else ''"/>
+                                    <span t-esc="booking.payment_date" t-options="{'widget': 'datetime', 'format': 'E, dd MMM yyyy HH:mm'}"/>
+                                    <span t-if="booking.payment_method"> - (<span t-esc="booking.payment_method"/>)</span>
+                                </td>
+                                <td style="width: 35%; text-align: right;">
+                                    PAID: <span t-esc="booking.amount_paid" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                            <tr t-if="booking.balance_amount != 0" class="balance-due">
+                                <td style="text-align: right; font-weight: bold;">BALANCE</td>
+                                <td style="text-align: right; font-weight: bold;">
+                                    <span t-esc="booking.balance_amount" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Refund Information for Cancelled Bookings -->
+                    <div t-if="booking.is_cancelled and booking.refund_amount > 0">
+                        <h5 style="background-color: #f8d7da; padding: 10px; margin: 20px 0 10px 0; color: #721c24;">Refund Information</h5>
+                        <table class="invoice-table">
+                            <tr>
+                                <td>Refund Policy:</td>
+                                <td><span t-esc="dict(booking._fields['refund_policy'].selection).get(booking.refund_policy)"/></td>
+                            </tr>
+                            <tr>
+                                <td>Refund Amount:</td>
+                                <td><span t-esc="booking.refund_amount" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/></td>
+                            </tr>
+                            <tr t-if="booking.refund_processed">
+                                <td>Refund Status:</td>
+                                <td style="color: green;">Processed</td>
+                            </tr>
+                            <tr t-else="">
+                                <td>Refund Status:</td>
+                                <td style="color: orange;">Pending</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div t-if="booking.terms_conditions" style="margin-top: 30px; border-top: 1px dashed #ccc; padding-top: 20px;">
+                        <h5>Terms &amp; Conditions</h5>
+                        <div t-raw="booking.terms_conditions"/>
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="public-invoice-footer">
+                        <p>This is a computer generated invoice and does not need any signature.</p>
+                        <p t-if="not booking.is_cancelled">Thank you for choosing our services!</p>
+                        <small>
+                            Generated on <span t-esc="datetime.datetime.now().strftime('%d %B %Y at %H:%M')"/>
+                            | Invoice URL expires when booking is deleted
+                        </small>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Print-Friendly Template -->
+    <template id="public_invoice_print_template" name="Fleet Booking Public Invoice Print">
+        <t t-call="web.html_container">
+            <head>
+                <title>Invoice - <t t-esc="booking.name"/></title>
+                <style>
+                    body { font-family: Arial, sans-serif; font-size: 12pt; line-height: 1.4; }
+                    .print-invoice { max-width: 100%; margin: 0; padding: 20px; }
+                    .invoice-header { border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 15px; }
+                    .company-logo { max-height: 80px; margin-bottom: 10px; }
+                    .invoice-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                    .invoice-table th, .invoice-table td { padding: 8px; border: 1px solid #000; text-align: left; }
+                    .invoice-table th { background-color: #f0f0f0; font-weight: bold; }
+                    .total-row { background-color: #f0f0f0; font-weight: bold; }
+                    .customer-box, .company-box { border: 1px solid #000; padding: 10px; margin: 10px 0; }
+                    .status-box { text-align: center; font-size: 14pt; font-weight: bold; margin: 15px 0; padding: 10px; border: 2px solid #000; }
+                    .footer { margin-top: 30px; text-align: center; font-size: 10pt; }
+                    @media print {
+                        body { margin: 0; }
+                        .print-invoice { padding: 0; }
+                    }
+                </style>
+            </head>
+            <body onload="window.print();">
+                <div class="print-invoice">
+                    <!-- Same structure as web template but optimized for print -->
+                    <div class="invoice-header">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="company-logo" alt="Logo"/>
+                        <h2 t-esc="company.name"/>
+                        <div t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address"], "no_marker": true}'/>
+                    </div>
+
+                    <div class="status-box">
+                        <span t-esc="booking.state.upper() if booking.state else ''"/> ORDER # <span t-esc="booking.name"/>
+                    </div>
+
+                    <table style="width: 100%; margin: 20px 0;">
+                        <tr>
+                            <td style="width: 50%; vertical-align: top;">
+                                <div class="customer-box">
+                                    <h4>CUSTOMER</h4>
+                                    <div><strong t-esc="booking.customer_id.name"/></div>
+                                    <div t-if="booking.company_name">Company: <span t-esc="booking.company_name"/></div>
+                                    <div t-if="booking.customer_email">Email: <span t-esc="booking.customer_email"/></div>
+                                    <div t-if="booking.customer_phone">Phone: <span t-esc="booking.customer_phone"/></div>
+                                </div>
+                            </td>
+                            <td style="width: 50%; vertical-align: top;">
+                                <div class="company-box">
+                                    <h4>COMPANY</h4>
+                                    <div><strong t-esc="company.name"/></div>
+                                    <div t-if="company.phone">Phone: <span t-esc="company.phone"/></div>
+                                    <div t-if="company.email">Email: <span t-esc="company.email"/></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- Order Summary -->
+                    <h4>Order Summary</h4>
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 70%;">DESCRIPTION</th>
+                                <th style="width: 30%; text-align: right;">PRICE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div><strong>
+                                        <span t-esc="booking.journey_start_date.strftime('%a, %d %b %Y') if booking.journey_start_date else ''"/>
+                                        <span t-esc="booking.journey_start_time or ''"/>
+                                    </strong></div>
+                                    <div>From: <span t-esc="booking.journey_start_location"/></div>
+                                    <div>To: <span t-esc="booking.journey_end_location"/></div>
+                                    <div>Vehicle: <span t-esc="dict(booking._fields['vehicle_type'].selection).get(booking.vehicle_type) if booking.vehicle_type else 'Not specified'"/></div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span t-esc="booking.journey_price" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                            <tr t-if="booking.gst_percentage and booking.gst_percentage != '0'">
+                                <td style="text-align: right;">GST @ <span t-esc="booking.gst_percentage"/>%</td>
+                                <td style="text-align: right;">
+                                    <span t-esc="booking.vat_amount" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </td>
+                            </tr>
+                            <tr class="total-row">
+                                <td style="text-align: right;"><strong>TOTAL</strong></td>
+                                <td style="text-align: right;"><strong>
+                                    <span t-esc="booking.total_price" t-options="{'widget': 'monetary', 'display_currency': booking.currency_id}"/>
+                                </strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="footer">
+                        <p>This is a computer generated invoice and does not need any signature.</p>
+                    </div>
+                </div>
+            </body>
+        </t>
+    </template>
+
+    <!-- Error Template -->
+    <template id="invoice_access_error" name="Invoice Access Error">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <head>
+                    <title>Invoice Access Error</title>
+                    <style>
+                        .error-container {
+                            max-width: 600px;
+                            margin: 50px auto;
+                            padding: 40px;
+                            text-align: center;
+                            background: #fff;
+                            border-radius: 8px;
+                            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                        }
+                        .error-icon {
+                            font-size: 4em;
+                            color: #dc3545;
+                            margin-bottom: 20px;
+                        }
+                        .error-title {
+                            color: #dc3545;
+                            font-size: 1.8em;
+                            margin-bottom: 15px;
+                        }
+                        .error-message {
+                            color: #6c757d;
+                            font-size: 1.1em;
+                            margin-bottom: 30px;
+                        }
+                        .back-home {
+                            display: inline-block;
+                            padding: 10px 20px;
+                            background-color: #007bff;
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 4px;
+                        }
+                        .back-home:hover {
+                            background-color: #0056b3;
+                            color: white;
+                            text-decoration: none;
+                        }
+                    </style>
+                </head>
+                <div class="error-container">
+                    <div class="error-icon">
+                        <i class="fa fa-exclamation-triangle"/>
+                    </div>
+                    <h1 class="error-title" t-esc="error_title"/>
+                    <p class="error-message" t-esc="error_message"/>
+                    <p>
+                        <small class="text-muted">
+                            Booking ID: <span t-esc="booking_id"/>
+                        </small>
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

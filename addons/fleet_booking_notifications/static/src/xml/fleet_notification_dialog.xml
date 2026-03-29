@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="fleet_booking_notifications.NotificationDialog">
+        <Dialog
+            size="'xl'"
+            title="'🚌  Upcoming Journey Notifications'"
+            close="props.close">
+
+            <!-- SUMMARY STATS BAR -->
+            <div class="fn-summary-bar">
+                <div class="fn-stat-item">
+                    <div class="fn-stat-number"><t t-esc="todayJourneys.length"/></div>
+                    <div class="fn-stat-label">Today</div>
+                </div>
+                <div class="fn-stat-divider"/>
+                <div class="fn-stat-item">
+                    <div class="fn-stat-number"><t t-esc="tomorrowJourneys.length"/></div>
+                    <div class="fn-stat-label">Tomorrow</div>
+                </div>
+                <div class="fn-stat-divider"/>
+                <div class="fn-stat-item">
+                    <div class="fn-stat-number"><t t-esc="weekJourneys.length"/></div>
+                    <div class="fn-stat-label">This Week</div>
+                </div>
+            </div>
+
+            <!-- TAB NAVIGATION -->
+            <div class="fn-tab-nav">
+                <button
+                    t-attf-class="fn-tab-btn #{ state.activeTab === 'today' ? 'fn-tab-active' : '' }"
+                    t-on-click="() => this.setTab('today')">
+                    <i class="fa fa-sun-o"/>  Today
+                    <span class="fn-tab-badge"><t t-esc="todayJourneys.length"/></span>
+                </button>
+                <button
+                    t-attf-class="fn-tab-btn #{ state.activeTab === 'tomorrow' ? 'fn-tab-active' : '' }"
+                    t-on-click="() => this.setTab('tomorrow')">
+                    <i class="fa fa-calendar"/>  Tomorrow
+                    <span class="fn-tab-badge"><t t-esc="tomorrowJourneys.length"/></span>
+                </button>
+                <button
+                    t-attf-class="fn-tab-btn #{ state.activeTab === 'week' ? 'fn-tab-active' : '' }"
+                    t-on-click="() => this.setTab('week')">
+                    <i class="fa fa-calendar-o"/>  This Week
+                    <span class="fn-tab-badge"><t t-esc="weekJourneys.length"/></span>
+                </button>
+            </div>
+
+            <!-- JOURNEY CARDS GRID -->
+            <div class="fn-cards-grid">
+
+                <!-- Empty State -->
+                <t t-if="activeJourneys.length === 0">
+                    <div class="fn-empty-state">
+                        <i class="fa fa-bus fn-empty-icon"/>
+                        <h5>No Journeys Found</h5>
+                        <p class="text-muted">No upcoming bookings for this period.</p>
+                    </div>
+                </t>
+
+                <!-- Journey Card — clickable to open form -->
+                <t t-foreach="activeJourneys" t-as="journey" t-key="journey.id">
+                    <div
+                        t-attf-class="#{ getCardClass(journey.journey_start_date, journey.state) }"
+                        t-on-click="() => this.openBooking(journey.id)"
+                        title="Click to open booking details">
+
+                        <!-- Card Header -->
+                        <div class="fn-card-header">
+                            <div class="fn-card-ref">
+                                <i class="fa fa-ticket text-primary"/>
+                                <strong t-esc="journey.name"/>
+                                <t t-if="getDateChipLabel(journey.journey_start_date)">
+                                    <span class="fn-date-chip">
+                                        <t t-esc="getDateChipLabel(journey.journey_start_date)"/>
+                                    </span>
+                                </t>
+                            </div>
+                            <div class="fn-card-header-right">
+                                <span t-attf-class="#{ getStateBadgeClass(journey.state) }"
+                                      t-esc="journey.state_label"/>
+                                <i class="fa fa-chevron-right fn-open-icon"/>
+                            </div>
+                        </div>
+
+                        <!-- Route Visualization -->
+                        <div class="fn-route-section">
+                            <div class="fn-route-point">
+                                <div class="fn-route-dot fn-dot-start"/>
+                                <div class="fn-route-text">
+                                    <div class="fn-route-label">FROM</div>
+                                    <div class="fn-route-location" t-esc="journey.journey_start_location"/>
+                                </div>
+                            </div>
+                            <div class="fn-route-connector"/>
+                            <div class="fn-route-point">
+                                <div class="fn-route-dot fn-dot-end"/>
+                                <div class="fn-route-text">
+                                    <div class="fn-route-label">TO</div>
+                                    <div class="fn-route-location" t-esc="journey.journey_end_location"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detail Chips -->
+                        <div class="fn-card-details">
+                            <span class="fn-detail-chip">
+                                <i class="fa fa-user"/>
+                                <t t-esc="journey.customer_name"/>
+                            </span>
+                            <span class="fn-detail-chip">
+                                <i class="fa fa-clock-o"/>
+                                <t t-esc="journey.journey_start_date_display"/>
+                                <t t-if="journey.journey_start_time">
+                                    &#160;<t t-esc="journey.journey_start_time"/>
+                                </t>
+                            </span>
+                            <t t-if="journey.vehicle_type">
+                                <span class="fn-detail-chip">
+                                    <i class="fa fa-bus"/>
+                                    <t t-esc="journey.vehicle_type"/>
+                                </span>
+                            </t>
+                            <span t-attf-class="fn-detail-chip #{ journey.driver_name === 'Not Assigned' ? 'fn-chip-warning' : '' }">
+                                <i class="fa fa-id-card-o"/>
+                                <t t-esc="journey.driver_name"/>
+                            </span>
+                            <t t-if="journey.passenger_count and journey.passenger_count > 0">
+                                <span class="fn-detail-chip">
+                                    <i class="fa fa-users"/>
+                                    <t t-esc="journey.passenger_count"/> pax
+                                </span>
+                            </t>
+                            <t t-if="journey.total_price and journey.total_price > 0">
+                                <span class="fn-detail-chip fn-chip-amount">
+                                    <i class="fa fa-inr"/>
+                                    <t t-esc="formatPrice(journey.total_price)"/>
+                                </span>
+                            </t>
+                        </div>
+
+                    </div><!-- /.fn-journey-card -->
+                </t>
+
+            </div><!-- /.fn-cards-grid -->
+
+            <!-- DIALOG FOOTER -->
+            <t t-set-slot="footer">
+                <div class="fn-dialog-footer">
+                    <span class="fn-footer-note text-muted">
+                        <i class="fa fa-info-circle me-1"/>
+                        Active bookings for the next 7 days · Click any card to open · Updates daily
+                    </span>
+                    <button class="btn btn-primary" t-on-click="onClose">
+                        <i class="fa fa-check me-1"/>
+                        Got It
+                    </button>
+                </div>
+            </t>
+
+        </Dialog>
+    </t>
+
+</templates>

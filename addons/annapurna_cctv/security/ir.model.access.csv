@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cctv_camera_admin,cctv.camera admin,model_cctv_camera,base.group_system,1,1,1,1
+access_cctv_camera_user,cctv.camera user,model_cctv_camera,base.group_user,1,0,0,0
+access_cctv_camera_manager,cctv.camera manager,model_cctv_camera,base.group_erp_manager,1,1,1,1
+access_cctv_recording_admin,cctv.recording admin,model_cctv_recording,base.group_system,1,1,1,1
+access_cctv_recording_user,cctv.recording user,model_cctv_recording,base.group_user,1,0,0,0
+access_cctv_recording_manager,cctv.recording manager,model_cctv_recording,base.group_erp_manager,1,1,1,1

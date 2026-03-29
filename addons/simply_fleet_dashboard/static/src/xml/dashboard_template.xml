@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="simply_fleet_dashboard.DashboardTemplate" owl="1">
+        <div class="o_action_manager o_fleet_dashboard bg-200 h-100 overflow-auto p-4">
+            
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary fw-bold m-0">Fleet &amp; Tanker Analytics</h2>
+                
+                <div class="d-flex gap-3">
+                    <select class="form-select w-auto shadow-sm" t-on-change="onVehicleFilterChange" t-model="state.vehicleFilter">
+                        <option value="0">All Vehicles</option>
+                        <t t-foreach="state.vehicles" t-as="v" t-key="v.id">
+                            <option t-att-value="v.id"><t t-esc="v.name"/></option>
+                        </t>
+                    </select>
+
+                    <select class="form-select w-auto shadow-sm" t-on-change="onFilterChange" t-model="state.dateFilter">
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                        <option value="this_year">This Year</option>
+                        <option value="all_time">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <div t-if="state.isLoading" class="text-center p-5">
+                <i class="fa fa-circle-o-notch fa-spin fa-3x text-primary"></i>
+            </div>
+
+            <div t-else="">
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card shadow-sm border-0 cursor-pointer h-100" t-on-click="openVehicles">
+                            <div class="card-body text-center">
+                                <h5 class="text-muted">Active Vehicles</h5>
+                                <h2 class="text-primary fw-bold"><t t-esc="state.kpis.active_vehicles"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body text-center">
+                                <h5 class="text-muted">Active Work Orders</h5>
+                                <h2 class="text-warning fw-bold"><t t-esc="state.kpis.active_work_orders"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body text-center">
+                                <h5 class="text-muted">Tanker Fuel Available (L)</h5>
+                                <h2 class="text-success fw-bold"><t t-esc="state.kpis.total_tanker_fuel"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card shadow-sm border-0 h-100">
+                            <div class="card-body text-center">
+                                <h5 class="text-muted">Expiring Documents</h5>
+                                <h2 class="text-danger fw-bold"><t t-esc="state.kpis.expiring_docs"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white border-0"><h5 class="m-0">Fuel Consumption Trend (Line)</h5></div>
+                            <div class="card-body" style="height: 300px;">
+                                <canvas t-ref="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white border-0"><h5 class="m-0">Work Order Costs (Horizontal Bar)</h5></div>
+                            <div class="card-body" style="height: 300px;">
+                                <canvas t-ref="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white border-0"><h5 class="m-0">Tanker Capacity vs Current Level (Column)</h5></div>
+                            <div class="card-body" style="height: 300px;">
+                                <canvas t-ref="colChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white border-0"><h5 class="m-0">Vehicle Status Distribution (Pie)</h5></div>
+                            <div class="card-body" style="height: 300px;">
+                                <canvas t-ref="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white border-0">
+                                <h5 class="m-0">Vehicle Mileage Analysis (km/l)</h5>
+                            </div>
+                            <div class="card-body" style="height: 350px;">
+                                <canvas t-ref="mileageChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </t>
+</templates>

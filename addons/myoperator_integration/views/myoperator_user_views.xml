@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- MyOperator User Form View -->
+    <record id="view_myoperator_user_form" model="ir.ui.view">
+        <field name="name">myoperator.user.form</field>
+        <field name="model">myoperator.user</field>
+        <field name="arch" type="xml">
+            <form string="MyOperator User">
+                <header>
+                    <button name="sync_with_odoo_user" type="object" string="Auto Link Odoo User" 
+                            class="btn-secondary" icon="fa-link"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="myoperator_details" string="MyOperator Details">
+                            <field name="user_id"/>
+                            <field name="email"/>
+                            <field name="company_id_mo"/>
+                            <field name="uuid"/>
+                        </group>
+                        <group name="odoo_integration" string="Odoo Integration">
+                            <field name="odoo_user_id"/>
+                            <field name="active"/>
+                            <field name="synced_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="config_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MyOperator User Tree View -->
+    <record id="view_myoperator_user_tree" model="ir.ui.view">
+        <field name="name">myoperator.user.tree</field>
+        <field name="model">myoperator.user</field>
+        <field name="arch" type="xml">
+            <tree string="MyOperator Users">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="user_id"/>
+                <field name="odoo_user_id"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="synced_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MyOperator User Action -->
+    <record id="action_myoperator_user" model="ir.actions.act_window">
+        <field name="name">MyOperator Users</field>
+        <field name="res_model">myoperator.user</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No MyOperator users found!
+            </p>
+            <p>
+                Sync users from MyOperator to see them here.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_myoperator_users" name="Users" parent="menu_myoperator_root" 
+              action="action_myoperator_user" sequence="30"/>
+</odoo>

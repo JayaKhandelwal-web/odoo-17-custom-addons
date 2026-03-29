@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Callback Wizard Form -->
+    <record id="view_callback_wizard_form" model="ir.ui.view">
+        <field name="name">callback.wizard.form</field>
+        <field name="model">callback.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Initiate Callback">
+                <group>
+                    <field name="call_log_id" readonly="1"/>
+                    <field name="config_id"/>
+                    <field name="source_number" placeholder="e.g., +91XXXXXXXXXX"/>
+                    <field name="destination_number" placeholder="e.g., +91XXXXXXXXXX"/>
+                </group>
+                <footer>
+                    <button name="action_make_callback" type="object" string="Initiate Callback" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Callback Wizard Action -->
+    <record id="action_callback_wizard" model="ir.actions.act_window">
+        <field name="name">Initiate Callback</field>
+        <field name="res_model">callback.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

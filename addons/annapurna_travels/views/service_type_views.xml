@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Service Type Tree View -->
+        <record id="view_service_type_tree" model="ir.ui.view">
+            <field name="name">service.type.tree</field>
+            <field name="model">service.type</field>
+            <field name="arch" type="xml">
+                <tree string="Service Types">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="base_price"/>
+                    <field name="price_per_km"/>
+                    <field name="price_per_day"/>
+                    <field name="website_published"/>
+                    <field name="booking_count"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Service Type Form View -->
+        <record id="view_service_type_form" model="ir.ui.view">
+            <field name="name">service.type.form</field>
+            <field name="model">service.type</field>
+            <field name="arch" type="xml">
+                <form string="Service Type">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_bookings" type="object" class="oe_stat_button" icon="fa-calendar">
+                                <field name="booking_count" widget="statinfo" string="Bookings"/>
+                            </button>
+                        </div>
+
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Service Name"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group string="Basic Information">
+                                <field name="code"/>
+                                <field name="sequence"/>
+                                <field name="icon" placeholder="fa-bus"/>
+                                <field name="active"/>
+                            </group>
+                            <group string="Website Settings">
+                                <field name="website_published"/>
+                            </group>
+                        </group>
+
+                        <group>
+                            <group string="Pricing">
+                                <field name="base_price"/>
+                                <field name="price_per_km"/>
+                                <field name="price_per_day"/>
+                            </group>
+                            <group string="Service Inclusions">
+                                <field name="includes_driver"/>
+                                <field name="includes_fuel"/>
+                                <field name="includes_toll"/>
+                                <field name="includes_parking"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" placeholder="Brief description of this service..."/>
+                            </page>
+                            <page string="Website Description">
+                                <field name="website_description" widget="html"/>
+                            </page>
+                            <page string="Terms &amp; Conditions">
+                                <field name="terms_conditions" widget="html"/>
+                            </page>
+                            <page string="Cancellation Policy">
+                                <field name="cancellation_policy" widget="html"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Service Type Kanban View -->
+        <record id="view_service_type_kanban" model="ir.ui.view">
+            <field name="name">service.type.kanban</field>
+            <field name="model">service.type</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="base_price"/>
+                    <field name="booking_count"/>
+                    <field name="website_published"/>
+                    <field name="image"/>
+                    <field name="icon"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-if="record.image.raw_value" t-att-src="kanban_image('service.type', 'image', record.id.raw_value)" alt="Service"/>
+                                    <div t-if="!record.image.raw_value" class="o_kanban_image_placeholder">
+                                        <i t-attf-class="fa #{record.icon.raw_value or 'fa-bus'} fa-3x text-primary"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div class="o_kanban_record_subtitle">
+                                        <field name="code"/>
+                                    </div>
+                                    <div class="o_kanban_record_body">
+                                        Base Price: ₹<field name="base_price"/>
+                                        <br/>
+                                        Bookings: <field name="booking_count"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <span t-if="record.website_published.raw_value" class="badge badge-success">Published</span>
+                                        <span t-if="!record.website_published.raw_value" class="badge badge-secondary">Unpublished</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Service Type Action -->
+        <record id="action_service_type" model="ir.actions.act_window">
+            <field name="name">Service Types</field>
+            <field name="res_model">service.type</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first service type!
+                </p>
+                <p>
+                    Define different types of services you offer like Corporate Travel, Marriage Events, etc.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,4 @@
+This is a placeholder for the module icon (icon.png)
+You should replace this with an actual 256x256 PNG image for your module.
+
+Recommended icon: A combination of a vehicle/driver icon with performance/chart elements

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Root Menu -->
+    <menuitem id="menu_cctv_root"
+              name="CCTV"
+              web_icon="annapurna_cctv,static/src/img/cctv_icon.png"
+              sequence="90"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_cctv_dashboard"
+              name="Dashboard"
+              parent="menu_cctv_root"
+              action="action_cctv_dashboard"
+              sequence="1"/>
+
+    <!-- Cameras -->
+    <menuitem id="menu_cctv_cameras"
+              name="Cameras"
+              parent="menu_cctv_root"
+              action="action_cctv_camera"
+              sequence="2"/>
+
+    <!-- Recordings -->
+    <menuitem id="menu_cctv_recordings"
+              name="Recordings &amp; Snapshots"
+              parent="menu_cctv_root"
+              action="action_cctv_recording"
+              sequence="3"/>
+
+</odoo>

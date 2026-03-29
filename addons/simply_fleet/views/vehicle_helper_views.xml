@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Define the base vehicle form view with button_box and notebook -->
+    <record id="view_simply_fleet_vehicle_form" model="ir.ui.view">
+        <field name="name">simply.fleet.vehicle.form</field>
+        <field name="model">simply.fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Smart buttons will go here -->
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="driver_id"/>
+                        <!-- Other basic fields here -->
+                    </group>
+                    <notebook>
+                        <!-- Tabs will go here -->
+                        <page string="General Information">
+                            <group>
+                                <!-- Additional fields can go here -->
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Then inherit from the base view -->
+    <record id="view_simply_fleet_vehicle_form_inherit_helper" model="ir.ui.view">
+        <field name="name">simply.fleet.vehicle.form.inherit.helper</field>
+        <field name="model">simply.fleet.vehicle</field>
+        <field name="inherit_id" ref="view_simply_fleet_vehicle_form"/>
+        <field name="arch" type="xml">
+            <!-- Add helper field after driver_id field -->
+            <xpath expr="//field[@name='driver_id']" position="after">
+                <field name="show_helper" invisible="0"/>  <!-- Temporarily visible for debugging -->
+                <field name="helper_id" 
+                       invisible="not show_helper"
+                       options="{'no_create': True, 'no_open': False}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

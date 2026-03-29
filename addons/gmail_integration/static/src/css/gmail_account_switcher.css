@@ -1,0 +1,353 @@
+/* Gmail Account Switcher - Complete CSS Reset and Redesign */
+
+/* Modal Container Override */
+.o_dialog:has(.gmail-account-switcher-modal) {
+    max-width: 350px !important;
+    margin: 60px auto !important;
+}
+
+.o_dialog .modal-content:has(.gmail-account-switcher-modal) {
+    border-radius: 12px !important;
+    border: none !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+    overflow: hidden !important;
+}
+
+.o_dialog .modal-header:has(~ .modal-body .gmail-account-switcher-modal) {
+    display: none !important;
+}
+
+.o_dialog .modal-body:has(.gmail-account-switcher-modal) {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Form Container */
+form.gmail-account-switcher-modal {
+    width: 350px !important;
+    max-width: 350px !important;
+    background: white !important;
+    border-radius: 12px !important;
+    overflow: hidden !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Company Header */
+.gmail-company-header {
+    background: linear-gradient(135deg, #4285f4 0%, #34a853 100%) !important;
+    color: white !important;
+    padding: 20px !important;
+    text-align: center !important;
+}
+
+.gmail-company-header h3 {
+    margin: 0 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: white !important;
+}
+
+/* Current Account Section */
+.gmail-current-section {
+    padding: 16px !important;
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #e9ecef !important;
+}
+
+/* Account Items */
+.gmail-account-item {
+    background: white !important;
+    border: 2px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    margin-bottom: 8px !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+.gmail-current-item {
+    border-color: #4285f4 !important;
+    background: linear-gradient(135deg, #e8f0fe 0%, #f8f9fa 100%) !important;
+    cursor: default !important;
+}
+
+/* Enhanced hover and click states */
+.gmail-other-item:hover {
+    border-color: #4285f4 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15) !important;
+}
+
+.gmail-other-item:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 8px rgba(66, 133, 244, 0.25) !important;
+}
+
+/* Debug: Add visual feedback for clicks */
+.gmail-other-item.clicked {
+    border-color: #34a853 !important;
+    background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%) !important;
+}
+
+/* Ensure clickable cursor */
+.gmail-other-item {
+    cursor: pointer !important;
+}
+
+.gmail-other-item * {
+    pointer-events: none !important;
+}
+
+.gmail-signout-btn {
+    pointer-events: auto !important;
+}
+
+/* Item Header */
+.gmail-item-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
+}
+
+.gmail-check-mark {
+    width: 20px !important;
+    height: 20px !important;
+    background: #34a853 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 10px !important;
+}
+
+.gmail-hidden {
+    visibility: hidden !important;
+}
+
+.gmail-signout-btn {
+    background: transparent !important;
+    border: 1px solid #ea4335 !important;
+    color: #ea4335 !important;
+    padding: 4px 8px !important;
+    border-radius: 4px !important;
+    font-size: 11px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.gmail-signout-btn:hover {
+    background: #ea4335 !important;
+    color: white !important;
+}
+
+/* Item Content */
+.gmail-item-content {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* Avatar */
+.gmail-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    background: #4285f4 !important;
+    color: white !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    flex-shrink: 0 !important;
+    border: 2px solid white !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.gmail-other-avatar {
+    background: #34a853 !important;
+}
+
+/* Account Info */
+.gmail-account-info {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.gmail-name {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #202124 !important;
+    margin-bottom: 2px !important;
+    line-height: 1.2 !important;
+}
+
+.gmail-email {
+    font-size: 12px !important;
+    color: #5f6368 !important;
+    line-height: 1.3 !important;
+    word-break: break-word !important;
+}
+
+/* Other Accounts Section */
+.gmail-other-section {
+    padding: 16px !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+}
+
+/* Kanban Override */
+.gmail-other-kanban .o_kanban_view {
+    display: block !important;
+    background: transparent !important;
+}
+
+.gmail-other-kanban .o_kanban_record {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* No Accounts */
+.gmail-no-accounts {
+    padding: 24px !important;
+    text-align: center !important;
+    color: #5f6368 !important;
+}
+
+.gmail-no-accounts p {
+    margin: 0 0 4px 0 !important;
+    font-size: 14px !important;
+}
+
+.gmail-no-accounts small {
+    font-size: 12px !important;
+    color: #9aa0a6 !important;
+}
+
+/* Add Account Section */
+.gmail-add-section {
+    padding: 16px !important;
+    text-align: center !important;
+    border-top: 1px solid #e8eaed !important;
+}
+
+.gmail-add-account-btn {
+    background: transparent !important;
+    border: 2px dashed #dadce0 !important;
+    color: #5f6368 !important;
+    padding: 12px 20px !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.gmail-add-account-btn:hover {
+    background: #4285f4 !important;
+    border-color: #4285f4 !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Footer */
+form.gmail-account-switcher-modal footer {
+    padding: 12px 16px !important;
+    background: #f8f9fa !important;
+    border-top: 1px solid #e8eaed !important;
+    text-align: center !important;
+}
+
+form.gmail-account-switcher-modal footer button {
+    background: #5f6368 !important;
+    border: 1px solid #5f6368 !important;
+    color: white !important;
+    padding: 8px 16px !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    cursor: pointer !important;
+}
+
+form.gmail-account-switcher-modal footer button:hover {
+    background: #3c4043 !important;
+    border-color: #3c4043 !important;
+}
+
+/* Field Overrides */
+.gmail-account-switcher-modal .o_field_widget {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.gmail-account-switcher-modal .o_field_char {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+.gmail-account-switcher-modal input[readonly] {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    color: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+}
+
+/* Scrollbar */
+.gmail-other-section::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+.gmail-other-section::-webkit-scrollbar-track {
+    background: #f1f3f4 !important;
+}
+
+.gmail-other-section::-webkit-scrollbar-thumb {
+    background: #dadce0 !important;
+    border-radius: 2px !important;
+}
+
+.gmail-other-section::-webkit-scrollbar-thumb:hover {
+    background: #bdc1c6 !important;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+    form.gmail-account-switcher-modal {
+        width: 95vw !important;
+        max-width: 95vw !important;
+    }
+    
+    .o_dialog:has(.gmail-account-switcher-modal) {
+        max-width: 95vw !important;
+        margin: 20px auto !important;
+    }
+}
+
+/* Important overrides for Odoo default styles */
+.o_dialog .gmail-account-switcher-modal * {
+    box-sizing: border-box !important;
+}
+
+.gmail-account-switcher-modal .o_form_view {
+    background: transparent !important;
+}
+
+.gmail-account-switcher-modal .o_form_sheet {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}

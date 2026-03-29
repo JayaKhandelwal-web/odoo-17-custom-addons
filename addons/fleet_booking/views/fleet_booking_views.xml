@@ -1,0 +1,979 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fleet Booking Form View - UPDATED WITH AUTOMATIC INVOICE URL GENERATION -->
+    <record id="view_fleet_booking_form" model="ir.ui.view">
+        <field name="name">fleet.booking.form</field>
+        <field name="model">fleet.booking</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_resend_followup_template"
+                            string="Resend Follow Up"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'followup'"
+                            icon="fa-whatsapp"/>
+                    <button name="action_quotation" string="Send Quotation" type="object"
+                            class="oe_highlight" invisible="state != 'enquiry'"/>
+                    <button name="action_followup" string="Follow Up" type="object"
+                            invisible="state != 'quotation'"/>
+                    <button name="action_confirm" string="Confirm" type="object"
+                            class="oe_highlight" invisible="state != 'followup'"/>
+
+                    <!-- NEW: Cancel Booking Button -->
+                    <button name="action_cancel_booking" string="Cancel Booking" type="object"
+                            class="btn-danger"
+                            invisible="state in ('cancelled', 'completed')"
+                            help="Cancel this booking with mandatory reason and refund details"/>
+
+                    <button name="action_complete" string="Complete" type="object"
+                            class="oe_highlight" invisible="state != 'confirmed'"/>
+
+                    <!-- NEW: Go Back One Stage Button -->
+                    <button name="action_go_back_one_stage" string="Go Back One Stage" type="object"
+                            class="btn-warning"
+                            invisible="state in ('enquiry', 'cancelled')"
+                            help="Go back to the previous stage with mandatory reason"/>
+
+                    <button name="action_reset_to_enquiry" string="Reset" type="object"
+                            invisible="state not in ('quotation', 'followup')"
+                            groups="fleet_booking.group_fleet_booking_manager"/>
+
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="enquiry,quotation,followup,confirmed,completed"/>
+                </header>
+
+                <!-- Hidden fields for form functionality -->
+                <field name="is_cancelled" invisible="1"/>
+                <field name="refund_policy" invisible="1"/>
+                <field name="refund_processed" invisible="1"/>
+                <field name="cancelled_date" invisible="1"/>
+                <field name="cancelled_by" invisible="1"/>
+                <field name="cancellation_reason" invisible="1"/>
+                <!-- NEW: Hidden fields for invoice URL -->
+                <field name="invoice_access_token" invisible="1"/>
+                <field name="invoice_url" invisible="1"/>
+
+                <!-- Add these hidden fields after existing hidden fields -->
+                <!-- NEW: Hidden WhatsApp fields -->
+                <field name="whatsapp_template_sent" invisible="1"/>
+                <field name="whatsapp_template_sent_date" invisible="1"/>
+                <field name="whatsapp_template_name" invisible="1"/>
+                <field name="whatsapp_message_id" invisible="1"/>
+                <field name="whatsapp_send_error" invisible="1"/>
+
+                <!-- NEW: WhatsApp Template Success Alert -->
+                <div class="alert alert-success" role="alert" invisible="not whatsapp_template_sent">
+                    <strong><i class="fa fa-whatsapp"/> WhatsApp Enquiry Template Sent Successfully!</strong><br/>
+                    <span>Template: <strong><field name="whatsapp_template_name" readonly="1" nolabel="1" invisible="0"/></strong></span><br/>
+                    <span>Sent on: <field name="whatsapp_template_sent_date" readonly="1" nolabel="1" invisible="0"/></span><br/>
+                    <span>Message ID: <field name="whatsapp_message_id" readonly="1" nolabel="1" invisible="0"/></span><br/>
+                </div>
+
+
+                <!-- NEW: Cancellation Alert Banner -->
+                <div class="alert alert-danger" role="alert" invisible="not is_cancelled">
+                    <strong>CANCELLED BOOKING</strong><br/>
+                    <span>Cancelled on: <field name="cancelled_date" readonly="1" invisible="0"/></span><br/>
+                    <span>Cancelled by: <field name="cancelled_by" readonly="1" invisible="0"/></span><br/>
+                    <span>Reason: <field name="cancellation_reason" readonly="1" invisible="0"/></span>
+                </div>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Hidden fields for button visibility -->
+                        <field name="refund_method" invisible="1"/>
+                        <field name="refund_processed_date" invisible="1"/>
+
+                        <button name="action_assign_driver" string="Assign Driver" type="object"
+                                class="oe_stat_button" icon="fa-user"
+                                invisible="state != 'confirmed'"/>
+                        <button name="action_register_payment" string="Register Payment" type="object"
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="state not in ('confirmed', 'completed')"/>
+
+                        <!-- NEW: Process Refund Button -->
+                        <button name="action_process_refund" string="Process Refund" type="object"
+                                class="oe_stat_button" icon="fa-undo"
+                                invisible="not is_cancelled or refund_policy == 'no_refund' or refund_processed"/>
+
+                        <!-- UPDATED: Invoice Sharing Buttons - Auto-generated URLs -->
+                        <!-- Note: No manual Generate Invoice button - URLs are auto-generated when booking is confirmed -->
+
+<!--                        <button name="action_view_invoice" string="View Invoice" type="object"-->
+<!--                                class="oe_stat_button" icon="fa-eye"-->
+<!--                                invisible="not invoice_access_token"-->
+<!--                                help="View invoice in new tab (Auto-generated when confirmed)"/>-->
+
+<!--                        <button name="action_copy_invoice_url" string="Copy Invoice URL" type="object"-->
+<!--                                class="oe_stat_button" icon="fa-copy"-->
+<!--                                invisible="not invoice_access_token"-->
+<!--                                help="Get shareable invoice URL (Auto-generated)"/>-->
+
+<!--                        <button name="action_email_invoice_url" string="Email Invoice" type="object"-->
+<!--                                class="oe_stat_button" icon="fa-envelope"-->
+<!--                                invisible="not invoice_access_token"-->
+<!--                                help="Send invoice URL via email"/>-->
+
+                        <button name="action_view_route" string="View Route" type="object"
+                                class="oe_stat_button" icon="fa-map-marker"/>
+
+<!--                        &lt;!&ndash; Add this button in the oe_button_box &ndash;&gt;-->
+<!--                        &lt;!&ndash; NEW: Resend WhatsApp Template Button &ndash;&gt;-->
+<!--                        <button name="action_resend_whatsapp_template" string="Resend WhatsApp Template" type="object"-->
+<!--                                class="oe_stat_button" icon="fa-whatsapp"-->
+<!--                                invisible="state == 'cancelled'"-->
+<!--                                help="Manually resend the annapurna_enquiries WhatsApp template to customer"/>-->
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <!-- NEW: Booking Type Selection -->
+                            <field name="booking_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="customer_id" required="1"/>
+                            <field name="customer_email"/>
+                            <field name="customer_phone" required="1"/>
+                            <!-- UPDATED: Company Name with conditional visibility and required attribute -->
+                            <field name="company_name"
+                                   invisible="booking_type == 'individual'"
+                                   required="booking_type == 'company'"
+                                   placeholder="Enter company name"/>
+                            <field name="user_id" groups="fleet_booking.group_fleet_booking_manager"/>
+                        </group>
+                        <group>
+                            <field name="journey_start_date" required="1"/>
+                            <field name="journey_start_time"/>
+<!--                            <field name="journey_duration" widget="float_time"/>-->
+                            <field name="fixed_end_time"/>
+                            <field name="return_journey_needed"/>
+                        </group>
+                    </group>
+
+                    <!-- Return Journey Section -->
+                    <group invisible="not return_journey_needed">
+                        <group string="Return Journey Details">
+                            <field name="return_journey_date"/>
+                            <field name="return_journey_time"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Transport" name="transport">
+                            <group>
+                                <group string="Route Planning" colspan="2">
+                                    <field name="journey_start_location" widget="google_map_field" required="1"/>
+                                    <field name="journey_end_location" widget="google_map_field" required="1"/>
+                                    <field name="via_stops" widget="google_map_field"/>
+                                    <field name="route_map_url" invisible="1"/>
+                                    <field name="journey_distance"/>
+<!--                                    <field name="journey_duration"/>-->
+                                </group>
+                            </group>
+
+                            <group>
+                                <group string="Vehicle Assignment">
+                                    <field name="distance_uom"/>
+                                    <field name="journey_duration_formatted" string="Estimated Duration"/>
+
+                                    <!-- UPDATED: Vehicle Group (replaces Vehicle Type) -->
+                                    <field name="vehicle_group_id"
+                                           string="Vehicle Group"
+                                           options="{'no_create': True, 'no_open': False}"
+                                           placeholder="Select Vehicle Group"/>
+
+                                    <!-- NEW: Vehicle Type Selection Field -->
+                                    <field name="vehicle_type"
+                                           string="Vehicle Type"
+                                           placeholder="Select Vehicle Type"/>
+
+                                    <!-- Simply Fleet Vehicle Selection -->
+                                    <field name="vehicle_id"
+                                           string="Vehicle"
+                                           options="{'no_create': True, 'no_open': False}"
+                                           placeholder="Select Vehicle"
+                                           domain="[('state', '=', 'active')]"/>
+
+                                    <!-- Vehicle Details Display -->
+                                    <field name="vehicle_ref" readonly="1" string="Vehicle Reference"/>
+                                    <field name="vehicle_name" readonly="1" string="Vehicle Name"/>
+                                    <field name="vehicle_brand" readonly="1" string="Brand"/>
+                                    <field name="vehicle_model" readonly="1" string="Model"/>
+
+                                    <!-- Driver Assignment -->
+                                    <field name="driver_id"
+                                           string="Assigned Driver"
+                                           domain="[('job_title', 'ilike', 'driver')]"
+                                           options="{'no_create': True}"
+                                           invisible="state not in ('confirmed', 'completed')"
+                                           readonly="state == 'completed'"/>
+                                </group>
+
+                                <field name="route_id" widget="google_maps_route" nolabel="1" colspan="2"/>
+                            </group>
+
+                            <group string="Transport Notes">
+                                <field name="transport_notes" placeholder="Additional transport notes..."/>
+                            </group>
+                        </page>
+
+                        <page string="Pricing" name="pricing">
+                            <group>
+                                <group string="Pricing Details">
+                                    <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
+                                    <field name="journey_price"/>
+
+                                    <!-- NEW: GST Type Selection -->
+                                    <label for="gst_type" string="GST Calculation"/>
+                                    <div>
+                                        <field name="gst_type" widget="radio" options="{'horizontal': false}" class="oe_inline"/>
+                                    </div>
+
+                                    <!-- UPDATED: GST Percentage with 18% option -->
+                                    <label for="gst_percentage" string="GST Percentage"/>
+                                    <div>
+                                        <field name="gst_percentage" widget="radio" options="{'horizontal': true}" class="oe_inline"/>
+                                    </div>
+
+                                    <!-- Show Base Price when GST is included - FIXED: Removed attrs -->
+                                    <field name="base_price" readonly="1"
+                                           invisible="gst_type == 'excluded'"/>
+
+                                    <field name="vat_amount" string="GST Amount"/>
+                                    <field name="total_price" class="oe_subtotal_footer_separator"/>
+                                </group>
+
+                                <!-- UPDATED: PAYMENT section - Only visible AFTER Follow Up stage -->
+                                <group string="Payment" invisible="state in ('enquiry', 'quotation')">
+                                    <field name="payment_status"/>
+                                    <field name="payment_method" invisible="payment_status == 'not_invoiced'"/>
+                                    <field name="payment_date" invisible="payment_status == 'not_invoiced'"/>
+                                    <field name="amount_paid"/>
+                                    <field name="balance_amount"/>
+                                </group>
+
+                                <!-- ALTERNATIVE: Show placeholder message BEFORE Follow Up stage -->
+                                <group string="Payment" invisible="state not in ('enquiry', 'quotation')">
+                                    <p class="text-muted">Payment details will be available after quotation stage.</p>
+                                </group>
+                            </group>
+
+                            <!-- NEW: Refund Information Section -->
+                            <group string="Refund Information" invisible="not is_cancelled">
+                                <!-- Hidden fields for section functionality -->
+                                <field name="refund_amount" invisible="1"/>
+                                <field name="refund_percentage" invisible="1"/>
+                                <field name="refund_notes" invisible="1"/>
+
+                                <group>
+                                    <field name="refund_policy" readonly="1"/>
+                                    <field name="refund_amount" readonly="1" invisible="0"/>
+                                    <field name="refund_percentage" readonly="1" invisible="0"/>
+                                    <field name="refund_processed" readonly="1" invisible="0"/>
+                                </group>
+                                <group>
+                                    <field name="refund_processed_date" readonly="1" invisible="not refund_processed"/>
+                                    <field name="refund_method" readonly="1" invisible="not refund_processed"/>
+                                </group>
+                                <group colspan="2">
+                                    <field name="refund_notes" readonly="1" nolabel="1" placeholder="No refund notes..." invisible="0"/>
+                                </group>
+                            </group>
+
+                            <!-- NEW: GST Calculation Explanation -->
+                            <group string="GST Calculation Info" class="text-muted">
+                                <div colspan="2" invisible="gst_type == 'excluded'">
+                                    <p><strong>GST Included:</strong> The journey price already contains GST.
+                                    The system calculates the base price and GST amount from the total journey price.</p>
+                                    <p><em>Example: Journey Price = ₹1,000 with 5% GST Included → Base Price = ₹952.38, GST = ₹47.62, Total = ₹1,000</em></p>
+                                </div>
+                                <div colspan="2" invisible="gst_type == 'included'">
+                                    <p><strong>GST Excluded:</strong> GST will be added on top of the journey price.</p>
+                                    <p><em>Example: Journey Price = ₹1,000 with 5% GST Excluded → Base Price = ₹1,000, GST = ₹50, Total = ₹1,050</em></p>
+                                </div>
+                            </group>
+                        </page>
+
+                        <page string="Terms &amp; Conditions" name="terms">
+                            <group>
+                                <field name="terms_template_id" placeholder="Select a template..."/>
+                            </group>
+                            <separator/>
+                            <field name="terms_conditions" widget="html" placeholder="Enter custom terms and conditions..." options="{'height': 300}"/>
+                        </page>
+
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Additional notes about this booking..."/>
+
+                            <!-- NEW: Stage Change History -->
+                            <group string="Stage Change History" invisible="not stage_change_reason">
+                                <field name="stage_change_reason" readonly="1" nolabel="1"
+                                       placeholder="No stage change reasons recorded yet..."/>
+                            </group>
+                        </page>
+                        <!-- Add this new notebook page -->
+                        <!-- NEW: WhatsApp Communication Tab -->
+                        <page string="WhatsApp Communication" name="whatsapp_communication">
+                            <group string="Template Communication">
+                                <group>
+                                    <field name="whatsapp_template_sent" readonly="1"/>
+                                    <field name="whatsapp_template_name" readonly="1" invisible="not whatsapp_template_sent"/>
+                                    <field name="whatsapp_template_sent_date" readonly="1" invisible="not whatsapp_template_sent"/>
+                                    <field name="whatsapp_message_id" readonly="1" invisible="not whatsapp_template_sent"/>
+                                </group>
+                                <group>
+                                    <field name="customer_phone" readonly="1" string="WhatsApp Number"/>
+                                </group>
+                            </group>
+
+                            <group string="Error Details" invisible="not whatsapp_send_error">
+                                <field name="whatsapp_send_error" readonly="1" nolabel="1" widget="text"/>
+                            </group>
+
+                            <group string="Manual Actions">
+                                <p class="text-muted">
+                                    <strong>Automatic Template Sending:</strong><br/>
+                                    The "annapurna_enquiries" template is automatically sent when a new booking is created.
+                                </p>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Rest of the views remain the same -->
+    <!-- NEW: Cancel Booking Wizard Form View -->
+    <record id="view_fleet_booking_cancel_wizard_form" model="ir.ui.view">
+        <field name="name">fleet.booking.cancel.wizard.form</field>
+        <field name="model">fleet.booking.cancel.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cancel Booking">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong> You are about to cancel this booking.
+                    This action cannot be undone. Please provide mandatory cancellation details.
+                </div>
+                <group>
+                    <field name="booking_id" readonly="1"/>
+                    <field name="total_amount" readonly="1"/>
+                    <field name="paid_amount" readonly="1"/>
+                    <field name="currency_id" invisible="1"/>
+                </group>
+
+                <group string="Cancellation Details">
+                    <field name="cancellation_reason"
+                           placeholder="Please provide a detailed reason for cancelling this booking (mandatory)..."
+                           widget="text" options="{'rows': 4}" colspan="2"/>
+                </group>
+
+                <group string="Refund Policy">
+                    <field name="refund_policy" widget="radio" options="{'horizontal': true}" colspan="2"/>
+
+                    <group invisible="refund_policy == 'no_refund'" colspan="2">
+                        <group>
+                            <field name="refund_percentage"
+                                   invisible="refund_policy == 'full_refund'"
+                                   readonly="refund_policy == 'full_refund'"/>
+                            <field name="refund_amount"
+                                   readonly="refund_policy == 'full_refund'"/>
+                        </group>
+                        <group>
+                            <field name="refund_notes"
+                                   placeholder="Additional notes about refund calculation..."
+                                   widget="text" options="{'rows': 3}"/>
+                        </group>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="action_confirm_cancellation" string="Confirm Cancellation"
+                            type="object" class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- NEW: Process Refund Wizard Form View -->
+    <record id="view_fleet_booking_refund_wizard_form" model="ir.ui.view">
+        <field name="name">fleet.booking.refund.wizard.form</field>
+        <field name="model">fleet.booking.refund.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Process Refund">
+                <div class="alert alert-info" role="alert">
+                    <strong>Process Refund</strong><br/>
+                    Please provide the refund processing details.
+                </div>
+                <group>
+                    <field name="booking_id" readonly="1"/>
+                    <field name="refund_amount" readonly="1"/>
+                    <field name="currency_id" invisible="1"/>
+                </group>
+
+                <group string="Refund Processing Details">
+                    <field name="refund_method" required="1"/>
+                    <field name="refund_notes"
+                           placeholder="Additional notes about refund processing..."
+                           widget="text" options="{'rows': 4}" colspan="2"/>
+                </group>
+
+                <footer>
+                    <button name="action_process_refund" string="Process Refund"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- NEW: Go Back Wizard Form View -->
+    <record id="view_fleet_booking_go_back_wizard_form" model="ir.ui.view">
+        <field name="name">fleet.booking.go.back.wizard.form</field>
+        <field name="model">fleet.booking.go.back.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Go Back One Stage">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong> You are about to move this booking back to the previous stage.
+                    This action will be logged in the booking's history.
+                </div>
+                <group>
+                    <field name="booking_id" readonly="1"/>
+                    <field name="current_state" readonly="1" string="Current Stage"/>
+                    <field name="previous_state" readonly="1" string="Going Back To"/>
+                </group>
+                <group>
+                    <field name="reason"
+                           placeholder="Please provide a detailed reason for going back to the previous stage (mandatory)..."
+                           widget="text" options="{'rows': 4}"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_go_back" string="Confirm Go Back" type="object"
+                            class="btn-warning"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Fleet Booking Tree View - UPDATED WITH INVOICE URL COLUMN -->
+    <record id="view_fleet_booking_tree" model="ir.ui.view">
+        <field name="name">fleet.booking.tree</field>
+        <field name="model">fleet.booking</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'enquiry'"
+                  decoration-primary="state == 'quotation'"
+                  decoration-warning="state == 'followup'"
+                  decoration-success="state == 'confirmed'"
+                  decoration-muted="state == 'completed'"
+                  decoration-danger="state == 'cancelled'"
+                  sample="1">
+                <field name="name"/>
+                <!-- NEW: Show Booking Type -->
+                <field name="booking_type" optional="show" string="Type"/>
+                <field name="customer_id"/>
+                <!-- UPDATED: Show Company Name when applicable -->
+                <field name="company_name" optional="show" string="Company"/>
+                <field name="passenger_name" optional="show"/>
+                <field name="journey_start_date"/>
+                <field name="journey_start_location" widget="google_map_field"/>
+                <field name="journey_end_location" widget="google_map_field"/>
+                <!-- UPDATED: Show Vehicle Group Name -->
+                <field name="vehicle_group_name" optional="show" string="Vehicle Group"/>
+                <!-- NEW: Show Vehicle Type -->
+                <field name="vehicle_type" optional="show" string="Vehicle Type"/>
+                <field name="vehicle_ref" optional="show" string="Vehicle ID"/>
+                <field name="driver_id" optional="show"/>
+                <field name="total_price" optional="show"/>
+                <field name="payment_status" optional="show"/>
+                <!-- NEW: Show cancellation info -->
+                <field name="is_cancelled" optional="show" string="Cancelled"/>
+                <field name="refund_amount" optional="show" string="Refund Amount" invisible="not is_cancelled"/>
+                <!-- UPDATED: Show Invoice URL status with auto-generation indicator -->
+                <field name="invoice_url" optional="show" string="Auto Invoice URL" widget="url"/>
+                <field name="state"/>
+                <field name="whatsapp_template_sent" optional="show" string="WhatsApp Sent" widget="boolean_toggle"/>
+                <field name="whatsapp_template_name" optional="show" string="Template Used"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Fleet Booking Search View - UPDATED WITH INVOICE SEARCH -->
+    <record id="view_fleet_booking_search" model="ir.ui.view">
+        <field name="name">fleet.booking.search</field>
+        <field name="model">fleet.booking</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="company_name"/>
+                <field name="passenger_name"/>
+                <field name="journey_start_location" widget="google_map_field"/>
+                <field name="journey_end_location" widget="google_map_field"/>
+                <field name="vehicle_id"/>
+                <field name="vehicle_group_id"/>
+                <field name="vehicle_type"/>
+                <field name="driver_id"/>
+                <field name="cancellation_reason"/>
+                <field name="whatsapp_template_name"/>
+                <separator/>
+                <!-- NEW: WhatsApp Template Filters -->
+                <filter string="WhatsApp Template Sent" name="whatsapp_sent" domain="[('whatsapp_template_sent', '=', True)]"/>
+                <filter string="WhatsApp Template Failed" name="whatsapp_failed" domain="[('whatsapp_template_sent', '=', False), ('whatsapp_send_error', '!=', False)]"/>
+                <filter string="WhatsApp Template Pending" name="whatsapp_pending" domain="[('whatsapp_template_sent', '=', False), ('whatsapp_send_error', '=', False)]"/>
+                <filter string="WhatsApp Template Status" name="whatsapp_status" context="{'group_by': 'whatsapp_template_sent'}"/>
+                <filter string="WhatsApp Template Used" name="whatsapp_template" context="{'group_by': 'whatsapp_template_name'}"/>
+                <separator/>
+                <!-- NEW: Booking Type Filters -->
+                <filter string="Individual Bookings" name="booking_individual" domain="[('booking_type', '=', 'individual')]"/>
+                <filter string="Company Bookings" name="booking_company" domain="[('booking_type', '=', 'company')]"/>
+                <separator/>
+                <filter string="Enquiry" name="state_enquiry" domain="[('state', '=', 'enquiry')]"/>
+                <filter string="Quotation" name="state_quotation" domain="[('state', '=', 'quotation')]"/>
+                <filter string="Follow Up" name="state_followup" domain="[('state', '=', 'followup')]"/>
+                <filter string="Confirmed" name="state_confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Completed" name="state_completed" domain="[('state', '=', 'completed')]"/>
+                <!-- NEW: Cancelled Filter -->
+                <filter string="Cancelled" name="state_cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <separator/>
+                <!-- UPDATED: Invoice and Refund Filters with enquiry stage auto-generation -->
+                <filter string="Has Auto Invoice URL" name="has_invoice_url" domain="[('invoice_access_token', '!=', False)]"/>
+                <filter string="Missing Invoice URL" name="missing_invoice_url" domain="[('invoice_access_token', '=', False)]"/>
+                <filter string="Cancelled Bookings" name="cancelled_bookings" domain="[('is_cancelled', '=', True)]"/>
+                <filter string="With Refunds" name="with_refunds" domain="[('refund_amount', '>', 0)]"/>
+                <filter string="Refund Pending" name="refund_pending" domain="[('is_cancelled', '=', True), ('refund_processed', '=', False), ('refund_policy', '!=', 'no_refund')]"/>
+                <filter string="Refund Processed" name="refund_processed" domain="[('refund_processed', '=', True)]"/>
+                <separator/>
+                <filter string="My Bookings" name="my_bookings" domain="[('user_id', '=', uid)]"/>
+                <filter string="Unpaid" name="unpaid" domain="[('payment_status', 'in', ['not_invoiced', 'invoiced', 'partially_paid'])]"/>
+                <group expand="0" string="Group By">
+                    <!-- NEW: Group by Booking Type -->
+                    <filter string="Booking Type" name="booking_type" context="{'group_by': 'booking_type'}"/>
+                    <filter string="Customer" name="customer" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Driver" name="driver" context="{'group_by': 'driver_id'}"/>
+                    <filter string="Start Date" name="start_date" context="{'group_by': 'journey_start_date'}"/>
+                    <filter string="Status" name="status" context="{'group_by': 'state'}"/>
+                    <filter string="Payment Status" name="payment_status" context="{'group_by': 'payment_status'}"/>
+                    <filter string="Vehicle Group" name="vehicle_group" context="{'group_by': 'vehicle_group_id'}"/>
+                    <filter string="Vehicle Type" name="vehicle_type" context="{'group_by': 'vehicle_type'}"/>
+                    <filter string="Vehicle" name="vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <!-- NEW: Group by Cancellation and Invoice -->
+                    <filter string="Cancelled Status" name="cancelled_status" context="{'group_by': 'is_cancelled'}"/>
+                    <filter string="Refund Policy" name="refund_policy" context="{'group_by': 'refund_policy'}"/>
+                    <filter string="Has Invoice URL" name="has_invoice_url_group" context="{'group_by': 'invoice_access_token'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Fleet Booking Kanban View - UPDATED WITH AUTO INVOICE URL INFO -->
+    <record id="view_fleet_booking_kanban" model="ir.ui.view">
+        <field name="name">fleet.booking.kanban</field>
+        <field name="model">fleet.booking</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column" sample="1">
+                <field name="name"/>
+                <field name="booking_type"/>
+                <field name="customer_id"/>
+                <field name="company_name"/>
+                <field name="journey_start_date"/>
+                <field name="journey_start_location"/>
+                <field name="journey_end_location"/>
+                <field name="vehicle_group_name"/>
+                <field name="vehicle_type"/>
+                <field name="vehicle_ref"/>
+                <field name="driver_id"/>
+                <field name="state"/>
+                <field name="total_price"/>
+                <field name="payment_status"/>
+                <field name="is_cancelled"/>
+                <field name="refund_amount"/>
+                <field name="refund_policy"/>
+                <field name="invoice_access_token"/>
+                <field name="invoice_url"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <!-- NEW: Cancelled booking styling -->
+                            <div t-if="record.is_cancelled.raw_value" class="ribbon ribbon-top-right">
+                                <span class="bg-danger">CANCELLED</span>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="customer_id"/>
+                                            <!-- NEW: Show Company Name for Company bookings -->
+                                            <t t-if="record.booking_type.raw_value == 'company' and record.company_name.raw_value">
+                                                (<field name="company_name"/>)
+                                            </t>
+                                        </small>
+                                    </div>
+                                    <div class="o_kanban_record_top_right">
+                                        <field name="total_price" widget="monetary"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <!-- NEW: Show booking type badge -->
+                                    <div>
+                                        <strong>Date: </strong><field name="journey_start_date"/>
+                                    </div>
+                                    <div>
+                                        <strong>From: </strong><field name="journey_start_location"/>
+                                    </div>
+                                    <div>
+                                        <strong>To: </strong><field name="journey_end_location"/>
+                                    </div>
+                                    <div t-if="record.vehicle_type.raw_value">
+                                        <strong>Vehicle Type: </strong><field name="vehicle_type"/>
+                                    </div>
+                                    <div t-if="record.vehicle_ref.raw_value">
+                                        <strong>Vehicle: </strong><field name="vehicle_ref"/>
+                                    </div>
+                                    <div t-if="record.driver_id.raw_value">
+                                        <strong>Driver: </strong><field name="driver_id"/>
+                                    </div>
+                                    <!-- NEW: Show refund info for cancelled bookings -->
+                                    <div t-if="record.is_cancelled.raw_value and record.refund_amount.raw_value > 0">
+                                        <strong>Refund: </strong><field name="refund_amount" widget="monetary"/>
+                                    </div>
+                                    <!-- UPDATED: Show auto-generated invoice URL status (should exist for all bookings) -->
+                                    <div t-if="record.invoice_access_token.raw_value">
+                                        <strong>Auto Invoice: </strong>
+                                        <a t-att-href="record.invoice_url.raw_value" target="_blank" class="btn btn-sm btn-link">
+                                            <i class="fa fa-external-link"/> View
+                                        </a>
+                                    </div>
+                                    <!-- UPDATED: Show error for missing invoice URL (should be rare) -->
+                                    <div t-if="!record.invoice_access_token.raw_value">
+                                        <strong>Invoice: </strong>
+                                        <span class="text-danger">
+                                            <i class="fa fa-exclamation-triangle"/> Missing URL
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="payment_status" widget="label_selection"
+                                               options="{'classes': {'not_invoiced': 'default', 'invoiced': 'primary', 'partially_paid': 'warning', 'paid': 'success', 'refunded': 'info', 'partially_refunded': 'warning'}}"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="vehicle_group_name" widget="badge"/>
+                                        <!-- NEW: Show refund policy for cancelled bookings -->
+                                        <t t-if="record.is_cancelled.raw_value">
+                                            <field name="refund_policy" widget="badge"
+                                                   options="{'full_refund': 'success', 'partial_refund': 'warning', 'no_refund': 'danger'}"/>
+                                        </t>
+                                        <!-- UPDATED: Show auto invoice badge -->
+                                        <t t-if="record.invoice_access_token.raw_value">
+                                            <span class="badge badge-success">Auto Invoice</span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Calendar View - UPDATED -->
+    <record id="view_fleet_booking_calendar" model="ir.ui.view">
+        <field name="name">fleet.booking.calendar</field>
+        <field name="model">fleet.booking</field>
+        <field name="arch" type="xml">
+            <calendar date_start="journey_start_date" color="state">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="booking_type"/>
+                <field name="company_name"/>
+                <field name="vehicle_ref"/>
+                <field name="state"/>
+                <field name="is_cancelled"/>
+                <field name="invoice_access_token"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Action Windows - UNCHANGED -->
+    <record id="action_fleet_bookings" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first booking!
+            </p>
+            <p>
+                Manage your vehicle bookings with Simply Fleet vehicles. Invoice URLs are automatically generated when new bookings are created at enquiry stage.
+            </p>
+        </field>
+    </record>
+
+    <!-- Rest of action windows -->
+    <record id="action_fleet_bookings_individual" model="ir.actions.act_window">
+        <field name="name">Individual Bookings</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_booking_individual': 1}</field>
+        <field name="domain">[('booking_type', '=', 'individual')]</field>
+    </record>
+
+    <record id="action_fleet_bookings_company" model="ir.actions.act_window">
+        <field name="name">Company Bookings</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_booking_company': 1}</field>
+        <field name="domain">[('booking_type', '=', 'company')]</field>
+    </record>
+
+    <record id="action_fleet_bookings_cancelled" model="ir.actions.act_window">
+        <field name="name">Cancelled Bookings</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_state_cancelled': 1}</field>
+        <field name="domain">[('state', '=', 'cancelled')]</field>
+    </record>
+
+    <record id="action_fleet_bookings_refunds" model="ir.actions.act_window">
+        <field name="name">Refund Management</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_with_refunds': 1}</field>
+        <field name="domain">[('refund_amount', '>', 0)]</field>
+    </record>
+
+    <!-- MISSING ACTION RECORDS - Adding these to fix the error -->
+    <record id="action_fleet_bookings_enquiry" model="ir.actions.act_window">
+        <field name="name">Enquiries</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_state_enquiry': 1}</field>
+        <field name="domain">[('state', '=', 'enquiry')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No enquiries yet!
+            </p>
+            <p>
+                Create your first booking enquiry. Invoice URLs are automatically generated at enquiry stage.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_bookings_quotation" model="ir.actions.act_window">
+        <field name="name">Quotations</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_state_quotation': 1}</field>
+        <field name="domain">[('state', '=', 'quotation')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No quotations yet!
+            </p>
+            <p>
+                Quotations are enquiries that have been converted to pricing proposals.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_bookings_followup" model="ir.actions.act_window">
+        <field name="name">Follow Ups</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_state_followup': 1}</field>
+        <field name="domain">[('state', '=', 'followup')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No follow ups yet!
+            </p>
+            <p>
+                Follow up bookings are quotations pending customer confirmation.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_bookings_confirmed" model="ir.actions.act_window">
+        <field name="name">Confirmed Bookings</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_state_confirmed': 1}</field>
+        <field name="domain">[('state', '=', 'confirmed')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No confirmed bookings yet!
+            </p>
+            <p>
+                Confirmed bookings are ready for execution.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_bookings_completed" model="ir.actions.act_window">
+        <field name="name">Completed Bookings</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_state_completed': 1}</field>
+        <field name="domain">[('state', '=', 'completed')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No completed bookings yet!
+            </p>
+            <p>
+                Completed bookings have finished their journey.
+            </p>
+        </field>
+    </record>
+
+    <!-- Missing Fleet-related Actions -->
+    <record id="action_fleet_drivers" model="ir.actions.act_window">
+        <field name="name">Drivers</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('job_title', 'ilike', 'driver')]</field>
+        <field name="context">{'default_job_title': 'Driver'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No drivers registered!
+            </p>
+            <p>
+                Add your first driver to start assigning bookings.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_vehicles" model="ir.actions.act_window">
+        <field name="name">Fleet Vehicles</field>
+        <field name="res_model">fleet.vehicle</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No vehicles in your fleet!
+            </p>
+            <p>
+                Add vehicles to start managing bookings.
+            </p>
+        </field>
+    </record>
+
+    <!-- Placeholder Actions for Routes and Cargo (if these models don't exist, create simple placeholder actions) -->
+    <record id="action_fleet_routes" model="ir.actions.act_window">
+        <field name="name">Routes</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_group_by_route': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Route management coming soon!
+            </p>
+            <p>
+                This will show your booking routes and patterns.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_cargo_manifests" model="ir.actions.act_window">
+        <field name="name">Cargo Manifests</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cargo management coming soon!
+            </p>
+            <p>
+                This will show your cargo and manifest details.
+            </p>
+        </field>
+    </record>
+
+    <!-- Placeholder Actions for Settings (if these models don't exist) -->
+    <record id="action_fleet_booking_status" model="ir.actions.act_window">
+        <field name="name">Booking Statuses</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'group_by': 'state'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Status configuration coming soon!
+            </p>
+            <p>
+                This will allow you to configure booking status settings.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_fleet_booking_status_changes" model="ir.actions.act_window">
+        <field name="name">Status Changes</field>
+        <field name="res_model">fleet.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Status change tracking coming soon!
+            </p>
+            <p>
+                This will show the history of booking status changes.
+            </p>
+        </field>
+    </record>
+
+    <!-- Terms Template Views - UNCHANGED -->
+    <record id="view_fleet_booking_terms_template_tree" model="ir.ui.view">
+        <field name="name">fleet.booking.terms.template.tree</field>
+        <field name="model">fleet.booking.terms.template</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_fleet_booking_terms_template_form" model="ir.ui.view">
+        <field name="name">fleet.booking.terms.template.form</field>
+        <field name="model">fleet.booking.terms.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <field name="template_content" widget="html" options="{'height': 400}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_fleet_booking_terms_templates" model="ir.actions.act_window">
+        <field name="name">Terms &amp; Conditions Templates</field>
+        <field name="res_model">fleet.booking.terms.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first terms template!
+            </p>
+            <p>
+                Manage reusable terms and conditions templates for your bookings.
+            </p>
+        </field>
+    </record>
+
+</odoo>

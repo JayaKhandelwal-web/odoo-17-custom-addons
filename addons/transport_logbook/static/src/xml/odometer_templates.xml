@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="transport_logbook.OdometerField" owl="1">
+        <span t-if="props.readonly" class="o_field_odometer" t-esc="formattedValue"/>
+        <input t-else="" 
+               class="o_input" 
+               type="text" 
+               t-ref="input"
+               t-att-value="inputValue"
+               t-on-input="onInput"
+               t-on-change="onChange"
+               t-att-placeholder="props.placeholder || 'Enter KM'"/>
+    </t>
+</templates>

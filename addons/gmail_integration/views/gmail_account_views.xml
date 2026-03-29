@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Root Menu for Gmail Integration -->
+        <record id="menu_gmail_root" model="ir.ui.menu">
+            <field name="name">Gmail Integration</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- Gmail Account Form View (Complete Base View) -->
+        <record id="view_gmail_account_form" model="ir.ui.view">
+            <field name="name">gmail.account.form</field>
+            <field name="model">gmail.account</field>
+            <field name="arch" type="xml">
+                <form string="Gmail Account">
+                    <header>
+                        <button name="action_connect_gmail"
+                                string="Connect Gmail"
+                                type="object"
+                                class="btn-primary"
+                                invisible="status == 'connected'"
+                                help="Connect this Gmail account using shared OAuth"/>
+                                
+                        <button name="action_test_connection"
+                                string="Test Connection"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="status != 'connected'"
+                                help="Test Gmail API connection"/>
+                                
+                        <button name="action_sync_now"
+                                string="Sync Now"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="status != 'connected'"
+                                help="Trigger immediate email sync"/>
+                                
+                        <button name="action_share_account" 
+                                string="Share Account" 
+                                type="object" 
+                                class="btn-secondary"
+                                invisible="status != 'connected' or access_level == 'company'"
+                                help="Configure who can access this Gmail account"/>
+                                
+                        <button name="action_setup_pubsub"
+                                string="Setup Push Notifications"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="status != 'connected' or gmail_watch_active == True"
+                                help="Setup real-time push notifications"/>
+                                
+                        <button name="action_disconnect_gmail"
+                                string="Disconnect"
+                                type="object"
+                                class="btn-warning"
+                                invisible="status != 'connected'"
+                                confirm="Are you sure you want to disconnect this Gmail account?"/>
+                                
+                        <field name="status" widget="statusbar" 
+                               statusbar_visible="draft,connecting,connected,oauth_required"/>
+                    </header>
+                    
+                    <sheet>
+                        <!-- System OAuth Status Warning -->
+                        <div class="alert alert-warning" role="alert" 
+                             invisible="status != 'draft'">
+                            <strong><i class="fa fa-exclamation-triangle"></i> System Configuration Required</strong><br/>
+                            Gmail OAuth is not configured at system level. 
+                            Please ask your administrator to configure Gmail integration in Settings.
+                            <button name="action_open_settings" type="button" class="btn btn-link p-0 ms-2" 
+                                    onclick="window.open('/web#action=gmail_integration.action_gmail_quick_settings', '_blank')">
+                                Open Settings
+                            </button>
+                        </div>
+                        
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Gmail Account Name..." required="1"/>
+                            </h1>
+                            <h2>
+                                <field name="display_name" readonly="1"/>
+                            </h2>
+                        </div>
+                        
+                        <group>
+                            <group name="basic_info" string="Basic Information">
+                                <field name="email_address" placeholder="user@gmail.com" required="1"/>
+                                <field name="user_id" 
+                                       readonly="status == 'connected'" 
+                                       options="{'no_create': True}"/>
+                                <field name="access_level" 
+                                       widget="selection"/>
+                                <field name="shared_user_ids" 
+                                       widget="many2many_tags" 
+                                       options="{'no_create': True}"
+                                       invisible="access_level != 'shared'"
+                                       domain="[('id', '!=', user_id)]"/>
+                            </group>
+                            
+                            <group name="status_info" string="Status Information">
+                                <field name="last_sync_date" readonly="1"/>
+                                <field name="total_messages" readonly="1"/>
+                                <field name="unread_messages" readonly="1"/>
+                                <field name="last_error_message" readonly="1" 
+                                       invisible="last_error_message == False"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="OAuth Status" name="oauth_status">
+                                <div class="alert alert-info" role="alert" 
+                                     invisible="status == 'connected'">
+                                    <strong><i class="fa fa-info-circle"></i> Shared OAuth Configuration</strong><br/>
+                                    This account uses the system-wide OAuth configuration. 
+                                    No individual Client ID/Secret needed - just click "Connect Gmail" to authorize.
+                                </div>
+                                
+                                <group string="OAuth Information" 
+                                       invisible="status == 'draft'">
+                                    <group>
+                                        <field name="oauth_uid" readonly="1"/>
+                                        <field name="last_oauth_date" readonly="1"/>
+                                        <field name="token_expires_at" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="access_token" readonly="1" password="True"
+                                               invisible="access_token == False"/>
+                                        <field name="refresh_token" readonly="1" password="True"
+                                               invisible="refresh_token == False"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Authorized Scopes" 
+                                       invisible="authorized_scopes == False">
+                                    <field name="authorized_scopes" widget="text" readonly="1" nolabel="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Sync Settings" name="sync_settings"
+                                  invisible="status != 'connected'">
+                                <group>
+                                    <group name="sync_options" string="Sync Options">
+                                        <field name="sync_enabled"/>
+                                        <field name="sync_frequency"/>
+                                        <field name="sync_inbox"/>
+                                        <field name="sync_sent"/>
+                                        <field name="sync_drafts"/>
+                                        <field name="sync_spam"/>
+                                        <field name="sync_trash"/>
+                                    </group>
+                                    
+                                    <group name="sync_stats" string="Sync Statistics">
+                                        <field name="total_messages" readonly="1"/>
+                                        <field name="unread_messages" readonly="1"/>
+                                        <field name="last_sync_date" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Push Notifications" name="push_notifications"
+                                  invisible="status != 'connected'">
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Real-time Push Notifications</strong><br/>
+                                    Configure Google Cloud Pub/Sub for real-time email notifications.
+                                </div>
+                                
+                                <group>
+                                    <group name="pubsub_config" string="Pub/Sub Configuration">
+                                        <field name="google_project_id"/>
+                                        <field name="pubsub_topic_name" readonly="1"/>
+                                        <field name="pubsub_subscription_name" readonly="1"/>
+                                        <field name="pubsub_topic" readonly="1"/>
+                                    </group>
+                                    
+                                    <group name="pubsub_status" string="Push Status">
+                                        <field name="pubsub_topic_created" readonly="1"/>
+                                        <field name="pubsub_subscription_created" readonly="1"/>
+                                        <field name="gmail_watch_active" readonly="1"/>
+                                        <field name="watch_expiration" readonly="1"/>
+                                        <field name="history_id" readonly="1"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Service Account Key (JSON)">
+                                    <field name="service_account_key" widget="text" nolabel="1"
+                                           placeholder="Paste your Google Cloud service account JSON key here..."/>
+                                </group>
+                                
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <button name="action_setup_pubsub" string="Setup Push Notifications" 
+                                                type="object" class="btn-primary btn-block"
+                                                invisible="gmail_watch_active == True"/>
+                                        <button name="action_test_pubsub" string="Test Pub/Sub Connection" 
+                                                type="object" class="btn-secondary btn-block"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <button name="action_renew_gmail_watch" string="Renew Gmail Watch" 
+                                                type="object" class="btn-warning btn-block"
+                                                invisible="gmail_watch_active == False"/>
+                                    </div>
+                                </div>
+                            </page>
+                            
+                            <page string="Sharing Settings" name="sharing_settings">
+                                <group>
+                                    <group name="access_control" string="Access Control">
+                                        <field name="access_level" widget="radio"/>
+                                        <field name="shared_user_ids" widget="many2many_tags" 
+                                               options="{'no_create': True}"
+                                               invisible="access_level != 'shared'"
+                                               domain="[('id', '!=', user_id)]"/>
+                                    </group>
+                                    
+                                    <group name="sharing_info" string="Sharing Information">
+                                        <field name="user_id" readonly="1" string="Account Owner"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Access Level Information:</strong><br/>
+                                    • <strong>Private:</strong> Only you can access this account<br/>
+                                    • <strong>Shared:</strong> Selected users can access this account<br/>
+                                    • <strong>Company:</strong> All company users can access this account
+                                </div>
+                                
+                                <div class="row mt-3" invisible="access_level == 'private'">
+                                    <div class="col-12">
+                                        <button name="action_share_account" string="Configure Sharing" 
+                                                type="object" class="btn-primary"
+                                                help="Open sharing wizard for advanced configuration"/>
+                                    </div>
+                                </div>
+                            </page>
+                            
+                            <page string="API Quota" name="api_quota">
+                                <group>
+                                    <group name="quota_usage" string="Quota Usage">
+                                        <field name="daily_quota_used" readonly="1"/>
+                                        <field name="daily_quota_limit" readonly="1"/>
+                                        <field name="quota_percentage" readonly="1" widget="percentage"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="alert alert-warning" role="alert" 
+                                     invisible="quota_percentage &lt; 80">
+                                    <strong>High Quota Usage Warning</strong><br/>
+                                    Your Gmail API quota usage is getting high. Consider reducing sync frequency.
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Gmail Account Tree View (Base View) -->
+        <record id="view_gmail_account_tree" model="ir.ui.view">
+            <field name="name">gmail.account.tree</field>
+            <field name="model">gmail.account</field>
+            <field name="arch" type="xml">
+                <tree string="Gmail Accounts"
+                      decoration-success="status == 'connected'"
+                      decoration-warning="status in ['connecting', 'oauth_required']"
+                      decoration-danger="status in ['error', 'expired']"
+                      decoration-muted="status == 'draft'">
+                    
+                    <field name="name"/>
+                    <field name="email_address"/>
+                    <field name="user_id"/>
+                    <field name="access_level" 
+                           widget="badge"
+                           decoration-info="access_level == 'private'"
+                           decoration-warning="access_level == 'shared'"
+                           decoration-success="access_level == 'company'"/>
+                    <field name="status" widget="badge"/>
+                    <field name="last_sync_date"/>
+                    <field name="total_messages"/>
+                    <field name="unread_messages"/>
+                    <field name="sync_enabled"/>
+                    <field name="gmail_watch_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- User's Gmail Accounts View (Filtered) -->
+        <record id="view_gmail_account_tree_user" model="ir.ui.view">
+            <field name="name">gmail.account.tree.user</field>
+            <field name="model">gmail.account</field>
+            <field name="arch" type="xml">
+                <tree string="My Gmail Accounts" 
+                      create="true" 
+                      edit="true" 
+                      delete="true"
+                      decoration-success="status == 'connected'"
+                      decoration-warning="status in ['connecting', 'oauth_required']"
+                      decoration-danger="status in ['error', 'expired']"
+                      decoration-muted="status == 'draft'">
+                    
+                    <field name="name"/>
+                    <field name="email_address"/>
+                    <field name="status" widget="badge"/>
+                    <field name="access_level" widget="badge"
+                           decoration-info="access_level == 'private'"
+                           decoration-warning="access_level == 'shared'"
+                           decoration-success="access_level == 'company'"/>
+                    <field name="last_sync_date"/>
+                    <field name="total_messages"/>
+                    <field name="unread_messages"/>
+                    <field name="sync_enabled"/>
+                    <field name="gmail_watch_active"/>
+                    
+                    <!-- Hide user_id column in user view -->
+                    <field name="user_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Gmail Account Search View -->
+        <record id="view_gmail_account_search" model="ir.ui.view">
+            <field name="name">gmail.account.search</field>
+            <field name="model">gmail.account</field>
+            <field name="arch" type="xml">
+                <search string="Gmail Accounts">
+                    <field name="name"/>
+                    <field name="email_address"/>
+                    <field name="user_id"/>
+                    
+                    <filter name="connected" string="Connected" 
+                            domain="[('status', '=', 'connected')]"/>
+                    <filter name="disconnected" string="Disconnected" 
+                            domain="[('status', '!=', 'connected')]"/>
+                    <filter name="sync_enabled" string="Sync Enabled" 
+                            domain="[('sync_enabled', '=', True)]"/>
+                    <filter name="push_enabled" string="Push Notifications" 
+                            domain="[('gmail_watch_active', '=', True)]"/>
+                    <separator/>
+                    <filter name="my_accounts" string="My Accounts" 
+                            domain="[('user_id', '=', uid)]"/>
+                    <filter name="shared_with_me" string="Shared With Me" 
+                            domain="['|', 
+                                     '&amp;', ('access_level', '=', 'shared'), ('shared_user_ids', 'in', [uid]),
+                                     ('access_level', '=', 'company')]"/>
+                    <separator/>
+                    <filter name="private_accounts" string="Private" 
+                            domain="[('access_level', '=', 'private')]"/>
+                    <filter name="shared_accounts" string="Shared" 
+                            domain="[('access_level', '=', 'shared')]"/>
+                    <filter name="company_accounts" string="Company Wide" 
+                            domain="[('access_level', '=', 'company')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_by_status" context="{'group_by': 'status'}"/>
+                        <filter string="Owner" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                        <filter string="Access Level" name="group_by_access" context="{'group_by': 'access_level'}"/>
+                        <filter string="Sync Frequency" name="group_by_sync_freq" context="{'group_by': 'sync_frequency'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Gmail Account Kanban View -->
+        <record id="view_gmail_account_kanban_enhanced" model="ir.ui.view">
+            <field name="name">gmail.account.kanban.enhanced</field>
+            <field name="model">gmail.account</field>
+            <field name="arch" type="xml">
+                <kanban string="Gmail Accounts" 
+                        class="o_kanban_mobile"
+                        sample="1">
+                    
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="email_address"/>
+                    <field name="user_id"/>
+                    <field name="access_level"/>
+                    <field name="status"/>
+                    <field name="total_messages"/>
+                    <field name="unread_messages"/>
+                    <field name="last_sync_date"/>
+                    <field name="sync_enabled"/>
+                    <field name="gmail_watch_active"/>
+                    
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    
+                                    <!-- Header -->
+                                    <div class="o_kanban_record_top">
+                                        <div class="o_kanban_record_headings">
+                                            <strong class="o_kanban_record_title">
+                                                <field name="name"/>
+                                            </strong>
+                                            <br/>
+                                            <small class="text-muted">
+                                                <field name="email_address"/>
+                                            </small>
+                                        </div>
+                                        <span class="float-end">
+                                            <field name="status" widget="label_selection" 
+                                                   options="{'classes': {
+                                                       'connected': 'success', 
+                                                       'connecting': 'warning',
+                                                       'oauth_required': 'warning', 
+                                                       'error': 'danger', 
+                                                       'expired': 'danger',
+                                                       'draft': 'secondary'
+                                                   }}"/>
+                                        </span>
+                                    </div>
+
+                                    <!-- User and Access Info -->
+                                    <div class="o_kanban_record_body">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span class="badge badge-pill badge-info" 
+                                                      t-if="record.access_level.raw_value == 'private'">
+                                                    Private
+                                                </span>
+                                                <span class="badge badge-pill badge-warning" 
+                                                      t-if="record.access_level.raw_value == 'shared'">
+                                                    Shared
+                                                </span>
+                                                <span class="badge badge-pill badge-success" 
+                                                      t-if="record.access_level.raw_value == 'company'">
+                                                    Company
+                                                </span>
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <small class="text-muted">
+                                                    <field name="user_id"/>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Sync and Push Status -->
+                                        <div class="row mt-2">
+                                            <div class="col-12">
+                                                <span class="badge badge-pill badge-primary" 
+                                                      t-if="record.sync_enabled.raw_value">
+                                                    <i class="fa fa-refresh"/> Sync On
+                                                </span>
+                                                <span class="badge badge-pill badge-success" 
+                                                      t-if="record.gmail_watch_active.raw_value">
+                                                    <i class="fa fa-bell"/> Push On
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Statistics -->
+                                    <div class="o_kanban_record_bottom" t-if="record.status.raw_value == 'connected'">
+                                        <div class="oe_kanban_bottom_left">
+                                            <span class="badge badge-pill badge-secondary">
+                                                <field name="total_messages"/> messages
+                                            </span>
+                                            <span class="badge badge-pill badge-primary" t-if="record.unread_messages.raw_value &gt; 0">
+                                                <field name="unread_messages"/> unread
+                                            </span>
+                                        </div>
+                                        <div class="oe_kanban_bottom_right">
+                                            <small class="text-muted">
+                                                <i class="fa fa-clock-o"/>
+                                                <field name="last_sync_date"/>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action for User's Gmail Accounts -->
+        <record id="action_gmail_account_user" model="ir.actions.act_window">
+            <field name="name">My Gmail Accounts</field>
+            <field name="res_model">gmail.account</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_gmail_account_kanban_enhanced')}),
+                                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_gmail_account_tree_user')}),
+                                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_gmail_account_form')})]"/>
+            <field name="domain">[('user_id', '=', uid)]</field>
+            <field name="context">{
+                'default_user_id': uid,
+                'hide_user_column': True,
+                'search_default_my_accounts': 1
+            }</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add your first Gmail account!
+                </p>
+                <p>
+                    Connect your Gmail accounts to send and receive emails directly from Odoo.
+                    Your Gmail data will be synchronized and accessible only to you (unless you choose to share).
+                </p>
+            </field>
+        </record>
+
+        <!-- Action for All Gmail Accounts (Admin) -->
+        <record id="action_gmail_account_all" model="ir.actions.act_window">
+            <field name="name">All Gmail Accounts</field>
+            <field name="res_model">gmail.account</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_gmail_account_tree')}),
+                                          (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_gmail_account_kanban_enhanced')}),
+                                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_gmail_account_form')})]"/>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Gmail accounts configured yet!
+                </p>
+                <p>
+                    Gmail accounts allow users to send and receive emails directly from Odoo.
+                    Users can connect their personal Gmail accounts or administrators can set up shared accounts.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item for User Gmail Accounts -->
+        <record id="menu_gmail_account_user" model="ir.ui.menu">
+            <field name="name">My Gmail</field>
+            <field name="parent_id" ref="menu_gmail_root"/>
+            <field name="action" ref="action_gmail_account_user"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <!-- Menu Item for All Gmail Accounts (Admin) -->
+        <record id="menu_gmail_accounts_all" model="ir.ui.menu">
+            <field name="name">All Gmail Accounts</field>
+            <field name="parent_id" ref="menu_gmail_root"/>
+            <field name="action" ref="action_gmail_account_all"/>
+            <field name="sequence">10</field>
+            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        </record>
+    </data>  
+</odoo>

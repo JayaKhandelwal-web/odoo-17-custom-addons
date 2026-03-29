@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Luxury AC Coaches -->
+        <record id="category_luxury_ac" model="bus.category">
+            <field name="name">Luxury AC Coaches</field>
+            <field name="sequence">10</field>
+            <field name="description">Premium air-conditioned coaches with luxury seating, entertainment systems, and modern amenities for comfortable long-distance travel.</field>
+        </record>
+
+        <!-- Business Class Coaches -->
+        <record id="category_business" model="bus.category">
+            <field name="name">Business Class Coaches</field>
+            <field name="sequence">20</field>
+            <field name="description">Comfortable business class coaches perfect for corporate travel and professional transportation needs.</field>
+        </record>
+
+        <!-- Mini Buses -->
+        <record id="category_mini_bus" model="bus.category">
+            <field name="name">Mini Buses</field>
+            <field name="sequence">30</field>
+            <field name="description">Compact and efficient mini buses ideal for small groups, local trips, and city transportation.</field>
+        </record>
+
+        <!-- Tempo Travellers -->
+        <record id="category_tempo" model="bus.category">
+            <field name="name">Tempo Travellers</field>
+            <field name="sequence">40</field>
+            <field name="description">Versatile tempo travellers perfect for group outings, family trips, and medium-distance travel.</field>
+        </record>
+
+        <!-- School Buses -->
+        <record id="category_school" model="bus.category">
+            <field name="name">School Buses</field>
+            <field name="sequence">50</field>
+            <field name="description">Specially designed school buses with safety features and comfortable seating for student transportation.</field>
+        </record>
+
+        <!-- Event Buses -->
+        <record id="category_event" model="bus.category">
+            <field name="name">Event &amp; Marriage Buses</field>
+            <field name="sequence">60</field>
+            <field name="description">Decorated buses perfect for weddings, parties, and special events with music systems and comfortable seating.</field>
+        </record>
+
+    </data>
+</odoo>

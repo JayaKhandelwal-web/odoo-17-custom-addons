@@ -1,0 +1,878 @@
+/* Gmail Compose Wizard Styles - SCOPED TO GMAIL MODULE ONLY */
+
+/* ==================================================
+   GMAIL COMPOSE WIZARD CONTAINER - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] {
+    font-family: 'Google Sans', 'Roboto', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .modal-dialog {
+    max-width: 640px !important;
+    width: 640px !important;
+    height: 600px !important;
+    margin: 50px auto !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .modal-content {
+    height: 600px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.28) !important;
+    border: none !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .modal-header {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #dadce0 !important;
+    background: #f8f9fa !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .modal-header .modal-title {
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    color: #202124 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .modal-body {
+    padding: 0 !important;
+    height: calc(600px - 100px) !important;
+    overflow: hidden !important;
+}
+
+/* ==================================================
+   GMAIL COMPOSE SHEET - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_compose_sheet {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* ==================================================
+   ACCOUNT BAR - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_account_bar {
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+    background: #f8f9fa !important;
+    font-size: 13px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_account_bar .o_field_widget {
+    margin: 0 !important;
+    font-size: 13px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_account_bar .o_field_widget select {
+    border: 1px solid #dadce0 !important;
+    border-radius: 4px !important;
+    padding: 6px 12px !important;
+    font-size: 13px !important;
+    background: white !important;
+}
+
+/* ==================================================
+   RECIPIENTS SECTION (COMPACT GMAIL STYLE) - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipients_section {
+    border-bottom: 1px solid #e0e0e0 !important;
+    background: white !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    min-height: 40px !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row:last-child {
+    border-bottom: none !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row label {
+    width: 30px !important;
+    color: #5f6368 !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+    font-weight: 500 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row .o_field_widget {
+    flex: 1 !important;
+    margin: 0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row .o_field_widget input,
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row .o_field_widget textarea {
+    border: none !important;
+    outline: none !important;
+    font-size: 14px !important;
+    padding: 4px 8px !important;
+    width: 100% !important;
+    resize: none !important;
+    background: transparent !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row .o_field_widget input:focus,
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row .o_field_widget textarea:focus {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* CC/BCC Toggle Buttons - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_cc_bcc_toggle {
+    margin-left: 16px !important;
+    display: flex !important;
+    gap: 4px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_cc_toggle,
+.o_form_view[data-model="gmail.send.mail"] .gmail_bcc_toggle {
+    padding: 4px 8px !important;
+    color: #5f6368 !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_cc_toggle:hover,
+.o_form_view[data-model="gmail.send.mail"] .gmail_bcc_toggle:hover {
+    background-color: #f1f3f4 !important;
+    color: #1a73e8 !important;
+    text-decoration: none !important;
+}
+
+/* Subject Row - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_subject_row {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    min-height: 44px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_subject_row .o_field_widget {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_subject_row .o_field_widget input {
+    width: 100% !important;
+    border: none !important;
+    outline: none !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    background: transparent !important;
+    color: #202124 !important;
+}
+
+/* ==================================================
+   MESSAGE BODY CONTAINER (SCROLLABLE) - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_container {
+    height: 350px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    padding: 16px !important;
+    background: white !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body .o_field_widget {
+    height: 100% !important;
+    min-height: 300px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body .note-editor {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body .note-toolbar {
+    border-bottom: 1px solid #e0e0e0 !important;
+    background: #f8f9fa !important;
+    padding: 8px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body .note-editing-area {
+    background: white !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body .note-editable {
+    padding: 16px !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: #202124 !important;
+}
+
+/* ==================================================
+   ATTACHMENTS SECTION (COMPACT) - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_attachments_section {
+    border-top: 1px solid #e0e0e0 !important;
+    max-height: 120px !important;
+    overflow-y: auto !important;
+    background: #f8f9fa !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_attachments_section .o_list_view {
+    margin: 0 !important;
+    border: none !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_attachments_section .o_list_view thead {
+    display: none !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_attachments_section .o_list_view .o_data_row {
+    padding: 8px 16px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_attachments_section .o_list_view .o_data_cell {
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    border: none !important;
+}
+
+/* ==================================================
+   FOOTER TOOLBAR (FIXED AT BOTTOM) - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_compose_footer {
+    padding: 16px !important;
+    border-top: 1px solid #e0e0e0 !important;
+    background: #f9f9f9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    min-height: 60px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_footer_left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_footer_right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Send Button - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_send_btn {
+    background: #1a73e8 !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 8px 24px !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_send_btn:hover {
+    background: #1557b0 !important;
+    box-shadow: 0 2px 4px rgba(60,64,67,.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_send_btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3) !important;
+}
+
+/* Draft Button - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_draft_btn {
+    color: #5f6368 !important;
+    text-decoration: none !important;
+    font-size: 14px !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_draft_btn:hover {
+    background-color: #f1f3f4 !important;
+    color: #1a73e8 !important;
+    text-decoration: none !important;
+}
+
+/* Attachment and Action Buttons - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_attach_btn,
+.o_form_view[data-model="gmail.send.mail"] .gmail_more_btn,
+.o_form_view[data-model="gmail.send.mail"] .gmail_cancel_btn {
+    color: #5f6368 !important;
+    font-size: 18px !important;
+    padding: 8px !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_attach_btn:hover,
+.o_form_view[data-model="gmail.send.mail"] .gmail_more_btn:hover,
+.o_form_view[data-model="gmail.send.mail"] .gmail_cancel_btn:hover {
+    background-color: #f1f3f4 !important;
+    color: #1a73e8 !important;
+}
+
+/* ==================================================
+   RESPONSIVE DESIGN - SCOPED
+   ================================================== */
+
+@media (max-width: 768px) {
+    .o_form_view[data-model="gmail.send.mail"] .modal-dialog {
+        max-width: 95% !important;
+        width: 95% !important;
+        margin: 20px auto !important;
+    }
+    
+    .o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 12px 16px !important;
+    }
+    
+    .o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row label {
+        width: 100% !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .o_form_view[data-model="gmail.send.mail"] .gmail_cc_bcc_toggle {
+        margin-left: 0 !important;
+        margin-top: 8px !important;
+    }
+    
+    .o_form_view[data-model="gmail.send.mail"] .gmail_compose_footer {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    
+    .o_form_view[data-model="gmail.send.mail"] .gmail_footer_left,
+    .o_form_view[data-model="gmail.send.mail"] .gmail_footer_right {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+/* ==================================================
+   GMAIL COMPOSE WIZARD IMPROVEMENTS - SCOPED
+   ================================================== */
+
+/* Hide unnecessary Odoo elements - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .o_form_sheet_bg {
+    padding: 0 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .o_form_statusbar {
+    display: none !important;
+}
+
+/* Improve form styling - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] {
+    background: white !important;
+}
+
+/* Custom scrollbar for message body - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 4px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 4px !important;
+    transition: background 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .gmail_message_body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8 !important;
+}
+
+/* Focus states - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row input:focus,
+.o_form_view[data-model="gmail.send.mail"] .gmail_subject_row input:focus {
+    background-color: rgba(26, 115, 232, 0.05) !important;
+}
+
+/* Animation for CC/BCC toggle - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_cc_row,
+.o_form_view[data-model="gmail.send.mail"] .gmail_bcc_row {
+    transition: all 0.3s ease !important;
+}
+
+/* Placeholder styling - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_recipient_row input::placeholder,
+.o_form_view[data-model="gmail.send.mail"] .gmail_subject_row input::placeholder {
+    color: #9aa0a6 !important;
+    font-style: italic !important;
+}
+
+/* Icon improvements - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .gmail_send_btn i,
+.o_form_view[data-model="gmail.send.mail"] .gmail_draft_btn i,
+.o_form_view[data-model="gmail.send.mail"] .gmail_attach_btn i,
+.o_form_view[data-model="gmail.send.mail"] .gmail_more_btn i,
+.o_form_view[data-model="gmail.send.mail"] .gmail_cancel_btn i {
+    margin-right: 6px !important;
+}
+
+/* ==================================================
+   MODAL DIALOG POSITIONING - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.send.mail"] .modal {
+    z-index: 1060 !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure proper height calculation - SCOPED */
+.o_form_view[data-model="gmail.send.mail"] .o_dialog {
+    height: 600px !important;
+    max-height: 600px !important;
+}
+
+.o_form_view[data-model="gmail.send.mail"] .o_dialog .modal-body {
+    height: calc(100% - 60px) !important;
+    max-height: calc(100% - 60px) !important;
+}
+
+/* ==================================================
+   RECIPIENTS SECTION (COMPACT GMAIL STYLE)
+   ================================================== */
+
+.gmail_recipients_section {
+    border-bottom: 1px solid #e0e0e0 !important;
+    background: white !important;
+}
+
+.gmail_recipient_row {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    min-height: 40px !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.gmail_recipient_row:last-child {
+    border-bottom: none !important;
+}
+
+.gmail_recipient_row label {
+    width: 30px !important;
+    color: #5f6368 !important;
+    font-size: 14px !important;
+    margin: 0 !important;
+    font-weight: 500 !important;
+}
+
+.gmail_recipient_row .o_field_widget {
+    flex: 1 !important;
+    margin: 0 !important;
+}
+
+.gmail_recipient_row .o_field_widget input,
+.gmail_recipient_row .o_field_widget textarea {
+    border: none !important;
+    outline: none !important;
+    font-size: 14px !important;
+    padding: 4px 8px !important;
+    width: 100% !important;
+    resize: none !important;
+    background: transparent !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.gmail_recipient_row .o_field_widget input:focus,
+.gmail_recipient_row .o_field_widget textarea:focus {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* CC/BCC Toggle Buttons */
+.gmail_cc_bcc_toggle {
+    margin-left: 16px !important;
+    display: flex !important;
+    gap: 4px !important;
+}
+
+.gmail_cc_toggle,
+.gmail_bcc_toggle {
+    padding: 4px 8px !important;
+    color: #5f6368 !important;
+    text-decoration: none !important;
+    font-size: 13px !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.gmail_cc_toggle:hover,
+.gmail_bcc_toggle:hover {
+    background-color: #f1f3f4 !important;
+    color: #1a73e8 !important;
+    text-decoration: none !important;
+}
+
+/* Subject Row */
+.gmail_subject_row {
+    display: flex !important;
+    align-items: center !important;
+    padding: 8px 16px !important;
+    min-height: 44px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.gmail_subject_row .o_field_widget {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.gmail_subject_row .o_field_widget input {
+    width: 100% !important;
+    border: none !important;
+    outline: none !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    padding: 8px !important;
+    background: transparent !important;
+    color: #202124 !important;
+}
+
+/* ==================================================
+   MESSAGE BODY CONTAINER (SCROLLABLE)
+   ================================================== */
+
+.gmail_message_container {
+    height: 350px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+.gmail_message_body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    padding: 16px !important;
+    background: white !important;
+}
+
+.gmail_message_body .o_field_widget {
+    height: 100% !important;
+    min-height: 300px !important;
+}
+
+.gmail_message_body .note-editor {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.gmail_message_body .note-toolbar {
+    border-bottom: 1px solid #e0e0e0 !important;
+    background: #f8f9fa !important;
+    padding: 8px !important;
+}
+
+.gmail_message_body .note-editing-area {
+    background: white !important;
+}
+
+.gmail_message_body .note-editable {
+    padding: 16px !important;
+    font-family: 'Roboto', sans-serif !important;
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    color: #202124 !important;
+}
+
+/* ==================================================
+   ATTACHMENTS SECTION (COMPACT)
+   ================================================== */
+
+.gmail_attachments_section {
+    border-top: 1px solid #e0e0e0 !important;
+    max-height: 120px !important;
+    overflow-y: auto !important;
+    background: #f8f9fa !important;
+}
+
+.gmail_attachments_section .o_list_view {
+    margin: 0 !important;
+    border: none !important;
+}
+
+.gmail_attachments_section .o_list_view thead {
+    display: none !important;
+}
+
+.gmail_attachments_section .o_list_view .o_data_row {
+    padding: 8px 16px !important;
+    border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.gmail_attachments_section .o_list_view .o_data_cell {
+    padding: 4px 8px !important;
+    font-size: 13px !important;
+    border: none !important;
+}
+
+/* ==================================================
+   FOOTER TOOLBAR (FIXED AT BOTTOM)
+   ================================================== */
+
+.gmail_compose_footer {
+    padding: 16px !important;
+    border-top: 1px solid #e0e0e0 !important;
+    background: #f9f9f9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    min-height: 60px !important;
+}
+
+.gmail_footer_left {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+.gmail_footer_right {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+/* Send Button */
+.gmail_send_btn {
+    background: #1a73e8 !important;
+    border: none !important;
+    border-radius: 20px !important;
+    padding: 8px 24px !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3) !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+}
+
+.gmail_send_btn:hover {
+    background: #1557b0 !important;
+    box-shadow: 0 2px 4px rgba(60,64,67,.4) !important;
+    transform: translateY(-1px) !important;
+}
+
+.gmail_send_btn:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 1px 2px rgba(60,64,67,.3) !important;
+}
+
+/* Draft Button */
+.gmail_draft_btn {
+    color: #5f6368 !important;
+    text-decoration: none !important;
+    font-size: 14px !important;
+    padding: 8px 16px !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.gmail_draft_btn:hover {
+    background-color: #f1f3f4 !important;
+    color: #1a73e8 !important;
+    text-decoration: none !important;
+}
+
+/* Attachment and Action Buttons */
+.gmail_attach_btn,
+.gmail_more_btn,
+.gmail_cancel_btn {
+    color: #5f6368 !important;
+    font-size: 18px !important;
+    padding: 8px !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    border-radius: 4px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.gmail_attach_btn:hover,
+.gmail_more_btn:hover,
+.gmail_cancel_btn:hover {
+    background-color: #f1f3f4 !important;
+    color: #1a73e8 !important;
+}
+
+/* ==================================================
+   RESPONSIVE DESIGN
+   ================================================== */
+
+@media (max-width: 768px) {
+    .gmail_compose_wizard .modal-dialog {
+        max-width: 95% !important;
+        width: 95% !important;
+        margin: 20px auto !important;
+    }
+    
+    .gmail_recipient_row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        padding: 12px 16px !important;
+    }
+    
+    .gmail_recipient_row label {
+        width: 100% !important;
+        margin-bottom: 4px !important;
+    }
+    
+    .gmail_cc_bcc_toggle {
+        margin-left: 0 !important;
+        margin-top: 8px !important;
+    }
+    
+    .gmail_compose_footer {
+        flex-direction: column !important;
+        gap: 12px !important;
+    }
+    
+    .gmail_footer_left,
+    .gmail_footer_right {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+}
+
+/* ==================================================
+   GMAIL COMPOSE WIZARD IMPROVEMENTS
+   ================================================== */
+
+/* Hide unnecessary Odoo elements */
+.gmail_compose_wizard .o_form_sheet_bg {
+    padding: 0 !important;
+}
+
+.gmail_compose_wizard .o_form_statusbar {
+    display: none !important;
+}
+
+/* Improve form styling */
+.gmail_compose_wizard .o_form_view {
+    background: white !important;
+}
+
+/* Custom scrollbar for message body */
+.gmail_message_body::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.gmail_message_body::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 4px !important;
+}
+
+.gmail_message_body::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 4px !important;
+    transition: background 0.2s ease !important;
+}
+
+.gmail_message_body::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8 !important;
+}
+
+/* Focus states */
+.gmail_recipient_row input:focus,
+.gmail_subject_row input:focus {
+    background-color: rgba(26, 115, 232, 0.05) !important;
+}
+
+/* Animation for CC/BCC toggle */
+.gmail_cc_row,
+.gmail_bcc_row {
+    transition: all 0.3s ease !important;
+}
+
+/* Placeholder styling */
+.gmail_recipient_row input::placeholder,
+.gmail_subject_row input::placeholder {
+    color: #9aa0a6 !important;
+    font-style: italic !important;
+}
+
+/* Icon improvements */
+.gmail_send_btn i,
+.gmail_draft_btn i,
+.gmail_attach_btn i,
+.gmail_more_btn i,
+.gmail_cancel_btn i {
+    margin-right: 6px !important;
+}
+
+/* ==================================================
+   MODAL DIALOG POSITIONING
+   ================================================== */
+
+.gmail_compose_wizard .modal {
+    z-index: 1060 !important;
+}
+
+.gmail_compose_wizard .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Ensure proper height calculation */
+.gmail_compose_wizard .o_dialog {
+    height: 600px !important;
+    max-height: 600px !important;
+}
+
+.gmail_compose_wizard .o_dialog .modal-body {
+    height: calc(100% - 60px) !important;
+    max-height: calc(100% - 60px) !important;
+}

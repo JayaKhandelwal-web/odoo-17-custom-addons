@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- FleetX Analytics Dashboard View (Simplified) -->
+        <record id="view_fleetx_dashboard_form" model="ir.ui.view">
+            <field name="name">fleetx.dashboard.form</field>
+            <field name="model">fleetx.config</field>
+            <field name="arch" type="xml">
+                <form string="FleetX Dashboard" create="false" edit="false">
+                    <header>
+                        <button name="sync_vehicles" string="Sync Now" type="object" class="btn-primary"/>
+                        <button name="test_connection" string="Test Connection" type="object" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>FleetX Dashboard</h1>
+                            <h3>Real-time Fleet Monitoring</h3>
+                        </div>
+                        <group>
+                            <group string="Configuration Status">
+                                <field name="name"/>
+                                <field name="sync_status"/>
+                                <field name="last_sync"/>
+                                <field name="error_message" invisible="not error_message"/>
+                            </group>
+                            <group string="Fleet Statistics">
+                                <field name="total_vehicles"/>
+                                <field name="running_vehicles"/>
+                                <field name="idle_vehicles"/>
+                                <field name="parked_vehicles"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Quick Actions" name="actions">
+                                <group>
+                                    <p>Quick access to vehicle management and configuration:</p>
+                                </group>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <a href="/web#action=fleetx_integration.action_fleetx_vehicle_tree" class="btn btn-primary btn-block">View All Vehicles</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="/web#action=fleetx_integration.action_fleetx_vehicle_running" class="btn btn-success btn-block">Running Vehicles</a>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <a href="/web#action=fleetx_integration.action_fleetx_vehicle_idle" class="btn btn-warning btn-block">Idle Vehicles</a>
+                                    </div>
+                                    <div class="col-6">
+                                        <a href="/web#action=fleetx_integration.action_fleetx_sync_wizard" class="btn btn-info btn-block">Data Sync Wizard</a>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- FleetX Analytics Kanban View (Dashboard) -->
+        <record id="view_fleetx_analytics_kanban" model="ir.ui.view">
+            <field name="name">fleetx.analytics.kanban</field>
+            <field name="model">fleetx.analytics</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard" create="false" edit="false" delete="false">
+                    <field name="total_vehicles"/>
+                    <field name="running_vehicles"/>
+                    <field name="idle_vehicles"/>
+                    <field name="parked_vehicles"/>
+                    <field name="unreachable_vehicles"/>
+                    <field name="utilization"/>
+                    <field name="fuel_sensor_working"/>
+                    <field name="fuel_sensor_efficiency"/>
+                    <field name="active_vehicles"/>
+                    <field name="inactive_vehicles"/>
+                    <field name="alarms"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="card bg-primary text-white mb-4">
+                                    <div class="card-header">
+                                        <h4 class="card-title text-white">FleetX Dashboard</h4>
+                                        <small class="text-white-50">Real-time vehicle monitoring</small>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="card bg-success text-white mb-2">
+                                                    <div class="card-body text-center">
+                                                        <h3><t t-esc="record.total_vehicles.value"/></h3>
+                                                        <small>Total Vehicles</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card bg-warning text-white mb-2">
+                                                    <div class="card-body text-center">
+                                                        <h3><t t-esc="record.running_vehicles.value"/></h3>
+                                                        <small>Running</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card bg-info text-white mb-2">
+                                                    <div class="card-body text-center">
+                                                        <h3><t t-esc="record.idle_vehicles.value"/></h3>
+                                                        <small>Idle</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="card bg-secondary text-white mb-2">
+                                                    <div class="card-body text-center">
+                                                        <h3><t t-esc="record.parked_vehicles.value"/></h3>
+                                                        <small>Parked</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <div class="card bg-light text-dark">
+                                                    <div class="card-body">
+                                                        <h5>Utilization</h5>
+                                                        <div class="progress mb-2">
+                                                            <div class="progress-bar bg-success" role="progressbar" t-attf-style="width: #{record.utilization.value}%" t-attf-aria-valuenow="#{record.utilization.value}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <small><t t-esc="record.utilization.value"/>%</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card bg-light text-dark">
+                                                    <div class="card-body">
+                                                        <h5>Fuel Sensors</h5>
+                                                        <div class="progress mb-2">
+                                                            <div class="progress-bar bg-info" role="progressbar" t-attf-style="width: #{record.fuel_sensor_efficiency.value}%" t-attf-aria-valuenow="#{record.fuel_sensor_efficiency.value}" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <small><t t-esc="record.fuel_sensor_working.value"/> working (<t t-esc="record.fuel_sensor_efficiency.value"/>%)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-md-12">
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button type="object" name="action_view_vehicles" class="btn btn-light btn-sm">View All Vehicles</button>
+                                                    <a href="/web#action=fleetx_integration.action_fleetx_vehicle_running" class="btn btn-light btn-sm">Running Vehicles</a>
+                                                    <a href="/web#action=fleetx_integration.action_fleetx_vehicle_idle" class="btn btn-light btn-sm">Idle Vehicles</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- FleetX Analytics Tree View -->
+        <record id="view_fleetx_analytics_tree" model="ir.ui.view">
+            <field name="name">fleetx.analytics.tree</field>
+            <field name="model">fleetx.analytics</field>
+            <field name="arch" type="xml">
+                <tree string="FleetX Analytics" default_order="create_date desc">
+                    <field name="create_date"/>
+                    <field name="config_id"/>
+                    <field name="total_vehicles"/>
+                    <field name="running_vehicles"/>
+                    <field name="idle_vehicles"/>
+                    <field name="parked_vehicles"/>
+                    <field name="unreachable_vehicles"/>
+                    <field name="utilization"/>
+                    <field name="fuel_sensor_working"/>
+                    <field name="fuel_sensor_efficiency"/>
+                    <field name="alarms"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FleetX Analytics Form View -->
+        <record id="view_fleetx_analytics_form" model="ir.ui.view">
+            <field name="name">fleetx.analytics.form</field>
+            <field name="model">fleetx.analytics</field>
+            <field name="arch" type="xml">
+                <form string="FleetX Analytics" create="false" edit="false">
+                    <header>
+                        <button name="action_view_vehicles" string="View Vehicles" type="object" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group string="General Information">
+                                <field name="config_id"/>
+                                <field name="create_date"/>
+                                <field name="timezone"/>
+                                <field name="currency"/>
+                            </group>
+                            <group string="Performance Metrics">
+                                <field name="utilization"/>
+                                <field name="alarms"/>
+                                <field name="dtc"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Vehicle Statistics" name="vehicles">
+                                <group>
+                                    <group string="By Status">
+                                        <field name="total_vehicles"/>
+                                        <field name="running_vehicles"/>
+                                        <field name="idle_vehicles"/>
+                                        <field name="parked_vehicles"/>
+                                        <field name="removed_vehicles"/>
+                                        <field name="unreachable_vehicles"/>
+                                        <field name="nopower_vehicles"/>
+                                        <field name="battery_discharged_vehicles"/>
+                                        <field name="disconnected_vehicles"/>
+                                        <field name="immobilised_vehicles"/>
+                                        <field name="inshop_vehicles"/>
+                                        <field name="standby_vehicles"/>
+                                    </group>
+                                    <group string="Computed Statistics">
+                                        <field name="active_vehicles"/>
+                                        <field name="inactive_vehicles"/>
+                                        <field name="moving_vehicles"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Fuel Sensors" name="fuel">
+                                <group>
+                                    <group>
+                                        <field name="fuel_sensor_working"/>
+                                        <field name="fuel_sensor_disconnected"/>
+                                        <field name="fuel_sensor_stuck"/>
+                                        <field name="fuel_sensor_uncalibrated"/>
+                                        <field name="fuel_sensor_efficiency"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- FleetX Analytics Graph View -->
+        <record id="view_fleetx_analytics_graph" model="ir.ui.view">
+            <field name="name">fleetx.analytics.graph</field>
+            <field name="model">fleetx.analytics</field>
+            <field name="arch" type="xml">
+                <graph string="FleetX Analytics Charts" type="line">
+                    <field name="create_date" type="row"/>
+                    <field name="running_vehicles" type="measure"/>
+                    <field name="idle_vehicles" type="measure"/>
+                    <field name="parked_vehicles" type="measure"/>
+                    <field name="utilization" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- FleetX Analytics Pivot View -->
+        <record id="view_fleetx_analytics_pivot" model="ir.ui.view">
+            <field name="name">fleetx.analytics.pivot</field>
+            <field name="model">fleetx.analytics</field>
+            <field name="arch" type="xml">
+                <pivot string="FleetX Analytics Pivot">
+                    <field name="create_date" type="row" interval="day"/>
+                    <field name="config_id" type="col"/>
+                    <field name="total_vehicles" type="measure"/>
+                    <field name="running_vehicles" type="measure"/>
+                    <field name="idle_vehicles" type="measure"/>
+                    <field name="utilization" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- FleetX Analytics Search View -->
+        <record id="view_fleetx_analytics_search" model="ir.ui.view">
+            <field name="name">fleetx.analytics.search</field>
+            <field name="model">fleetx.analytics</field>
+            <field name="arch" type="xml">
+                <search string="FleetX Analytics">
+                    <field name="config_id"/>
+                    <filter string="Today" name="today" domain="[('create_date', '&gt;=', datetime.datetime.now().replace(hour=0, minute=0, second=0))]"/>
+                    <filter string="This Week" name="this_week" domain="[('create_date', '&gt;=', (datetime.datetime.now() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Month" name="this_month" domain="[('create_date', '&gt;=', datetime.datetime.now().replace(day=1, hour=0, minute=0, second=0))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Configuration" name="group_config" context="{'group_by': 'config_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'create_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_fleetx_dashboard" model="ir.actions.act_window">
+            <field name="name">FleetX Dashboard</field>
+            <field name="res_model">fleetx.config</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_fleetx_dashboard_form"/>
+            <field name="target">current</field>
+            <field name="domain">[('active', '=', True)]</field>
+            <field name="context">{'create': False}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Welcome to FleetX!
+                </p>
+                <p>
+                    Create and configure your FleetX API connection to get started.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_fleetx_analytics_kanban" model="ir.actions.act_window">
+            <field name="name">FleetX Analytics</field>
+            <field name="res_model">fleetx.analytics</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="view_fleetx_analytics_kanban"/>
+            <field name="context">{'search_default_today': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No analytics data found!
+                </p>
+                <p>
+                    Configure your FleetX API and sync data to see analytics here.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_fleetx_analytics_tree" model="ir.actions.act_window">
+            <field name="name">Analytics Reports</field>
+            <field name="res_model">fleetx.analytics</field>
+            <field name="view_mode">tree,form,pivot</field>
+            <field name="search_view_id" ref="view_fleetx_analytics_search"/>
+            <field name="context">{'search_default_this_week': 1}</field>
+        </record>
+
+        <record id="action_fleetx_analytics_graph" model="ir.actions.act_window">
+            <field name="name">Analytics Charts</field>
+            <field name="res_model">fleetx.analytics</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="view_fleetx_analytics_search"/>
+            <field name="context">{'search_default_this_week': 1}</field>
+        </record>
+
+    </data>
+</odoo>

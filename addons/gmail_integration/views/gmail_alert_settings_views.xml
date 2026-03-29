@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Template Mapping Views -->
+        <record id="view_gmail_alert_template_mapping_tree" model="ir.ui.view">
+            <field name="name">gmail.alert.template.mapping.tree</field>
+            <field name="model">gmail.alert.template.mapping</field>
+            <field name="arch" type="xml">
+                <tree string="Template Mappings" editable="bottom"
+                      decoration-success="enabled == True"
+                      decoration-muted="enabled == False">
+                    <field name="module_name"/>
+                    <field name="alert_type" placeholder="e.g., document_expiry, low_stock"/>
+                    <field name="alert_level" placeholder="e.g., 30_days, critical, overdue"/>
+                    <field name="template_id" options="{'no_create': True}"/>
+                    <field name="enabled"/>
+                    <field name="description" placeholder="When is this template used?"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_gmail_alert_template_mapping_form" model="ir.ui.view">
+            <field name="name">gmail.alert.template.mapping.form</field>
+            <field name="model">gmail.alert.template.mapping</field>
+            <field name="arch" type="xml">
+                <form string="Template Mapping">
+                    <header>
+                        <field name="enabled" widget="boolean_toggle"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="display_name" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group name="alert_info" string="Alert Information">
+                                <field name="module_name"/>
+                                <field name="alert_type" placeholder="document_expiry, low_stock, work_order"/>
+                                <field name="alert_level" placeholder="30_days, critical, overdue"/>
+                            </group>
+                            
+                            <group name="template_info" string="Template Information">
+                                <field name="template_id" options="{'no_create': True}"/>
+                                <field name="settings_id" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Description">
+                            <field name="description" nolabel="1" placeholder="Describe when this template is used..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_gmail_alert_template_mapping_search" model="ir.ui.view">
+            <field name="name">gmail.alert.template.mapping.search</field>
+            <field name="model">gmail.alert.template.mapping</field>
+            <field name="arch" type="xml">
+                <search string="Template Mappings">
+                    <field name="module_name"/>
+                    <field name="alert_type"/>
+                    <field name="alert_level"/>
+                    <field name="template_id"/>
+                    
+                    <filter name="enabled" string="Enabled" domain="[('enabled', '=', True)]"/>
+                    <filter name="disabled" string="Disabled" domain="[('enabled', '=', False)]"/>
+                    
+                    <separator/>
+                    <filter name="fleet_module" string="Fleet" domain="[('module_name', '=', 'fleet')]"/>
+                    <filter name="inventory_module" string="Inventory" domain="[('module_name', '=', 'inventory')]"/>
+                    <filter name="hr_module" string="HR" domain="[('module_name', '=', 'hr')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Module" name="group_by_module" context="{'group_by': 'module_name'}"/>
+                        <filter string="Alert Type" name="group_by_type" context="{'group_by': 'alert_type'}"/>
+                        <filter string="Enabled" name="group_by_enabled" context="{'group_by': 'enabled'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Enhanced Gmail Alert Settings Form View - Fully Compatible -->
+        <record id="view_gmail_alert_settings_form_enhanced" model="ir.ui.view">
+            <field name="name">gmail.alert.settings.form.enhanced</field>
+            <field name="model">gmail.alert.settings</field>
+            <field name="arch" type="xml">
+                <form string="Alert System Configuration" class="gmail_alert_config">
+                    <header>
+                        <button name="action_test_alert_system"
+                                string="🧪 Test Alert System"
+                                type="object"
+                                class="btn-warning"
+                                invisible="system_enabled != True or default_account_id == False"/>
+                                
+                        <button name="action_save_and_activate"
+                                string="💾 Save &amp; Activate"
+                                type="object"
+                                class="btn-success"/>
+                                
+                        <button name="action_view_alert_logs"
+                                string="📋 View Alert Logs"
+                                type="object"
+                                class="btn-info"/>
+                                
+                        <button name="action_auto_discover_templates"
+                                string="🔍 Auto-Discover Templates"
+                                type="object"
+                                class="btn-primary"
+                                invisible="system_enabled != True"/>
+                                
+                        <button name="action_cleanup_alerts"
+                                string="🧹 Cleanup Old Alerts"
+                                type="object"
+                                class="btn-secondary"
+                                invisible="auto_cleanup_enabled != True"/>
+                                
+                        <field name="config_status" widget="statusbar" 
+                               statusbar_visible="not_configured,partial,configured,error"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Alert Configuration Name..."/>
+                            </h1>
+                        </div>
+                        
+                        <!-- Status Alerts -->
+                        <div class="alert alert-success" role="alert" 
+                             invisible="config_status != 'configured'">
+                            <strong><i class="fa fa-check-circle"></i> Alert System Ready!</strong><br/>
+                            Your alert system is properly configured and ready to handle alerts from any module.
+                        </div>
+                        
+                        <div class="alert alert-warning" role="alert" 
+                             invisible="config_status != 'partial'">
+                            <strong><i class="fa fa-exclamation-triangle"></i> Partial Configuration</strong><br/>
+                            Alert system is enabled but needs additional configuration (default account, etc.).
+                        </div>
+                        
+                        <div class="alert alert-info" role="alert" 
+                             invisible="config_status != 'not_configured'">
+                            <strong><i class="fa fa-info-circle"></i> System Disabled</strong><br/>
+                            Alert system is currently disabled. Enable it below to start receiving alerts.
+                        </div>
+                        
+                        <div class="alert alert-danger" role="alert" 
+                             invisible="config_status != 'error'">
+                            <strong><i class="fa fa-times-circle"></i> Configuration Error</strong><br/>
+                            There's an issue with your alert configuration (account not connected, etc.).
+                        </div>
+                        
+                        <!-- Main Configuration -->
+                        <group>
+                            <group name="main_settings" string="Main Settings">
+                                <field name="system_enabled"/>
+                                <field name="default_account_id" 
+                                       invisible="system_enabled != True"
+                                       required="system_enabled == True"
+                                       options="{'no_create': True}"/>
+                                <field name="is_active" readonly="1"/>
+                            </group>
+                            
+                            <group name="status_info" string="Status Information">
+                                <field name="total_alerts_sent" readonly="1"/>
+                                <field name="alerts_today" readonly="1"/>
+                                <field name="failed_alerts" readonly="1"/>
+                                <field name="last_alert_date" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <!-- Template Mappings -->
+                            <page string="📧 Template Mappings" name="template_mappings" invisible="system_enabled != True">
+                                
+                                <div class="alert alert-info mb-3">
+                                    <strong>📧 Template Mappings:</strong><br/>
+                                    Configure which email template to use for each type of alert.<br/>
+                                    • <strong>Module:</strong> The module generating the alert (Fleet, Inventory, HR, etc.)<br/>
+                                    • <strong>Alert Type:</strong> Type of alert (document_expiry, low_stock, work_order, etc.)<br/>
+                                    • <strong>Alert Level:</strong> Specific level (30_days, critical, overdue, etc.)<br/>
+                                    • <strong>Template:</strong> Email template to use for this combination<br/>
+                                    <em>Click "Auto-Discover Templates" to automatically find and map existing templates!</em>
+                                </div>
+                                
+                                <field name="template_mapping_ids" nolabel="1">
+                                    <tree string="Template Mappings" editable="bottom"
+                                          decoration-success="enabled == True"
+                                          decoration-muted="enabled == False">
+                                        <field name="module_name"/>
+                                        <field name="alert_type" placeholder="e.g., document_expiry, low_stock"/>
+                                        <field name="alert_level" placeholder="e.g., 30_days, critical, overdue"/>
+                                        <field name="template_id" options="{'no_create': True}"/>
+                                        <field name="enabled"/>
+                                        <field name="description" placeholder="When is this template used?"/>
+                                    </tree>
+                                </field>
+                                
+                                <div class="mt-3">
+                                    <button name="action_auto_discover_templates"
+                                            string="🔍 Auto-Discover Templates"
+                                            type="object"
+                                            class="btn-primary"/>
+                                </div>
+                                
+                                <!-- Template Mapping JSON Display -->
+                                <group string="Current Mappings (JSON)" invisible="template_mapping_json == False">
+                                    <field name="template_mapping_json" widget="text" readonly="1" nolabel="1"/>
+                                </group>
+                                
+                                <!-- Fleet Specific Help -->
+                                <div class="mt-4">
+                                    <h5 style="color: #495057;">💡 Common Fleet Alert Mappings:</h5>
+                                    <table class="table table-sm table-striped" style="font-size: 0.9em;">
+                                        <thead>
+                                            <tr>
+                                                <th>Module</th>
+                                                <th>Alert Type</th>
+                                                <th>Alert Level</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="badge badge-primary">fleet</span></td>
+                                                <td>document_expiry</td>
+                                                <td>30_days</td>
+                                                <td>Document expires in 30 days</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge badge-primary">fleet</span></td>
+                                                <td>document_expiry</td>
+                                                <td>15_days</td>
+                                                <td>Document expires in 15 days</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge badge-primary">fleet</span></td>
+                                                <td>document_expiry</td>
+                                                <td>7_days</td>
+                                                <td>Document expires in 7 days</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge badge-primary">fleet</span></td>
+                                                <td>document_expiry</td>
+                                                <td>expired</td>
+                                                <td>Document has expired</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge badge-primary">fleet</span></td>
+                                                <td>work_order</td>
+                                                <td>overdue</td>
+                                                <td>Work order is overdue</td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="badge badge-primary">fleet</span></td>
+                                                <td>work_order</td>
+                                                <td>pending</td>
+                                                <td>Work order pending approval</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                            </page>
+                            
+                            <!-- Recipients Configuration -->
+                            <page string="👥 Recipients" name="recipients" invisible="system_enabled != True">
+                                <group string="Global Recipients">
+                                    <field name="global_recipients" 
+                                           widget="text"
+                                           nolabel="1"
+                                           placeholder="admin@company.com, alerts@company.com, manager@company.com"/>
+                                </group>
+                                
+                                <div class="alert alert-info mt-3">
+                                    <strong>📧 Global Recipients:</strong><br/>
+                                    These email addresses will receive ALL alerts from any module.<br/>
+                                    Enter comma-separated email addresses.<br/>
+                                    <em>Example: admin@company.com, alerts@company.com</em>
+                                </div>
+                            </page>
+                            
+                            <!-- Processing Settings -->
+                            <page string="⚙️ Processing" name="processing" invisible="system_enabled != True">
+                                <group string="Template Selection Strategy">
+                                    <group>
+                                        <field name="template_search_strategy"/>
+                                        <field name="default_template_id" 
+                                               options="{'no_create': True}"
+                                               invisible="template_search_strategy == 'mapping'"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Duplicate Prevention">
+                                    <group>
+                                        <field name="duplicate_prevention"/>
+                                        <field name="duplicate_prevention_hours" 
+                                               invisible="duplicate_prevention != True"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Batch Processing">
+                                    <group>
+                                        <field name="batch_processing"/>
+                                        <field name="batch_interval_minutes" 
+                                               invisible="batch_processing != True"/>
+                                    </group>
+                                </group>
+                                
+                                <!-- Template Convention Help (Static HTML) -->
+                                <group string="Template Naming Convention">
+                                    <div class="alert alert-light">
+                                        <h5>📝 Template Naming Convention</h5>
+                                        <p><strong>Standard Format:</strong> <code>{module}_{alert_type}_{level}</code></p>
+                                        <p><strong>Examples:</strong></p>
+                                        <ul style="font-family: monospace;">
+                                            <li><code>fleet_document_expiry_30_days</code></li>
+                                            <li><code>inventory_low_stock_critical</code></li>
+                                            <li><code>hr_leave_approval_pending</code></li>
+                                        </ul>
+                                        <p><strong>Fallback Order:</strong> Exact match → Without level → Default template</p>
+                                    </div>
+                                </group>
+                                
+                                <div class="alert alert-info">
+                                    <strong>⚙️ Processing Options:</strong><br/>
+                                    • <strong>Template Selection:</strong> How to find the right template for alerts<br/>
+                                    • <strong>Duplicate Prevention:</strong> Prevents sending the same alert multiple times<br/>
+                                    • <strong>Batch Processing:</strong> Groups alerts together for processing (useful for high volume)
+                                </div>
+                            </page>
+                            
+                            <!-- Cleanup Settings -->
+                            <page string="🧹 Cleanup" name="cleanup" invisible="system_enabled != True">
+                                <group string="Automatic Cleanup">
+                                    <group>
+                                        <field name="auto_cleanup_enabled"/>
+                                        <field name="cleanup_after_days" 
+                                               invisible="auto_cleanup_enabled != True"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="alert alert-info">
+                                    <strong>🧹 Cleanup Settings:</strong><br/>
+                                    Automatically removes old alert records to keep database clean.<br/>
+                                    This only affects the alert logs, not the actual emails sent.
+                                </div>
+                            </page>
+                            
+                            <!-- Notifications -->
+                            <page string="🔔 Notifications" name="notifications" invisible="system_enabled != True">
+                                <group string="Admin Notifications">
+                                    <group>
+                                        <field name="notify_admin_on_failure"/>
+                                        <field name="admin_notification_email" 
+                                               invisible="notify_admin_on_failure != True"
+                                               placeholder="admin@company.com"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Daily Summary">
+                                    <group>
+                                        <field name="daily_summary_enabled"/>
+                                        <field name="summary_recipients" 
+                                               widget="text"
+                                               invisible="daily_summary_enabled != True"
+                                               placeholder="manager@company.com, admin@company.com"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="alert alert-info">
+                                    <strong>🔔 Notification Options:</strong><br/>
+                                    • <strong>Admin Notifications:</strong> Get notified when alerts fail to send<br/>
+                                    • <strong>Daily Summary:</strong> Receive daily report of all alerts sent
+                                </div>
+                            </page>
+                            
+                            <!-- Test & Debug -->
+                            <page string="🧪 Test &amp; Debug" name="testing" invisible="system_enabled != True">
+                                <group string="Test Information">
+                                    <group>
+                                        <field name="last_test_date" readonly="1"/>
+                                        <field name="last_test_result" readonly="1" widget="text"/>
+                                        <field name="created_by" readonly="1"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Test Actions">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <button name="action_test_alert_system"
+                                                    string="🧪 Send Test Alert"
+                                                    type="object"
+                                                    class="btn-warning btn-block"
+                                                    invisible="default_account_id == False"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button name="action_view_alert_logs"
+                                                    string="📋 View All Logs"
+                                                    type="object"
+                                                    class="btn-info btn-block"/>
+                                        </div>
+                                    </div>
+                                </group>
+                                
+                                <div class="alert alert-warning">
+                                    <strong>🧪 Testing:</strong><br/>
+                                    Use "Send Test Alert" to verify your configuration.<br/>
+                                    This will send a test email using template mapping: <code>system → system_test → configuration_test</code><br/>
+                                    Create this template mapping if you want custom test messages.
+                                </div>
+                            </page>
+                            
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Gmail Alert Settings Tree View -->
+        <record id="view_gmail_alert_settings_tree" model="ir.ui.view">
+            <field name="name">gmail.alert.settings.tree</field>
+            <field name="model">gmail.alert.settings</field>
+            <field name="arch" type="xml">
+                <tree string="Alert Configurations"
+                      decoration-success="config_status == 'configured'"
+                      decoration-warning="config_status == 'partial'"
+                      decoration-info="config_status == 'not_configured'"
+                      decoration-danger="config_status == 'error'">
+                    
+                    <field name="name"/>
+                    <field name="system_enabled"/>
+                    <field name="config_status" widget="badge"/>
+                    <field name="is_active"/>
+                    <field name="default_account_id"/>
+                    <field name="total_alerts_sent"/>
+                    <field name="alerts_today"/>
+                    <field name="last_alert_date"/>
+                    <field name="created_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Gmail Alert Settings Search View -->
+        <record id="view_gmail_alert_settings_search" model="ir.ui.view">
+            <field name="name">gmail.alert.settings.search</field>
+            <field name="model">gmail.alert.settings</field>
+            <field name="arch" type="xml">
+                <search string="Alert Configurations">
+                    <field name="name"/>
+                    <field name="created_by"/>
+                    <field name="default_account_id"/>
+                    
+                    <filter name="active_config" string="Active Configuration" 
+                            domain="[('is_active', '=', True)]"/>
+                    <filter name="system_enabled" string="System Enabled" 
+                            domain="[('system_enabled', '=', True)]"/>
+                    <filter name="configured" string="Fully Configured" 
+                            domain="[('config_status', '=', 'configured')]"/>
+                    <filter name="partial" string="Partially Configured" 
+                            domain="[('config_status', '=', 'partial')]"/>
+                    <filter name="not_configured" string="Not Configured" 
+                            domain="[('config_status', '=', 'not_configured')]"/>
+                    <filter name="error" string="Configuration Error" 
+                            domain="[('config_status', '=', 'error')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_by_status" 
+                                context="{'group_by': 'config_status'}"/>
+                        <filter string="System Enabled" name="group_by_enabled" 
+                                context="{'group_by': 'system_enabled'}"/>
+                        <filter string="Created By" name="group_by_creator" 
+                                context="{'group_by': 'created_by'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Alert Handler Views -->
+        <record id="view_gmail_alert_handler_tree" model="ir.ui.view">
+            <field name="name">gmail.alert.handler.tree</field>
+            <field name="model">gmail.alert.handler</field>
+            <field name="arch" type="xml">
+                <tree string="Alert Logs"
+                      decoration-success="status == 'sent'"
+                      decoration-danger="status == 'failed'"
+                      decoration-warning="status == 'pending'"
+                      decoration-muted="status == 'ignored'">
+                    
+                    <field name="name"/>
+                    <field name="alert_type"/>
+                    <field name="alert_level"/>
+                    <field name="source_module"/>
+                    <field name="status" widget="badge"/>
+                    <field name="sent_from_account"/>
+                    <field name="recipients"/>
+                    <field name="alert_date"/>
+                    <field name="sent_date"/>
+                    <field name="retry_count"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_gmail_alert_handler_form" model="ir.ui.view">
+            <field name="name">gmail.alert.handler.form</field>
+            <field name="model">gmail.alert.handler</field>
+            <field name="arch" type="xml">
+                <form string="Alert Log" create="false" edit="false">
+                    <header>
+                        <button name="action_resend_alert"
+                                string="🔄 Resend Alert"
+                                type="object"
+                                class="btn-warning"
+                                invisible="status not in ['failed', 'pending']"/>
+                                
+                        <field name="status" widget="statusbar" 
+                               statusbar_visible="pending,sent,failed,ignored"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group name="alert_info" string="Alert Information">
+                                <field name="alert_type" readonly="1"/>
+                                <field name="alert_level" readonly="1"/>
+                                <field name="source_module" readonly="1"/>
+                                <field name="alert_date" readonly="1"/>
+                                <field name="retry_count" readonly="1"/>
+                            </group>
+                            
+                            <group name="email_info" string="Email Information">
+                                <field name="sent_from_account" readonly="1"/>
+                                <field name="template_used" readonly="1"/>
+                                <field name="email_subject" readonly="1"/>
+                                <field name="sent_date" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Recipients" name="recipients">
+                                <field name="recipients" readonly="1" widget="text"/>
+                            </page>
+                            
+                            <page string="Alert Data" name="alert_data">
+                                <field name="alert_data" readonly="1" widget="text"/>
+                            </page>
+                            
+                            <page string="Error Details" name="error" invisible="status != 'failed'">
+                                <field name="error_message" readonly="1" widget="text"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_gmail_alert_handler_search" model="ir.ui.view">
+            <field name="name">gmail.alert.handler.search</field>
+            <field name="model">gmail.alert.handler</field>
+            <field name="arch" type="xml">
+                <search string="Search Alert Logs">
+                    <field name="name"/>
+                    <field name="alert_type"/>
+                    <field name="alert_level"/>
+                    <field name="source_module"/>
+                    <field name="sent_from_account"/>
+                    
+                    <filter name="recent" string="Recent (7 days)" 
+                            domain="[('alert_date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="today" string="Today" 
+                            domain="[('alert_date', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+                    
+                    <separator/>
+                    <filter name="sent" string="Sent" 
+                            domain="[('status', '=', 'sent')]"/>
+                    <filter name="failed" string="Failed" 
+                            domain="[('status', '=', 'failed')]"/>
+                    <filter name="pending" string="Pending" 
+                            domain="[('status', '=', 'pending')]"/>
+                    <filter name="ignored" string="Ignored" 
+                            domain="[('status', '=', 'ignored')]"/>
+                    
+                    <separator/>
+                    <filter name="fleet_alerts" string="Fleet Alerts" 
+                            domain="[('source_module', 'ilike', 'fleet')]"/>
+                    <filter name="system_tests" string="System Tests" 
+                            domain="[('alert_type', '=', 'system_test')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Alert Type" name="group_by_type" 
+                                context="{'group_by': 'alert_type'}"/>
+                        <filter string="Status" name="group_by_status" 
+                                context="{'group_by': 'status'}"/>
+                        <filter string="Source Module" name="group_by_module" 
+                                context="{'group_by': 'source_module'}"/>
+                        <filter string="Alert Date" name="group_by_date" 
+                                context="{'group_by': 'alert_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Template Mapping Action -->
+        <record id="action_gmail_alert_template_mapping" model="ir.actions.act_window">
+            <field name="name">Template Mappings</field>
+            <field name="res_model">gmail.alert.template.mapping</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_enabled': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Template Mappings!
+                </p>
+                <p>
+                    Set up which email template to use for each type of alert from any module.
+                    Use the Auto-Discover feature to automatically find existing templates.
+                </p>
+            </field>
+        </record>
+
+        <!-- Enhanced Gmail Alert Settings Action -->
+        <record id="action_gmail_alert_settings_enhanced" model="ir.actions.act_window">
+            <field name="name">Alert Configuration</field>
+            <field name="res_model">gmail.alert.settings</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_gmail_alert_settings_form_enhanced"/>
+            <field name="target">current</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Alert System!
+                </p>
+                <p>
+                    Set up the alert system to handle notifications from any module (Fleet, Inventory, HR, etc.).
+                    Configure default accounts, recipients, template mappings, and processing options.
+                </p>
+            </field>
+        </record>
+
+        <!-- Quick Alert Settings Action (opens active config directly) -->
+        <record id="action_gmail_alert_quick_settings_enhanced" model="ir.actions.server">
+            <field name="name">Alert Configuration</field>
+            <field name="model_id" ref="model_gmail_alert_settings"/>
+            <field name="state">code</field>
+            <field name="code">
+# Get or create active alert configuration
+config = env['gmail.alert.settings'].get_active_config()
+
+# Return form view for active configuration
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Alert Configuration',
+    'res_model': 'gmail.alert.settings',
+    'view_mode': 'form',
+    'view_id': env.ref('gmail_integration.view_gmail_alert_settings_form_enhanced').id,
+    'res_id': config.id,
+    'target': 'current',
+    'context': env.context,
+}
+
+action_result = action
+            </field>
+        </record>
+
+        <!-- Alert Handler Action -->
+        <record id="action_gmail_alert_handler" model="ir.actions.act_window">
+            <field name="name">Alert Logs</field>
+            <field name="res_model">gmail.alert.handler</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_recent': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Alert Logs Yet!
+                </p>
+                <p>
+                    Alert logs will appear here when the system sends alerts.
+                    Configure the alert system to start monitoring.
+                </p>
+            </field>
+        </record>
+
+        <!-- Alert Test Wizard -->
+        <record id="view_gmail_alert_test_wizard" model="ir.ui.view">
+            <field name="name">gmail.alert.test.wizard</field>
+            <field name="model">gmail.alert.settings</field>
+            <field name="arch" type="xml">
+                <form string="Test Alert System" class="gmail_alert_test_wizard">
+                    <group>
+                        <group string="Test Configuration">
+                            <field name="name" readonly="1"/>
+                            <field name="default_account_id" readonly="1"/>
+                            <field name="system_enabled" readonly="1"/>
+                            <field name="config_status" readonly="1"/>
+                        </group>
+                        <group string="Test Options">
+                            <div class="o_form_label">Test Type</div>
+                            <div>
+                                <p>This will send a test alert to verify your configuration.</p>
+                                <p><strong>Template Strategy:</strong> <field name="template_search_strategy" readonly="1" nolabel="1"/></p>
+                                <p><strong>Template needed:</strong> <code>system_test_configuration_test</code></p>
+                            </div>
+                        </group>
+                    </group>
+                    
+                    <footer>
+                        <button name="action_test_alert_system" 
+                                string="🧪 Send Test Alert" 
+                                type="object" 
+                                class="btn-primary"/>
+                        <button string="Cancel" 
+                                class="btn-secondary" 
+                                special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Alert Test Wizard Action -->
+        <record id="action_gmail_alert_test_wizard" model="ir.actions.act_window">
+            <field name="name">Test Alert System</field>
+            <field name="res_model">gmail.alert.settings</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_gmail_alert_test_wizard"/>
+            <field name="target">new</field>
+            <field name="context">{'form_view_ref': 'gmail_integration.view_gmail_alert_test_wizard'}</field>
+        </record>
+
+    </data>
+</odoo>

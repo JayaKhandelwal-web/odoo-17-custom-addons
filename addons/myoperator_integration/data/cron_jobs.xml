@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cron Job for Auto Sync Call Logs -->
+    <record id="cron_myoperator_auto_sync" model="ir.cron">
+        <field name="name">MyOperator: Auto Sync Call Logs</field>
+        <field name="model_id" ref="model_myoperator_config"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sync_call_logs()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="priority">5</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Auto Sync Chat Conversations -->
+    <record id="cron_myoperator_chat_auto_sync" model="ir.cron">
+        <field name="name">MyOperator: Auto Sync Chat Conversations</field>
+        <field name="model_id" ref="model_myoperator_chat_config"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_sync_conversations()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="priority">5</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Template Cache Refresh -->
+    <record id="cron_myoperator_template_refresh" model="ir.cron">
+        <field name="name">MyOperator: Refresh Template Cache</field>
+        <field name="model_id" ref="model_myoperator_chat_config"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_refresh_template_cache()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="priority">10</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Failed Message Retry -->
+    <record id="cron_myoperator_retry_failed_messages" model="ir.cron">
+        <field name="name">MyOperator: Retry Failed Messages</field>
+        <field name="model_id" ref="model_myoperator_chat_config"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_retry_failed_messages()</field>
+        <field name="interval_number">30</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+        <field name="doall">False</field>
+        <field name="priority">15</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Template Validation -->
+    <record id="cron_myoperator_validate_templates" model="ir.cron">
+        <field name="name">MyOperator: Validate Templates</field>
+        <field name="model_id" ref="model_myoperator_chat_config"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_validate_templates()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="priority">20</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Message Status Update -->
+    <record id="cron_myoperator_update_message_status" model="ir.cron">
+        <field name="name">MyOperator: Update Message Status</field>
+        <field name="model_id" ref="model_myoperator_chat_config"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_update_message_status()</field>
+        <field name="interval_number">10</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+        <field name="priority">8</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Conversation Assignment -->
+    <record id="cron_myoperator_auto_assign_conversations" model="ir.cron">
+        <field name="name">MyOperator: Auto Assign Conversations</field>
+        <field name="model_id" ref="model_myoperator_conversation"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_auto_assign_conversations()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+        <field name="doall">False</field>
+        <field name="priority">12</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+
+    <!-- Cron Job for Cleanup Old Messages -->
+    <record id="cron_myoperator_cleanup_old_messages" model="ir.cron">
+        <field name="name">MyOperator: Cleanup Old Messages</field>
+        <field name="model_id" ref="model_myoperator_message"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_cleanup_old_messages()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">False</field>
+        <field name="doall">False</field>
+        <field name="priority">25</field>
+        <field name="user_id" ref="base.user_root"/>
+    </record>
+</odoo>

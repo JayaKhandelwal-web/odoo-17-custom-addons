@@ -1,0 +1,263 @@
+/* FleetX Integration Custom Styles */
+
+/* Dashboard Cards */
+.fleetx_dashboard_card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.fleetx_dashboard_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Vehicle Status Colors */
+.status_running {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status_idle {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.status_parked {
+    color: #17a2b8;
+    font-weight: bold;
+}
+
+.status_unreachable {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status_no_power {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.status_battery_discharged {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+/* Vehicle Cards */
+.fleetx_vehicle_card {
+    border-left: 4px solid #007bff;
+    margin-bottom: 15px;
+}
+
+.fleetx_vehicle_card.running {
+    border-left-color: #28a745;
+}
+
+.fleetx_vehicle_card.idle {
+    border-left-color: #ffc107;
+}
+
+.fleetx_vehicle_card.parked {
+    border-left-color: #17a2b8;
+}
+
+.fleetx_vehicle_card.unreachable {
+    border-left-color: #dc3545;
+}
+
+/* Progress bars for fuel levels */
+.fuel_progress {
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.fuel_progress .progress-bar {
+    transition: width 0.3s ease;
+}
+
+.fuel_low {
+    background-color: #dc3545 !important;
+}
+
+.fuel_medium {
+    background-color: #ffc107 !important;
+}
+
+.fuel_high {
+    background-color: #28a745 !important;
+}
+
+/* Map container */
+.fleetx_map_container {
+    height: 400px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
+
+/* Analytics charts */
+.fleetx_chart_container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Status badges */
+.fleetx_status_badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Sync status indicators */
+.sync_success {
+    color: #28a745;
+}
+
+.sync_error {
+    color: #dc3545;
+}
+
+.sync_pending {
+    color: #ffc107;
+}
+
+/* Vehicle location button */
+.location_btn {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.location_btn:hover {
+    background-color: #0056b3;
+}
+
+/* Dashboard statistics */
+.fleetx_stat_box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.fleetx_stat_box h3 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.fleetx_stat_box small {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Moving indicator */
+.moving_indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.moving_indicator.moving {
+    background-color: #28a745;
+    animation: pulse 1.5s infinite;
+}
+
+.moving_indicator.stopped {
+    background-color: #6c757d;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Configuration form styles */
+.fleetx_config_form .o_form_sheet {
+    max-width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .fleetx_dashboard_card {
+        margin-bottom: 15px;
+    }
+    
+    .fleetx_stat_box h3 {
+        font-size: 2rem;
+    }
+    
+    .fleetx_map_container {
+        height: 300px;
+    }
+}
+
+/* Kanban view improvements */
+.o_kanban_view .o_kanban_record {
+    margin-bottom: 10px;
+}
+
+.o_kanban_view .fleetx_vehicle_card {
+    margin-bottom: 0;
+}
+
+/* Form view improvements */
+.o_form_view .oe_button_box {
+    margin-bottom: 20px;
+}
+
+/* Loading spinner */
+.fleetx_loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.fleetx_loading .fa-spinner {
+    font-size: 2rem;
+    color: #007bff;
+}
+
+/* Error message styling */
+.fleetx_error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Success message styling */
+.fleetx_success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}

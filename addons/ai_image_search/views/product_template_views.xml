@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Simplified Product Template Form View - Auto Processing Only -->
+    <record id="product_template_form_view_enhanced" model="ir.ui.view">
+        <field name="name">product.template.form.enhanced</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            
+            <!-- Add AI Images tab -->
+            <xpath expr="//notebook" position="inside">
+                <page string="AI Search Images" name="ai_images">
+                    
+                    <!-- Summary Information -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <field name="search_images_count" string="Total Images"/>
+                        </div>
+                        <div class="col-md-3">
+                            <field name="completed_views" string="Processed"/>
+                        </div>
+                        <div class="col-md-3">
+                            <field name="is_multiview_product" string="Multi-View"/>
+                        </div>
+                        <div class="col-md-3">
+                            <field name="images_processing_status" string="Status"/>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Images List - Inline Editing Only -->
+                    <field name="product_image_ids" context="{'default_product_id': active_id}">
+                        <tree editable="bottom" decoration-success="processing_status=='completed'" 
+                              decoration-warning="processing_status=='processing'" 
+                              decoration-danger="processing_status=='failed'"
+                              decoration-info="processing_status=='pending'">
+                            
+                            <field name="image_name" placeholder="Descriptive name (e.g., front_view, side_angle)"/>
+                            <field name="view_type"/>
+                            <field name="is_primary_view"/>
+                            <field name="image_file" widget="image"/>
+                            <field name="processing_status" readonly="1"/>
+                            <field name="vector_size" readonly="1"/>
+                            <field name="file_size" readonly="1"/>
+                            <field name="upload_date" readonly="1"/>
+                                    
+                        </tree>
+                        
+                        <form>
+                            <header>
+                                <field name="processing_status" widget="statusbar"/>
+                            </header>
+                            
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="image_name"/>
+                                        <field name="view_type"/>
+                                        <field name="is_primary_view"/>
+                                        <field name="processing_status"/>
+                                    </group>
+                                    <group>
+                                        <field name="vector_size"/>
+                                        <field name="file_size"/>
+                                        <field name="upload_date"/>
+                                        <field name="last_processed"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Image">
+                                    <field name="image_file" widget="image" class="oe_avatar"/>
+                                    <field name="thumbnail" widget="image" readonly="1"/>
+                                </group>
+                                
+                                <group string="Multi-View Information" 
+                                       invisible="view_count &lt;= 1">
+                                    <field name="view_count"/>
+                                    <field name="related_views" readonly="1"/>
+                                    <field name="primary_image_id" readonly="1"/>
+                                </group>
+                                
+                                <group string="Processing Details" 
+                                       invisible="processing_error == False">
+                                    <field name="processing_error" readonly="1"/>
+                                </group>
+                                
+                            </sheet>
+                        </form>
+                    </field>
+                    
+                </page>
+            </xpath>
+            
+            <!-- Add computed fields (hidden) -->
+            <xpath expr="//field[@name='list_price']" position="after">
+                <field name="has_search_images" invisible="1"/>
+                <field name="search_images_count" invisible="1"/>
+                <field name="images_processing_status" invisible="1"/>
+                <field name="is_multiview_product" invisible="1"/>
+                <field name="completed_views" invisible="1"/>
+                <field name="primary_search_image_id" invisible="1"/>
+            </xpath>
+            
+        </field>
+    </record>
+    
+</odoo>
