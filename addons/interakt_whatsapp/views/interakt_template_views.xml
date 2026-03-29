@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Interakt Template Form View -->
+    <record id="view_interakt_template_form" model="ir.ui.view">
+        <field name="name">interakt.template.form</field>
+        <field name="model">interakt.template</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Template">
+                <header>
+                    <button name="action_test_template" string="Test Template" type="object"
+                            class="oe_highlight" icon="fa-paper-plane"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_message_logs" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="message_count" widget="statinfo"
+                                   string="Messages"/>
+                        </button>
+                        <button name="action_view_message_logs" type="object"
+                                class="oe_stat_button" icon="fa-check"
+                                context="{'search_default_status_sent': 1}">
+                            <field name="success_count" widget="statinfo"
+                                   string="Successful"/>
+                        </button>
+                        <button name="action_view_message_logs" type="object"
+                                class="oe_stat_button" icon="fa-times"
+                                context="{'search_default_status_failed': 1}">
+                            <field name="failed_count" widget="statinfo"
+                                   string="Failed"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Active" bg_color="bg-success"
+                            invisible="not active"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name_field" placeholder="Template Display Name..."/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Template Identification">
+                            <field name="name" invisible="1"/>
+                            <field name="template_code" placeholder="confirmation_order"/>
+                            <field name="language_code"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Automation">
+                            <field name="auto_send"/>
+                            <field name="trigger_model" invisible="not auto_send"/>
+                            <field name="trigger_field" invisible="not auto_send"/>
+                            <field name="trigger_value" invisible="not auto_send"/>
+                        </group>
+                    </group>
+
+                    <group string="Description">
+                        <field name="description" nolabel="1" placeholder="Describe this template..."/>
+                    </group>
+
+                    <notebook>
+                        <page string="Template Structure" name="structure">
+                            <group>
+                                <group string="Header">
+                                    <field name="header_type"/>
+                                    <field name="header_text" invisible="header_type != 'TEXT'"/>
+                                    <field name="example_header_url"
+                                           invisible="header_type == 'TEXT'"
+                                           placeholder="https://example.com/image.jpg"/>
+                                </group>
+                                <group string="Variables">
+                                    <field name="body_variable_count"/>
+                                    <field name="body_variable_names"
+                                           placeholder="Customer Name,Phone,Start Location,End Location,Date,Time,Vehicle,Price"
+                                           invisible="body_variable_count == 0"/>
+                                </group>
+                            </group>
+
+                            <group string="Body">
+                                <field name="body_text" nolabel="1" widget="text"
+                                       placeholder="Hello {{1}}!&#10;&#10;Your booking {{2}} is confirmed.&#10;&#10;Use {{1}}, {{2}}, etc. for variables"/>
+                            </group>
+
+                            <group string="Footer">
+                                <field name="footer_text" nolabel="1" placeholder="Happy Journey"/>
+                            </group>
+                        </page>
+
+                        <page string="Example Values" name="examples">
+                            <group>
+                                <field name="example_body_values" nolabel="1" widget="text"
+                                       placeholder='["Raja Kumar", "8298913646", "Bhopal", "Indore", "Dec 1, 2025", "10:00 AM", "45 Seater AC", "Rs. 15,000"]'/>
+                            </group>
+
+                            <div class="alert alert-info mt-3" role="alert">
+                                <h5>Example Body Values Format:</h5>
+                                <p>Provide values as a JSON array. Example:</p>
+                                <pre>["Raja Kumar", "8298913646", "Bhopal Railway Station", "Indore City", "December 1, 2025", "10:00 AM", "45 Seater AC Coach", "Rs. 15,000"]</pre>
+                                <p class="mt-2">
+                                    <strong>Important:</strong> The number of values must match the body_variable_count.
+                                </p>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Interakt Template Tree View -->
+    <record id="view_interakt_template_tree" model="ir.ui.view">
+        <field name="name">interakt.template.tree</field>
+        <field name="model">interakt.template</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="active" decoration-muted="not active">
+                <field name="sequence" widget="handle"/>
+                <field name="display_name_field"/>
+                <field name="template_code"/>
+                <field name="language_code"/>
+                <field name="body_variable_count"/>
+                <field name="auto_send" widget="boolean_toggle"/>
+                <field name="message_count"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Interakt Template Search View -->
+    <record id="view_interakt_template_search" model="ir.ui.view">
+        <field name="name">interakt.template.search</field>
+        <field name="model">interakt.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="display_name_field"/>
+                <field name="template_code"/>
+                <field name="description"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter string="Auto Send" name="auto_send" domain="[('auto_send', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Header Type" name="header_type" context="{'group_by': 'header_type'}"/>
+                    <filter string="Auto Send" name="group_auto_send" context="{'group_by': 'auto_send'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Interakt Template Action -->
+    <record id="action_interakt_template" model="ir.actions.act_window">
+        <field name="name">WhatsApp Templates</field>
+        <field name="res_model">interakt.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first WhatsApp template!
+            </p>
+            <p>
+                Configure WhatsApp templates from your Interakt account.
+            </p>
+        </field>
+    </record>
+</odoo>

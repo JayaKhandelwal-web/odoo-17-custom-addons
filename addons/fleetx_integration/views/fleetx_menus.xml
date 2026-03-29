@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Root Menu -->
+        <menuitem id="menu_fleetx_root"
+                  name="FleetX"
+                  sequence="50"
+                  web_icon="fleetx_integration,static/description/icon.png"/>
+
+        <!-- Dashboard Menu -->
+        <menuitem id="menu_fleetx_dashboard"
+                  name="Dashboard"
+                  parent="menu_fleetx_root"
+                  action="action_fleetx_dashboard"
+                  sequence="10"/>
+
+        <!-- Vehicles Menu -->
+        <menuitem id="menu_fleetx_vehicles"
+                  name="Vehicles"
+                  parent="menu_fleetx_root"
+                  sequence="20"/>
+
+        <menuitem id="menu_fleetx_vehicles_all"
+                  name="All Vehicles"
+                  parent="menu_fleetx_vehicles"
+                  action="action_fleetx_vehicle_tree"
+                  sequence="10"/>
+
+        <menuitem id="menu_fleetx_vehicles_running"
+                  name="Running Vehicles"
+                  parent="menu_fleetx_vehicles"
+                  action="action_fleetx_vehicle_running"
+                  sequence="20"/>
+
+        <menuitem id="menu_fleetx_vehicles_idle"
+                  name="Idle Vehicles"
+                  parent="menu_fleetx_vehicles"
+                  action="action_fleetx_vehicle_idle"
+                  sequence="30"/>
+
+        <menuitem id="menu_fleetx_vehicles_parked"
+                  name="Parked Vehicles"
+                  parent="menu_fleetx_vehicles"
+                  action="action_fleetx_vehicle_parked"
+                  sequence="40"/>
+
+        <!-- Analytics Menu -->
+        <menuitem id="menu_fleetx_analytics"
+                  name="Analytics"
+                  parent="menu_fleetx_root"
+                  sequence="30"/>
+
+        <menuitem id="menu_fleetx_analytics_reports"
+                  name="Reports"
+                  parent="menu_fleetx_analytics"
+                  action="action_fleetx_analytics_tree"
+                  sequence="10"/>
+
+        <menuitem id="menu_fleetx_analytics_charts"
+                  name="Charts"
+                  parent="menu_fleetx_analytics"
+                  action="action_fleetx_analytics_graph"
+                  sequence="20"/>
+
+        <menuitem id="menu_fleetx_analytics_kanban"
+                  name="Analytics Dashboard"
+                  parent="menu_fleetx_analytics"
+                  action="action_fleetx_analytics_kanban"
+                  sequence="30"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_fleetx_config"
+                  name="Configuration"
+                  parent="menu_fleetx_root"
+                  sequence="90"/>
+
+        <menuitem id="menu_fleetx_config_api"
+                  name="API Configuration"
+                  parent="menu_fleetx_config"
+                  action="action_fleetx_config_tree"
+                  sequence="10"/>
+
+        <menuitem id="menu_fleetx_config_sync"
+                  name="Data Synchronization"
+                  parent="menu_fleetx_config"
+                  action="action_fleetx_sync_wizard"
+                  sequence="20"/>
+
+        <menuitem id="menu_fleetx_config_settings"
+                  name="Settings"
+                  parent="menu_fleetx_config"
+                  action="action_fleetx_settings"
+                  sequence="30"/>
+
+    </data>
+</odoo>

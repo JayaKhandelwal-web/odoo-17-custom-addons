@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        EXAMPLE: How to add custom buttons to specific form views
+        
+        Copy this pattern for each model where you want to add the buttons.
+        The buttons will work universally by inheriting the base model.
+        
+        To apply to ALL form views, you'll need to inherit each form view individually
+        or use a more advanced approach with automated view inheritance.
+    -->
+
+    <!-- Example 1: Add buttons to res.partner (Contacts) form view -->
+    <record id="view_partner_form_custom_buttons" model="ir.ui.view">
+        <field name="name">res.partner.form.custom.buttons</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="o_form_custom_buttons_container">
+                    <button name="action_custom_save" 
+                            string="SAVE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_save">
+                        <i class="fa fa-save"/> SAVE
+                    </button>
+                    
+                    <button name="action_custom_delete" 
+                            string="DELETE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_delete"
+                            confirm="Are you sure you want to delete this contact?">
+                        <i class="fa fa-trash"/> DELETE
+                    </button>
+                    
+                    <button name="action_custom_back" 
+                            string="BACK" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_back">
+                        <i class="fa fa-arrow-left"/> BACK
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Example 2: Add buttons to sale.order (Sales Orders) form view -->
+    <!-- Uncomment if you have the sale module installed -->
+    <!--
+    <record id="view_order_form_custom_buttons" model="ir.ui.view">
+        <field name="name">sale.order.form.custom.buttons</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="o_form_custom_buttons_container">
+                    <button name="action_custom_save" 
+                            string="SAVE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_save">
+                        <i class="fa fa-save"/> SAVE
+                    </button>
+                    
+                    <button name="action_custom_delete" 
+                            string="DELETE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_delete"
+                            confirm="Are you sure you want to delete this sales order?">
+                        <i class="fa fa-trash"/> DELETE
+                    </button>
+                    
+                    <button name="action_custom_back" 
+                            string="BACK" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_back">
+                        <i class="fa fa-arrow-left"/> BACK
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    -->
+
+    <!-- Example 3: Add buttons to account.move (Invoices) form view -->
+    <!-- Uncomment if you have the account module installed -->
+    <!--
+    <record id="view_move_form_custom_buttons" model="ir.ui.view">
+        <field name="name">account.move.form.custom.buttons</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="o_form_custom_buttons_container">
+                    <button name="action_custom_save" 
+                            string="SAVE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_save">
+                        <i class="fa fa-save"/> SAVE
+                    </button>
+                    
+                    <button name="action_custom_delete" 
+                            string="DELETE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_delete"
+                            confirm="Are you sure you want to delete this invoice?">
+                        <i class="fa fa-trash"/> DELETE
+                    </button>
+                    
+                    <button name="action_custom_back" 
+                            string="BACK" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_back">
+                        <i class="fa fa-arrow-left"/> BACK
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    -->
+
+    <!-- 
+        TEMPLATE FOR YOUR CUSTOM MODULES:
+        
+        Copy this template and replace:
+        - "your.model" with your model name (e.g., "fuel.log")
+        - "your_module.view_your_form" with the view you want to inherit
+        - Confirmation message as needed
+    -->
+    <!--
+    <record id="view_your_model_form_custom_buttons" model="ir.ui.view">
+        <field name="name">your.model.form.custom.buttons</field>
+        <field name="model">your.model</field>
+        <field name="inherit_id" ref="your_module.view_your_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <div class="o_form_custom_buttons_container">
+                    <button name="action_custom_save" 
+                            string="SAVE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_save">
+                        <i class="fa fa-save"/> SAVE
+                    </button>
+                    
+                    <button name="action_custom_delete" 
+                            string="DELETE" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_delete"
+                            confirm="Are you sure you want to delete this record?">
+                        <i class="fa fa-trash"/> DELETE
+                    </button>
+                    
+                    <button name="action_custom_back" 
+                            string="BACK" 
+                            type="object" 
+                            class="o_form_custom_button o_form_button_back">
+                        <i class="fa fa-arrow-left"/> BACK
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    -->
+
+</odoo>

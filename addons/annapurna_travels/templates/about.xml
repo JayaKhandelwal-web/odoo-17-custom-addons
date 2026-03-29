@@ -1,0 +1,749 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- About Us Page Template -->
+        <template id="about_page" name="Annapurna Travels - About Us">
+            <t t-call="website.layout">
+                <t t-set="title">About Us - Annapurna Tour and Travels LLP</t>
+                <t t-set="additional_title">Luxurious Journey with Care</t>
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center">
+                                <h1 class="page-title">About Annapurna Tour and Travels LLP</h1>
+                                <p class="page-subtitle">
+                                    Your trusted partner for comfortable and reliable travel experiences since 1990
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Our Story Section -->
+                <section class="our-story-section py-5">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h2 class="display-6 fw-bold mb-4">Our Story</h2>
+                                <p class="lead mb-4">
+                                    Established in 1990 in Bhopal, Madhya Pradesh, Annapurna Travels has been serving customers
+                                    with dedication and commitment for over three decades.
+                                </p>
+                                <p class="mb-4">
+                                    Founded by <strong>Mr. Narendra Kumar Ratnawat</strong>, our company started with a simple vision:
+                                    to provide safe, comfortable, and reliable transportation services that exceed customer expectations.
+                                    From humble beginnings with a single bus, we have grown into Central India's leading luxury coach
+                                    rental company.
+                                </p>
+                                <p class="mb-4">
+                                    In 2022, marking a significant milestone in our journey, we restructured our business and officially
+                                    became <strong>Annapurna Tour and Travels LLP</strong>. This transformation reflects our commitment
+                                    to professional excellence and sustainable growth while maintaining the values and customer-centric
+                                    approach that have defined us for over 30 years.
+                                </p>
+                                <p class="mb-4">
+                                    What sets us apart is our unwavering commitment to passenger comfort and safety. We have always
+                                    believed that travel should be an experience to remember, not an ordeal to endure. This philosophy
+                                    has guided us through our journey of growth and success, from Annapurna Travels to Annapurna Tour
+                                    and Travels LLP.
+                                </p>
+
+                                <!-- Trade Name & GSTIN Information -->
+                                <div class="business-info bg-light p-4 rounded mb-4">
+                                    <h5 class="fw-bold mb-3 text-primary">Business Information</h5>
+                                    <div class="row g-3">
+                                        <div class="col-12">
+                                            <div class="info-item">
+                                                <strong class="text-muted d-block mb-1">Legal Name:</strong>
+                                                <span class="fw-semibold">ANNAPURNA TOUR AND TRAVELS LLP</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="info-item">
+                                                <strong class="text-muted d-block mb-1">Trade Name:</strong>
+                                                <span class="fw-semibold">ANNAPURNA TOUR AND TRAVELS LLP</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="info-item">
+                                                <strong class="text-muted d-block mb-1">GSTIN:</strong>
+                                                <span class="fw-semibold">23ABXFA4396D1Z6</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="story-stats row g-3 mt-4">
+                                    <div class="col-6">
+                                        <div class="stat-item text-center p-3 bg-light rounded">
+                                            <h3 class="text-primary fw-bold mb-1">1990</h3>
+                                            <small class="text-muted">Established</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item text-center p-3 bg-light rounded">
+                                            <h3 class="text-primary fw-bold mb-1">2022</h3>
+                                            <small class="text-muted">Became LLP</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="stat-item text-center p-3 bg-light rounded">
+                                            <h3 class="text-primary fw-bold mb-1">34+</h3>
+                                            <small class="text-muted">Years of Excellence</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="about-image">
+                                    <div class="image-placeholder rounded-4 overflow-hidden shadow">
+                                        <!-- Replace with actual image -->
+                                        <img src="/annapurna_travels/static/src/img/about_journey.jpg"
+                                             alt="Our Journey"
+                                             class="img-fluid w-100"
+                                             style="height: 400px; object-fit: cover;"/>
+                                    </div>
+                                    <div class="mt-3 text-center">
+                                        <h4 class="text-muted">Our Journey</h4>
+                                        <p class="text-muted">
+                                            From Annapurna Travels in 1990 to Annapurna Tour and Travels LLP in 2022,
+                                            we continue to uphold honest and transparent business practices. Our pricing is fair,
+                                            our commitments are reliable, and our communication is always truthful.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Our Values Section -->
+                <section class="values-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center mb-5">
+                                <h2 class="section-title display-6 fw-bold mb-3">Our Values</h2>
+                                <p class="section-subtitle text-muted">
+                                    The principles that guide everything we do
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="value-card text-center p-4">
+                                    <div class="value-icon mb-3">
+                                        <i class="fas fa-shield-alt fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-3">Safety First</h4>
+                                    <p class="text-muted">
+                                        Your safety is our top priority. We maintain the highest safety standards
+                                        in all aspects of our service delivery.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="value-card text-center p-4">
+                                    <div class="value-icon mb-3">
+                                        <i class="fas fa-heart fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-3">Customer Care</h4>
+                                    <p class="text-muted">
+                                        We treat every customer like family, providing personalized service
+                                        that goes beyond expectations.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="value-card text-center p-4">
+                                    <div class="value-icon mb-3">
+                                        <i class="fas fa-handshake fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-3">Integrity</h4>
+                                    <p class="text-muted">
+                                        We believe in honest and transparent business practices. Our pricing is fair,
+                                        our commitments are reliable, and our communication is always truthful.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="value-card text-center p-4">
+                                    <div class="value-icon mb-3">
+                                        <i class="fas fa-clock fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-3">Reliability</h4>
+                                    <p class="text-muted">
+                                        Punctuality and dependability are hallmarks of our service. We understand the
+                                        importance of being on time for your important moments.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="value-card text-center p-4">
+                                    <div class="value-icon mb-3">
+                                        <i class="fas fa-leaf fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-3">Sustainability</h4>
+                                    <p class="text-muted">
+                                        We are committed to environmental responsibility through fuel-efficient vehicles
+                                        and sustainable business practices for a greener future.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="value-card text-center p-4">
+                                    <div class="value-icon mb-3">
+                                        <i class="fas fa-star fa-3x text-primary"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-3">Excellence</h4>
+                                    <p class="text-muted">
+                                        We continuously strive for excellence in every aspect of our service,
+                                        from vehicle maintenance to customer interaction.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Our Team Section -->
+                <section class="team-section py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center mb-5">
+                                <h2 class="section-title display-6 fw-bold mb-3">Our Team</h2>
+                                <p class="section-subtitle text-muted">
+                                    Meet the professionals who make your journey comfortable and safe
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="team-card bg-white rounded-4 p-4 shadow-sm text-center">
+                                    <div class="team-avatar bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-user fa-2x text-white"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-2">Mr. Narendra Kumar Ratnawat</h4>
+                                    <p class="text-primary mb-3">Founder &amp; Managing Director</p>
+                                    <p class="text-muted small">
+                                        With over 20 years of experience in the transportation industry, Mr. Ratnawat
+                                        leads the company with vision and dedication to customer satisfaction.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="team-card bg-white rounded-4 p-4 shadow-sm text-center">
+                                    <div class="team-avatar bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-user-tie fa-2x text-white"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-2">Operations Team</h4>
+                                    <p class="text-primary mb-3">Fleet Management</p>
+                                    <p class="text-muted small">
+                                        Our experienced operations team ensures all vehicles are maintained to the highest
+                                        standards and routes are optimized for your convenience.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="team-card bg-white rounded-4 p-4 shadow-sm text-center">
+                                    <div class="team-avatar bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                        <i class="fas fa-headset fa-2x text-white"></i>
+                                    </div>
+                                    <h4 class="fw-bold mb-2">Customer Support</h4>
+                                    <p class="text-primary mb-3">24/7 Assistance</p>
+                                    <p class="text-muted small">
+                                        Our dedicated customer support team is available round the clock to assist you
+                                        with bookings, queries, and travel support.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Achievements Section -->
+                <section class="achievements-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center mb-5">
+                                <h2 class="section-title display-6 fw-bold mb-3">Our Achievements</h2>
+                                <p class="section-subtitle text-muted">
+                                    Milestones that mark our journey of excellence
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="achievement-item p-4">
+                                    <div class="achievement-icon mb-3">
+                                        <i class="fas fa-users fa-3x text-primary"></i>
+                                    </div>
+                                    <h3 class="fw-bold text-primary mb-2">25,000+</h3>
+                                    <p class="text-muted">Happy Customers</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="achievement-item p-4">
+                                    <div class="achievement-icon mb-3">
+                                        <i class="fas fa-route fa-3x text-primary"></i>
+                                    </div>
+                                    <h3 class="fw-bold text-primary mb-2">5M+</h3>
+                                    <p class="text-muted">Kilometers Traveled</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="achievement-item p-4">
+                                    <div class="achievement-icon mb-3">
+                                        <i class="fas fa-calendar-check fa-3x text-primary"></i>
+                                    </div>
+                                    <h3 class="fw-bold text-primary mb-2">50000+</h3>
+                                    <p class="text-muted">Successful Trips</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="achievement-item p-4">
+                                    <div class="achievement-icon mb-3">
+                                        <i class="fas fa-star fa-3x text-primary"></i>
+                                    </div>
+                                    <h3 class="fw-bold text-primary mb-2">4.8/5</h3>
+                                    <p class="text-muted">Customer Rating</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Why Choose Us Section -->
+                <section class="why-choose-about-section py-5 bg-primary text-white">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center mb-5">
+                                <h2 class="display-6 fw-bold mb-3">Why Choose Annapurna Travels?</h2>
+                                <p class="lead">
+                                    Here's what makes us the preferred choice for thousands of travelers
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <div class="col-lg-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-certificate fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-2">Licensed &amp; Certified</h4>
+                                        <p class="mb-0">All our vehicles are properly licensed with valid permits and insurance coverage.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-tools fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-2">Regular Maintenance</h4>
+                                        <p class="mb-0">Our fleet undergoes regular maintenance and safety inspections for optimal performance.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-id-card fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-2">Experienced Drivers</h4>
+                                        <p class="mb-0">All our drivers are licensed, experienced, and trained in customer service and safety protocols.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-map-marked-alt fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-2">GPS Tracking</h4>
+                                        <p class="mb-0">Real-time GPS tracking ensures your safety and allows you to share your journey with family.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-rupee-sign fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-2">Transparent Pricing</h4>
+                                        <p class="mb-0">No hidden charges. We provide clear, upfront pricing with detailed breakdowns.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon me-3">
+                                        <i class="fas fa-phone-alt fa-2x text-warning"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="fw-bold mb-2">24/7 Support</h4>
+                                        <p class="mb-0">Round-the-clock customer support for emergency assistance and travel updates.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Terms & Conditions Section -->
+                <section class="terms-section py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-10 mx-auto">
+                                <div class="terms-content bg-white rounded-4 shadow-sm p-5">
+                                    <h2 class="display-6 fw-bold mb-4 text-center">Terms &amp; Conditions</h2>
+                                    <p class="text-muted mb-4">
+                                        Thank you for accessing/shopping at annapurnatravels.com. This site is owned by
+                                        <strong>Annapurna Tour and Travels LLP</strong>. By accessing, shopping on this site,
+                                        you indicate your unconditional acceptance of these terms &amp; conditions. We reserve
+                                        this right, in our sole discretion, to update or revise these terms &amp; conditions.
+                                        Continued use of the site following the posting of any changes to the 'terms &amp; conditions',
+                                        constitutes your acceptance of those changes.
+                                    </p>
+                                    <p class="text-muted mb-4">
+                                        At Annapurna Travels, we try our best to create a space where you can explore and shop for
+                                        all your favorite things in a safe and secure environment. All products and information
+                                        displayed on our website constitutes an "invitation to offer". We reserve the right to
+                                        accept or reject your offer. Your order for purchase, constitutes your "offer" which shall
+                                        be subject to the terms and conditions as listed below.
+                                    </p>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">1. Eligibility to Use Our Site</h4>
+                                        <p class="text-muted">
+                                            Use of the Site is available only to persons who can legally enter into contracts under
+                                            applicable laws. Persons who are "incompetent to contract", within the meaning of the
+                                            Indian Contract Act, 1872 including un-discharged insolvents etc. are not eligible to
+                                            use the Site. We reserve the right to terminate your access to the Site if it discovers
+                                            that you are under the age of 18 years or suffers from any other disability, as recognized
+                                            under Indian Contract Act, 1872.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">2. Membership</h4>
+                                        <p class="text-muted">
+                                            Although it's not essential to have an account to shop with us, you can shop as a guest.
+                                            As a member, you agree to provide true, accurate, current, and complete information about
+                                            yourself as prompted by the site's registration form. Registration where prohibited under
+                                            any law shall be void. We reserve the right to revoke or terminate your registration for
+                                            any reason at any time, without notice.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">3. Electronic Communications</h4>
+                                        <p class="text-muted">
+                                            When you use the site or send emails or other data, information or communicate to us,
+                                            you agree and understand that you are communicating with us electronically and give your
+                                            consent to receive communications electronically from us periodically, when required.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">4. Reviews, Feedback, Submissions</h4>
+                                        <p class="text-muted">
+                                            All reviews, comments, feedback, postcards, suggestions, ideas, and other submissions
+                                            disclosed, submitted or offered to us directly or otherwise disclosed, submitted or offered
+                                            in connection with your use of this Site (collectively referred to "Comments") will remain
+                                            our property. Such disclosure, submission or offer of any comments shall constitute an
+                                            assignment to us of all worldwide rights, titles and interests in all copyrights and other
+                                            intellectual properties in the comments, thus, it exclusively owns all such rights, titles
+                                            and interests and shall not be limited in any way in its use, commercial or otherwise.
+                                        </p>
+                                        <p class="text-muted">
+                                            We will be entitled to use, reproduce, disclose, modify, adapt, create derivative works from,
+                                            publish, display and distribute any comments you submit for any purpose whatsoever, without
+                                            restriction and without compensating you in any way. We are and shall be under no obligation
+                                            (1) to maintain any Comments in confidence; or (2) to pay you any compensation for any Comments;
+                                            or (3) to respond to any Comments.
+                                        </p>
+                                        <p class="text-muted">
+                                            You agree that any comments submitted by you to the Site will not violate this policy or any
+                                            right of any third party, including copyright, trademark, privacy or other personal or proprietary
+                                            right(s), and will not cause injury to any person or entity. You further agree that no comments
+                                            submitted by you to the site will be libelous or otherwise unlawful, threatening, abusive or
+                                            obscene material, or contain software viruses, political campaigning, commercial solicitation,
+                                            chain letters, mass mailings or any form of "spam".
+                                        </p>
+                                        <p class="text-muted">
+                                            We do not regularly review posted comments, but does reserve the right (but not the obligation)
+                                            to monitor and edit or remove any comment submitted to the Site. You grant us the right to use
+                                            the name that you submit in connection with any of the posted comments. You agree not to use a
+                                            false email address, impersonate any person or entity, or otherwise mislead as to the origin of
+                                            any Comments you submit. You are and shall remain solely responsible for the content of any
+                                            comments you make and you agree to indemnify us and our affiliates for all claims resulting from
+                                            any Comments you submit, we take no responsibility and assume no liability for any comments
+                                            submitted by you or any third party.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">5. Accuracy of Content/Information of Products on the Website</h4>
+                                        <p class="text-muted">
+                                            While we strive to provide accurate product and pricing information, typographical errors may
+                                            occur. In the event that a product is listed at an incorrect price or with incorrect information
+                                            due to an error in pricing or product information, we shall have the right, on our sole discretion,
+                                            to modify the price of the products, or information of the products or to refuse or cancel any
+                                            orders placed for that product, unless the product has already been dispatched.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">6. Return Policy</h4>
+                                        <p class="text-muted">
+                                            Product must be returned to us within the specified number of days from the date it has been
+                                            delivered to the customer. Product must be returned with all tags attached in its original
+                                            condition along with all packing material, courier receipt, invoice &amp; other papers.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">7. Refund Policy</h4>
+                                        <p class="text-muted">
+                                            Once the Product is received to the company successfully, Annapurna Tour and Travels LLP will
+                                            instantly initiate the refund to your source account or chosen method of refund.
+                                        </p>
+                                        <p class="text-muted fw-bold mt-3">
+                                            Refund and Cancellation for Service Provider Company:
+                                        </p>
+                                        <p class="text-muted">
+                                            Due to service providers in nature "NO REFUND", "NO CANCELLATION" will be entertained once
+                                            the Payment has been made.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">8. Cancellation Policy</h4>
+                                        <p class="text-muted">
+                                            Please note an order can only be canceled within 24 hours of placing the order. Once the order
+                                            is processed after 24 hours, no cancellation request will be entertained. However return is
+                                            possible for all orders/products.
+                                        </p>
+                                        <p class="text-muted mt-3">
+                                            <strong>OR</strong>
+                                        </p>
+                                        <p class="text-muted">
+                                            Customers can CANCEL order only before the Order has been shipped/Dispatched. After the
+                                            Product/s have been shipped, The Customer CANNOT Cancel the Orders. However return is possible
+                                            for all orders/products.
+                                        </p>
+                                    </div>
+
+                                    <div class="term-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">9. Shipping &amp; Delivery Policies</h4>
+                                        <p class="text-muted">
+                                            Annapurna Tour and Travels LLP ships its products to almost all parts of India. Orders placed
+                                            will be shipped within 24 hrs. We ship on all days except Sunday and National Holidays.
+                                        </p>
+                                        <p class="text-muted">
+                                            For all areas serviced by reputed couriers, the delivery time would be within 3 to 4 business
+                                            days of shipping (business days exclude Sundays and other holidays). For other areas the products
+                                            will be shipped through standard courier and may take 1-2 weeks depending on location.
+                                        </p>
+                                        <p class="text-muted">
+                                            At times there might be unexpected delays in the delivery of your order due to unavoidable and
+                                            undetermined logistics challenges beyond our control for which we are not liable and would request
+                                            its users to cooperate as we continuously try to nought such instances. Also, we reserve the right
+                                            to cancel your order at its sole discretion in cases where it takes longer than usual delivery time
+                                            or the shipment is physically untraceable and refund the amount paid for cancelled product(s) to
+                                            your source account.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Privacy Policy Section -->
+                <section class="privacy-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-10 mx-auto">
+                                <div class="privacy-content bg-white rounded-4 shadow-sm p-5">
+                                    <h2 class="display-6 fw-bold mb-4 text-center">Privacy Policy</h2>
+                                    <p class="text-muted mb-4">
+                                        We respect and are committed towards protecting your privacy. Publishing, selling or renting
+                                        any personal data or information to any third party, without your consent, is against our ethics.
+                                    </p>
+                                    <p class="text-muted mb-4">
+                                        The privacy practices of this statement apply to our services available under the domain and
+                                        subdomains of the Site. By visiting this Site you agree to be bound by the terms and conditions
+                                        of this privacy policy. If you do not agree, please do not use or access our site.
+                                    </p>
+                                    <p class="text-muted mb-4">
+                                        This privacy policy does not apply to sites maintained by other companies or organizations to
+                                        which we link and we are not responsible for any personal information you submit to third parties
+                                        via our website. Please ensure that you read the privacy policy of such other companies or
+                                        organizations before submitting your details.
+                                    </p>
+                                    <p class="text-muted mb-4">
+                                        This privacy policy describes the information, as part of the normal operation of our services,
+                                        we collect from you and what may happen to that information. This policy is inter alia formulated
+                                        and displayed, to inform you about our information collection/retention policies and practices so
+                                        that you can make an informed decision, in relation to the sharing of your personal information
+                                        with us. By accepting the privacy policy and the user agreement or the use of the site in general,
+                                        you give your consent to our use and disclosure of your personal information in accordance with
+                                        this privacy policy. This Privacy Policy is incorporated into and subject to the terms of the
+                                        User Agreement. This privacy policy is effective upon acceptance of access by you to the site.
+                                    </p>
+
+                                    <div class="privacy-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">Privacy Guarantee</h4>
+                                        <p class="text-muted">
+                                            We agree that we will not sell or rent your personal information to third parties for their
+                                            marketing purposes without your explicit consent. From time to time, we may reveal general
+                                            statistical information about our Site and visitors, such as number of visitors, number and
+                                            type of goods and services purchased, etc.
+                                        </p>
+                                        <p class="text-muted">
+                                            Only those of our employees who need access to your information in order to perform their duties,
+                                            are allowed such access. Any employee who violates our privacy and/or security policies is
+                                            subjected to disciplinary action, including possible termination and civil and/or criminal
+                                            prosecution.
+                                        </p>
+                                    </div>
+
+                                    <div class="privacy-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">Information We Collect</h4>
+                                        <p class="text-muted">
+                                            The Personal Information is used for two general purposes: to process your order, and to provide
+                                            you with the best possible services. Unless otherwise stated explicitly, this policy applies to
+                                            personal information as disclosed on any of the media.
+                                        </p>
+                                        <p class="text-muted">
+                                            In furtherance of the confidentiality with which we treat Personal Information, we have put in
+                                            place appropriate physical, electronic, and managerial procedures to safeguard and secure the
+                                            information we collect online. We use data collection devices such as "cookies" on certain pages
+                                            of the Site to help and analyze our web page flow, measure promotional effectiveness, and promote
+                                            trust and safety.
+                                        </p>
+                                        <p class="text-muted">
+                                            "Cookies" are small files placed on your hard drive that assist us in providing our services.
+                                            We offer certain features that are only available through the use of a "cookie". Cookies can
+                                            also help us provide information that is targeted to your interests. Most cookies are "session
+                                            cookies," which means that they are automatically deleted from your hard drive at the end of a
+                                            session. You are always free to decline our cookies if your browser permits.
+                                        </p>
+                                        <p class="text-muted">
+                                            Additionally, you may encounter "cookies" or other similar devices on certain pages of the Site
+                                            that are placed by third parties. For example, if you view a web page created by a user, there
+                                            may be a "cookie" placed within that web page. We do not control the use of cookies by third parties.
+                                        </p>
+                                        <p class="text-muted">
+                                            You acknowledge that you are disclosing Personal Information voluntarily. We identify and use your
+                                            IP address to help diagnose problems with our server, and to administer our Website. Your IP address
+                                            is also used to help identify you and to gather broad demographic information.
+                                        </p>
+                                    </div>
+
+                                    <div class="privacy-item mb-4">
+                                        <h4 class="fw-bold text-primary mb-3">Cookie Policy</h4>
+                                        <p class="text-muted">
+                                            Annapurna Tour and Travels LLP operates a strict privacy policy and we are committed to being
+                                            transparent about how we use cookies on our website.
+                                        </p>
+
+                                        <h5 class="fw-bold mt-4 mb-3">Why Are Cookies Important?</h5>
+                                        <p class="text-muted">
+                                            Cookies help you make your online experience more efficient and relevant to your interests. For
+                                            instance, they are used to remember your preferences on sites you visit often, to remember your
+                                            user ID and the contents of your shopping baskets, and to help you navigate between pages efficiently.
+                                        </p>
+
+                                        <h5 class="fw-bold mt-4 mb-3">What Is a Cookie?</h5>
+                                        <p class="text-muted">
+                                            A cookie is a small file, or files on your computer, phone, or other device with a browser to
+                                            save snippets of text for reference by the website you are visiting. All cookies have expiration
+                                            dates in them that determine how long they stay in your browser:
+                                        </p>
+                                        <ul class="text-muted">
+                                            <li>
+                                                <strong>Session cookies</strong> - these are temporary cookies that expire (and are automatically
+                                                erased) whenever you close your browser.
+                                            </li>
+                                            <li>
+                                                <strong>Persistent cookies</strong> - these usually have an expiration date and so stay in your
+                                                browser until they expire, or until you manually delete them. For example we use persistent
+                                                cookies to better understand usage patterns so that we can improve the site for our customers.
+                                            </li>
+                                        </ul>
+
+                                        <h5 class="fw-bold mt-4 mb-3">Cookie Categories</h5>
+                                        <p class="text-muted">Cookies are grouped into the following categories:</p>
+                                        <ul class="text-muted">
+                                            <li>
+                                                <strong>Essential</strong> - these are cookies that are required for the regular operation
+                                                of our websites.
+                                            </li>
+                                            <li>
+                                                <strong>Functional</strong> - these remember your preferences, and are intended to make your
+                                                experience on our websites better for you.
+                                            </li>
+                                            <li>
+                                                <strong>Analytics</strong> - these cookies are used for performance measurement to understand
+                                                things including how many people visit our websites, how they navigate our sites, and what
+                                                content is popular. This allows us to improve your experience with us. Additionally, you can
+                                                see how Google Analytics (one of our analytics tools) uses cookie information when you use our
+                                                partners' sites by visiting www.google.com/policies/privacy/partners.
+                                            </li>
+                                            <li>
+                                                <strong>Advertising</strong> - these cookies enable us and our advertising partners to serve
+                                                you with relevant advertisements that we think will interest you. You might see these
+                                                advertisements on our sites on other sites you visit. These cookies record your visit to our
+                                                website and the content you interact with. They may be placed by us, or by advertising partners
+                                                with our permission.
+                                            </li>
+                                        </ul>
+                                        <p class="text-muted mt-3">
+                                            To ensure compliance with our policies, we restrict the use of third-party cookies to trusted
+                                            partners. We also use third party information from third party sources to enable us deliver
+                                            advertising. These sources are validated by Third party, and not by us.
+                                        </p>
+                                        <p class="text-muted">
+                                            To delete cookies from your browser, please note the following simple steps. The following steps
+                                            are indicative for Google Chrome and might vary of the different browsers that you may use. Please
+                                            refer Settings on your browser for further details. You may also change other setting related to
+                                            Privacy and Security under the same section.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact CTA Section -->
+                <section class="contact-cta-section py-5">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h3 class="display-6 fw-bold mb-3">Ready to Travel with Us?</h3>
+                                <p class="lead mb-0">
+                                    Experience the Annapurna Travels difference. Book your journey today and join thousands
+                                    of satisfied customers who trust us for their travel needs.
+                                </p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                                <div class="cta-buttons">
+                                    <a href="/booking" class="btn btn-primary btn-lg rounded-pill px-4 me-3">
+                                        <i class="fas fa-calendar-check me-2"></i>Book Now
+                                    </a>
+                                    <a href="/contact" class="btn btn-outline-primary btn-lg rounded-pill px-4">
+                                        <i class="fas fa-envelope me-2"></i>Contact Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+    </data>
+</odoo>

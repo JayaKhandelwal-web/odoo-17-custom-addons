@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- FleetX Integration Categories -->
+        <record id="module_category_fleetx" model="ir.module.category">
+            <field name="name">FleetX Integration</field>
+            <field name="description">Manage FleetX vehicle tracking and analytics</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <!-- FleetX User Group -->
+        <record id="group_fleetx_user" model="res.groups">
+            <field name="name">FleetX User</field>
+            <field name="category_id" ref="module_category_fleetx"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">User can view vehicles and analytics data</field>
+        </record>
+
+        <!-- FleetX Manager Group -->
+        <record id="group_fleetx_manager" model="res.groups">
+            <field name="name">FleetX Manager</field>
+            <field name="category_id" ref="module_category_fleetx"/>
+            <field name="implied_ids" eval="[(4, ref('group_fleetx_user'))]"/>
+            <field name="comment">Manager can configure FleetX settings and manage synchronization</field>
+        </record>
+
+        <!-- FleetX Admin Group -->
+        <record id="group_fleetx_admin" model="res.groups">
+            <field name="name">FleetX Administrator</field>
+            <field name="category_id" ref="module_category_fleetx"/>
+            <field name="implied_ids" eval="[(4, ref('group_fleetx_manager'))]"/>
+            <field name="comment">Administrator has full access to all FleetX features</field>
+        </record>
+
+        <!-- Multi-company Rules -->
+        <record id="fleetx_config_company_rule" model="ir.rule">
+            <field name="name">FleetX Config: multi-company</field>
+            <field name="model_id" ref="model_fleetx_config"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="fleetx_vehicle_company_rule" model="ir.rule">
+            <field name="name">FleetX Vehicle: multi-company</field>
+            <field name="model_id" ref="model_fleetx_vehicle"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+        <record id="fleetx_analytics_company_rule" model="ir.rule">
+            <field name="name">FleetX Analytics: multi-company</field>
+            <field name="model_id" ref="model_fleetx_analytics"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="global" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

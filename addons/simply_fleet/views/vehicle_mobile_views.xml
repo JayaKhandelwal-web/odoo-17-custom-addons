@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Mobile Vehicle Kanban View - Same pattern as fuel_log_mobile_views.xml -->
+    <record id="simply_fleet_vehicle_mobile_kanban" model="ir.ui.view">
+        <field name="name">simply.fleet.vehicle.mobile.kanban</field>
+        <field name="model">simply.fleet.vehicle</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="state" quick_create="false" create="true" delete="true">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="state"/>
+                <field name="brand"/>
+                <field name="driver_id"/>
+                <field name="vehicle_type_id"/>
+                <field name="year"/>
+                <field name="model"/>
+                <field name="active"/>
+                <field name="fuel_log_count"/>
+                <field name="document_count"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <!-- Mobile-optimized vehicle card -->
+                        <div class="oe_kanban_global_click" style="background-color: #ffffff; color: black; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 8px;">
+                            <div class="row mx-0 py-2">
+                                <!-- Vehicle Icon Column -->
+                                <div class="col-3 d-flex align-items-center justify-content-center">
+                                    <div class="vehicle-mobile-icon">
+                                        <!-- Color-coded vehicle icon based on state -->
+                                        <t t-if="record.state.raw_value == 'active'">
+                                            <i class="fa fa-truck" style="font-size: 36px; color: #28a745;"></i>
+                                        </t>
+                                        <t t-elif="record.state.raw_value == 'maintenance'">
+                                            <i class="fa fa-wrench" style="font-size: 36px; color: #ffc107;"></i>
+                                        </t>
+                                        <t t-else="">
+                                            <i class="fa fa-truck" style="font-size: 36px; color: #dc3545;"></i>
+                                        </t>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vehicle Info Column -->
+                                <div class="col-6">
+                                    <div class="vehicle-mobile-info">
+                                        <!-- Vehicle Reference -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <strong class="text-dark"><field name="ref"/></strong>
+                                            </div>
+                                        </div>
+                                        <!-- Vehicle Name -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <span class="text-muted"><field name="name"/></span>
+                                            </div>
+                                        </div>
+                                        <!-- Brand and Year -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <small class="text-info">
+                                                    <field name="brand"/> - <field name="year"/>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <!-- Driver -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <small class="text-secondary">
+                                                    <i class="fa fa-user"></i> <field name="driver_id"/>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Status and Stats Column -->
+                                <div class="col-3 text-end d-flex flex-column align-items-end justify-content-center">
+                                    <!-- Status Badge -->
+                                    <div class="mb-1">
+                                        <span t-attf-class="badge #{record.state.raw_value == 'active' ? 'badge-success' : (record.state.raw_value == 'maintenance' ? 'badge-warning' : 'badge-danger')}">
+                                            <field name="state"/>
+                                        </span>
+                                    </div>
+                                    <!-- Vehicle Type -->
+                                    <div class="mb-1">
+                                        <small class="text-muted">
+                                            <field name="vehicle_type_id"/>
+                                        </small>
+                                    </div>
+                                    <!-- Quick Stats -->
+                                    <div class="d-flex flex-column">
+                                        <small class="text-primary">
+                                            <i class="fa fa-gas-pump"></i> <field name="fuel_log_count"/>
+                                        </small>
+                                        <small class="text-info">
+                                            <i class="fa fa-file-text"></i> <field name="document_count"/>
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

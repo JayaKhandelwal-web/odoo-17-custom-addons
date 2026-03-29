@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Sample Luxury Bus -->
+        <record id="sample_luxury_bus" model="bus.fleet">
+            <field name="name">Premium Luxury Tourist Coach</field>
+            <field name="vehicle_number">MP84AE92</field>
+            <field name="category_id" ref="category_luxury_ac"/>
+            <field name="seating_capacity">45</field>
+            <field name="daily_rate">5000</field>
+            <field name="per_km_rate">18</field>
+
+            <!-- Video Information -->
+            <field name="youtube_video_url">https://www.youtube.com/watch?v=dQw4w9WgXcQ</field>
+            <field name="price_range_min">1850000</field>
+            <field name="price_range_max">2200000</field>
+            <field name="average_rating">4.8</field>
+            <field name="review_count">324</field>
+
+            <!-- Technical Specifications -->
+            <field name="engine_type">BS6 Diesel Engine, 6-cylinder, Turbo</field>
+            <field name="power_output">220 HP @ 2400 RPM</field>
+            <field name="transmission">manual</field>
+            <field name="fuel_capacity">300</field>
+            <field name="mileage">8-10 km/l (varies with load)</field>
+            <field name="overall_length">12.0</field>
+            <field name="overall_width">2.5</field>
+            <field name="overall_height">3.4</field>
+            <field name="ground_clearance">230</field>
+            <field name="suspension_type">Air suspension with auto-leveling</field>
+            <field name="braking_system">Air brakes with ABS</field>
+
+            <!-- Advanced Comfort Features -->
+            <field name="multi_zone_ac">1</field>
+            <field name="air_purification">1</field>
+            <field name="humidity_control">1</field>
+            <field name="ergonomic_seats">1</field>
+            <field name="adjustable_headrests">1</field>
+            <field name="seat_belts">1</field>
+            <field name="extra_legroom">1</field>
+
+            <!-- Lighting System -->
+            <field name="led_ambient_lighting">1</field>
+            <field name="individual_reading_lights">1</field>
+            <field name="step_lighting">1</field>
+            <field name="emergency_lighting">1</field>
+            <field name="mood_lighting">1</field>
+
+            <!-- Refreshment -->
+            <field name="mini_refrigerator">1</field>
+            <field name="refrigerator_capacity">80</field>
+            <field name="water_dispenser">1</field>
+            <field name="cup_holders">1</field>
+            <field name="waste_disposal">1</field>
+
+            <!-- Entertainment System -->
+            <field name="led_tv_screens">1</field>
+            <field name="tv_screen_size">32 inch</field>
+            <field name="dvd_player">1</field>
+            <field name="surround_sound">1</field>
+            <field name="wireless_microphone">1</field>
+            <field name="bluetooth_connectivity">1</field>
+
+            <!-- Charging and Power -->
+            <field name="usb_charging_ports">1</field>
+            <field name="power_outlets_230v">1</field>
+            <field name="mobile_holders">1</field>
+            <field name="wireless_charging">1</field>
+            <field name="power_backup">1</field>
+
+            <!-- Connectivity -->
+            <field name="wifi_hotspot">1</field>
+            <field name="gps_navigation">1</field>
+            <field name="real_time_tracking">1</field>
+            <field name="digital_display">1</field>
+            <field name="pa_system">1</field>
+
+            <!-- Safety Systems -->
+            <field name="abs_ebd">1</field>
+            <field name="speed_limiting">1</field>
+            <field name="driver_fatigue_monitor">1</field>
+            <field name="hill_start_assist">1</field>
+            <field name="emergency_braking">1</field>
+
+            <!-- Emergency Equipment -->
+            <field name="fire_extinguisher">1</field>
+            <field name="first_aid_kit">1</field>
+            <field name="emergency_exits">1</field>
+            <field name="emergency_hammer">1</field>
+            <field name="warning_triangles">1</field>
+
+            <!-- Security Features -->
+            <field name="cctv_surveillance">1</field>
+            <field name="gps_tracking_security">1</field>
+            <field name="anti_theft_alarm">1</field>
+            <field name="central_locking">1</field>
+            <field name="panic_button">1</field>
+
+            <field name="description">Premium luxury tourist coach with advanced comfort features, state-of-the-art entertainment system, and comprehensive safety measures. Perfect for long-distance travel and luxury tours.</field>
+            <field name="active">1</field>
+            <field name="state">available</field>
+        </record>
+
+    </data>
+</odoo>

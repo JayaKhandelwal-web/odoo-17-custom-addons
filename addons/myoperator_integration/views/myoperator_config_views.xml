@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- MyOperator Configuration Form View -->
+    <record id="view_myoperator_config_form" model="ir.ui.view">
+        <field name="name">myoperator.config.form</field>
+        <field name="model">myoperator.config</field>
+        <field name="arch" type="xml">
+            <form string="MyOperator Configuration">
+                <header>
+                    <button name="test_connection" type="object" string="Test Connection"
+                            class="btn-primary" icon="fa-plug"/>
+                    <button name="sync_users" type="object" string="Sync Users"
+                            class="btn-secondary" icon="fa-users"/>
+                    <button name="test_search_endpoint" type="object" string="Test Search"
+                            class="btn-secondary" icon="fa-search"/>
+                    <field name="connection_status" widget="statusbar"
+                           statusbar_visible="not_tested,connected,failed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="connection_details" string="Connection Details">
+                            <field name="api_token" password="True"/>
+                            <field name="base_url"/>
+                            <field name="active"/>
+                        </group>
+                        <group name="sync_settings" string="Sync Settings">
+                            <field name="auto_sync_enabled"/>
+                            <field name="sync_interval" invisible="auto_sync_enabled == False"/>
+                            <field name="last_sync_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="callback_settings" string="Callback Settings">
+                            <field name="enable_callback"/>
+                            <field name="callback_source_number" invisible="enable_callback == False" 
+                                   placeholder="e.g., +91XXXXXXXXXX" 
+                                   help="Your MyOperator number to use as source for callbacks"/>
+                        </group>
+                        <group name="webhook_settings" string="Webhook Settings">
+                            <field name="webhook_url" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MyOperator Configuration Tree View -->
+    <record id="view_myoperator_config_tree" model="ir.ui.view">
+        <field name="name">myoperator.config.tree</field>
+        <field name="model">myoperator.config</field>
+        <field name="arch" type="xml">
+            <tree string="MyOperator Configurations">
+                <field name="name"/>
+                <field name="connection_status" widget="badge"
+                       decoration-success="connection_status == 'connected'"
+                       decoration-danger="connection_status == 'failed'"
+                       decoration-muted="connection_status == 'not_tested'"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="auto_sync_enabled" widget="boolean_toggle"/>
+                <field name="enable_callback" widget="boolean_toggle"/>
+                <field name="last_sync_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MyOperator Configuration Action -->
+    <record id="action_myoperator_config" model="ir.actions.act_window">
+        <field name="name">Call Configuration</field>
+        <field name="res_model">myoperator.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first MyOperator configuration!
+            </p>
+            <p>
+                Configure your MyOperator API settings to start syncing call logs and managing telephony features.
+            </p>
+        </field>
+    </record>
+
+    <!-- Call Log Action -->
+    <record id="action_myoperator_call_log" model="ir.actions.act_window">
+        <field name="name">Call Logs</field>
+        <field name="res_model">myoperator.call.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No call logs found.
+            </p>
+            <p>
+                Call logs will appear here once you sync with MyOperator.
+            </p>
+        </field>
+    </record>
+
+    <!-- MyOperator Users Action -->
+    <record id="action_myoperator_user" model="ir.actions.act_window">
+        <field name="name">MyOperator Users</field>
+        <field name="res_model">myoperator.user</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No users found.
+            </p>
+            <p>
+                Sync users from MyOperator to see them here.
+            </p>
+        </field>
+    </record>
+
+    <!-- Sync Call Logs Wizard Action -->
+    <record id="action_sync_call_logs_wizard" model="ir.actions.act_window">
+        <field name="name">Sync Call Logs</field>
+        <field name="res_model">sync.call.logs.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Sync call logs from MyOperator
+            </p>
+            <p>
+                Use this wizard to manually sync call logs from your MyOperator account.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_myoperator_call_config" name="Call Configuration" 
+              parent="menu_myoperator_configuration"
+              action="action_myoperator_config" sequence="10"/>
+              
+    <!-- Telephony Menu Items -->
+    <menuitem id="menu_myoperator_call_logs" name="Call Logs" 
+              parent="menu_myoperator_telephony" 
+              action="action_myoperator_call_log" sequence="10"/>
+              
+    <menuitem id="menu_myoperator_users" name="Users" 
+              parent="menu_myoperator_telephony" 
+              action="action_myoperator_user" sequence="20"/>
+              
+    <menuitem id="menu_sync_call_logs" name="Sync Call Logs" 
+              parent="menu_myoperator_telephony" 
+              action="action_sync_call_logs_wizard" sequence="30"/>
+</odoo>

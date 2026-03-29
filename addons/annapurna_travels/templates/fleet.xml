@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Fleet Page Template -->
+        <template id="fleet_page" name="Annapurna Travels - Our Fleet">
+            <t t-call="website.layout">
+                <t t-set="title">Our Fleet - Annapurna Travels</t>
+                <t t-set="additional_title">Modern Comfortable Buses</t>
+
+                <!-- Add Bootstrap JS to head assets -->
+                <t t-set="head">
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+                </t>
+
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center">
+                                <h1 class="page-title">Our Fleets</h1>
+                                <p class="page-subtitle">
+                                    Well-maintained buses with modern amenities for your comfortable journey
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fleet Categories Filter -->
+                <section class="fleet-filter-section py-4 bg-light">
+                    <div class="container">
+                        <div class="filter-buttons text-center">
+                            <button class="filter-btn active" data-category="all">All Buses</button>
+                            <t t-foreach="categories" t-as="category">
+                                <button class="filter-btn" t-attf-data-category="#{category.id}">
+                                    <t t-esc="category.name"/>
+                                </button>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fleet Grid -->
+                <section class="fleet-grid-section py-5">
+                    <div class="container">
+                        <div class="row g-4" id="fleetGrid">
+                            <t t-foreach="buses" t-as="bus">
+                                <div class="col-lg-4 col-md-6" t-attf-data-category="#{bus.category_id.id}">
+                                    <div class="fleet-card bg-white rounded-4 shadow-sm h-100 overflow-hidden">
+
+                                        <!-- Image Gallery Section -->
+                                        <div class="fleet-gallery position-relative">
+                                            <div class="gallery-container">
+                                                <!-- Main Image Display -->
+                                                <div class="main-image-container position-relative">
+                                                    <img t-if="bus.image"
+                                                         t-attf-src="data:image/png;base64,#{bus.image.decode()}"
+                                                         class="w-100 main-fleet-img"
+                                                         t-att-alt="bus.name"
+                                                         t-attf-id="mainImg#{bus.id}"
+                                                         t-attf-onclick="openImagePreview('data:image/png;base64,#{bus.image.decode()}', '#{bus.name}')"/>
+                                                    <div t-if="not bus.image" class="fleet-placeholder bg-primary d-flex align-items-center justify-content-center">
+                                                        <i class="fas fa-bus fa-4x text-white"></i>
+                                                    </div>
+
+                                                    <!-- Status Badge - Top Left -->
+                                                    <div class="fleet-status position-absolute" style="top: 15px; left: 15px;">
+                                                        <span t-if="bus.state == 'available'" class="badge bg-success px-3 py-2">
+                                                            <i class="fas fa-check-circle me-1"></i>Available
+                                                        </span>
+                                                        <span t-if="bus.state == 'booked'" class="badge bg-warning text-dark px-3 py-2">
+                                                            <i class="fas fa-calendar-times me-1"></i>Booked
+                                                        </span>
+                                                        <span t-if="bus.state == 'maintenance'" class="badge bg-secondary px-3 py-2">
+                                                            <i class="fas fa-tools me-1"></i>Maintenance
+                                                        </span>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <!-- Thumbnail Gallery -->
+                                                <div class="thumbnail-gallery mt-2" t-if="bus.images">
+                                                    <div class="thumbnail-scroll d-flex gap-2 overflow-auto pb-2">
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="fleet-content p-4">
+                                            <h4 class="fleet-title fw-bold mb-2" t-field="bus.name"/>
+                                            <p class="fleet-category text-primary mb-2" t-field="bus.category_id.name"/>
+
+                                            <!-- Basic Info -->
+                                            <div class="fleet-basic-info mb-3">
+                                                <div class="row g-2 text-center">
+                                                    <div class="col-4">
+                                                        <div class="info-item">
+                                                            <i class="fas fa-users text-primary"></i>
+                                                            <small class="d-block"><t t-esc="bus.seating_capacity"/> Seats</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4" t-if="bus.is_ac">
+                                                        <div class="info-item">
+                                                            <i class="fas fa-snowflake text-primary"></i>
+                                                            <small class="d-block">AC</small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-4" t-if="bus.manufacture_year">
+                                                        <div class="info-item">
+                                                            <i class="fas fa-calendar text-primary"></i>
+                                                            <small class="d-block"><t t-esc="bus.manufacture_year"/></small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Action Buttons -->
+                                            <div class="fleet-actions">
+                                                <div class="row g-2 mb-2">
+                                                <div class="col-6">
+                                                    <a t-attf-href="/bus/#{bus.id}"
+                                                       class="btn btn-outline-primary rounded-pill w-100">
+                                                        <i class="fas fa-list me-1"></i>View Features
+                                                    </a>
+                                                </div>
+                                                    <div class="col-6">
+                                                        <button class="btn btn-outline-primary rounded-pill w-100"
+                                                                t-attf-onclick="shareBus(#{bus.id}, '#{bus.name}', '#{bus.daily_rate}')"
+                                                                title="Share this bus">
+                                                            <i class="fas fa-share-alt me-1"></i>Share
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="d-grid">
+                                                    <a href="/booking" class="btn btn-primary rounded-pill">
+                                                        <i class="fas fa-calendar-check me-1"></i>Book This Bus
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hidden Features Data -->
+                                        <div class="bus-features-data" style="display: none;" t-attf-data-bus-id="#{bus.id}">
+                                            <div class="features-list">
+                                                <div class="feature-item" t-if="bus.is_ac" data-feature="ac">
+                                                    <i class="fas fa-snowflake text-primary"></i>
+                                                    <span>Air Conditioning</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.has_wifi" data-feature="wifi">
+                                                    <i class="fas fa-wifi text-primary"></i>
+                                                    <span>WiFi Internet</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.has_music_system" data-feature="music">
+                                                    <i class="fas fa-music text-primary"></i>
+                                                    <span>Music System</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.has_tv" data-feature="tv">
+                                                    <i class="fas fa-tv text-primary"></i>
+                                                    <span>TV/Entertainment</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.has_charging_point" data-feature="charging">
+                                                    <i class="fas fa-plug text-primary"></i>
+                                                    <span>Charging Points</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.has_washroom" data-feature="washroom">
+                                                    <i class="fas fa-restroom text-primary"></i>
+                                                    <span>Onboard Washroom</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.pushback_seats" data-feature="pushback">
+                                                    <i class="fas fa-chair text-primary"></i>
+                                                    <span>Push Back Seats</span>
+                                                </div>
+                                                <div class="feature-item" t-if="bus.reading_lights" data-feature="lights">
+                                                    <i class="fas fa-lightbulb text-primary"></i>
+                                                    <span>Reading Lights</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <!-- No Results Message -->
+                        <div class="row" id="noResults" style="display: none;">
+                            <div class="col text-center py-5">
+                                <i class="fas fa-bus fa-3x text-muted mb-3"></i>
+                                <h4 class="text-muted">No buses found in this category</h4>
+                                <p class="text-muted">Please select a different category or view all buses.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bus Features Section -->
+                <section class="bus-features-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row mb-5">
+                            <div class="col-lg-8 mx-auto text-center">
+                                <h2 class="section-title fw-bold mb-3">Why Choose Our Buses</h2>
+                                <p class="section-subtitle text-muted">
+                                    Experience comfort, safety, and convenience with our premium bus features designed for your perfect journey.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Outside the Bus Features -->
+                        <div class="feature-category mb-5">
+                            <div class="category-header text-center mb-4">
+                                <div class="category-icon bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-bus fa-2x"></i>
+                                </div>
+                                <h3 class="category-title text-primary fw-bold">Outside the Bus</h3>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-primary mb-3">
+                                            <i class="fas fa-leaf fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Eco-friendly engines</h5>
+                                        <p class="feature-description text-muted">
+                                            Every bus is equipped with the latest technology to burn fuel cleanly,
+                                            minimizing our environmental impact and ensuring sustainable travel.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-primary mb-3">
+                                            <i class="fas fa-suitcase fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Under-bus baggage compartment</h5>
+                                        <p class="feature-description text-muted">
+                                            Store up to three bags under the bus safely and securely.
+                                            Spacious compartments ensure your luggage travels comfortably with you.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-primary mb-3">
+                                            <i class="fas fa-shield-alt fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Outstanding safety record</h5>
+                                        <p class="feature-description text-muted">
+                                            We maintain the highest safety standards with rigorous driver training
+                                            and regular vehicle maintenance checks for your peace of mind.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-primary mb-3">
+                                            <i class="fas fa-wheelchair fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Wheelchair accessible</h5>
+                                        <p class="feature-description text-muted">
+                                            All our buses are equipped with wheelchair lifts and accessibility features
+                                            to ensure comfortable travel for passengers with mobility needs.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Inside the Bus Features -->
+                        <div class="feature-category mb-5">
+                            <div class="category-header text-center mb-4">
+                                <div class="category-icon bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-couch fa-2x"></i>
+                                </div>
+                                <h3 class="category-title text-success fw-bold">Inside the Bus</h3>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-success mb-3">
+                                            <i class="fas fa-wheelchair fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Wheelchair space</h5>
+                                        <p class="feature-description text-muted">
+                                            Dedicated space for wheelchairs and mobility scooters with secure tie-downs
+                                            and easy access for comfortable boarding and travel.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-success mb-3">
+                                            <i class="fas fa-snowflake fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Air conditioning</h5>
+                                        <p class="feature-description text-muted">
+                                            Individual adjustable air outlets at your seat to keep you comfortable
+                                            throughout your journey, regardless of weather conditions.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-success mb-3">
+                                            <i class="fas fa-archive fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Overhead storage</h5>
+                                        <p class="feature-description text-muted">
+                                            Spacious overhead compartments for your carry-on baggage,
+                                            freeing up legroom and keeping your essentials within easy reach.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-success mb-3">
+                                            <i class="fas fa-map-marked-alt fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Choose your seat</h5>
+                                        <p class="feature-description text-muted">
+                                            Select your preferred seat when booking. All passengers get assigned seating
+                                            with options for window, aisle, or specific location preferences.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-success mb-3">
+                                            <i class="fas fa-restroom fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">On-board toilet</h5>
+                                        <p class="feature-description text-muted">
+                                            Clean and convenient on-board restroom facilities available during your journey
+                                            for added comfort on longer trips.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- At Your Seat Features -->
+                        <div class="feature-category mb-5">
+                            <div class="category-header text-center mb-4">
+                                <div class="category-icon bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3">
+                                    <i class="fas fa-chair fa-2x"></i>
+                                </div>
+                                <h3 class="category-title text-warning fw-bold">At Your Seat</h3>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-warning mb-3">
+                                            <i class="fas fa-plug fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Individual power outlets</h5>
+                                        <p class="feature-description text-muted">
+                                            Keep your devices charged throughout your journey with standard power outlets
+                                            available at nearly every seat for phones, tablets, and laptops.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-warning mb-3">
+                                            <i class="fas fa-expand-arrows-alt fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Extra legroom</h5>
+                                        <p class="feature-description text-muted">
+                                            Enjoy generous legroom with our thoughtfully designed seating layout
+                                            that prioritizes passenger comfort over maximum capacity.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-warning mb-3">
+                                            <i class="fas fa-wifi fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Free Wi-Fi</h5>
+                                        <p class="feature-description text-muted">
+                                            Stay connected with complimentary Wi-Fi throughout your journey.
+                                            Stream, browse, work, or share your travel experiences online.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-warning mb-3">
+                                            <i class="fas fa-chair fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">Reclining leather seats</h5>
+                                        <p class="feature-description text-muted">
+                                            Comfortable leather seats with reclining capability and footrests
+                                            to help you relax and rest during your journey.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-warning mb-3">
+                                            <i class="fas fa-user-shield fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">3-point safety belts</h5>
+                                        <p class="feature-description text-muted">
+                                            Modern three-point safety belts with shoulder and lap harnesses
+                                            for maximum safety, compatible with standard child car seats.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6">
+                                    <div class="feature-item bg-white p-4 rounded-4 shadow-sm h-100">
+                                        <div class="feature-icon text-warning mb-3">
+                                            <i class="fas fa-window-maximize fa-2x"></i>
+                                        </div>
+                                        <h5 class="feature-title fw-bold mb-2">No middle seats</h5>
+                                        <p class="feature-description text-muted">
+                                            Every passenger gets either a window or aisle seat.
+                                            No uncomfortable middle seats means everyone enjoys the journey.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Fleet Statistics Section -->
+                <section class="fleet-stats-section py-5 bg-primary text-white">
+                    <div class="container">
+                        <div class="row text-center">
+                            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                                <div class="stat-item">
+                                    <h2 class="stat-number display-4 fw-bold"><t t-esc="len(buses)"/>+</h2>
+                                    <p class="stat-label">Modern Buses</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                                <div class="stat-item">
+                                    <h2 class="stat-number display-4 fw-bold">20+</h2>
+                                    <p class="stat-label">Years Experience</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4 mb-lg-0">
+                                <div class="stat-item">
+                                    <h2 class="stat-number display-4 fw-bold">10K+</h2>
+                                    <p class="stat-label">Happy Customers</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6">
+                                <div class="stat-item">
+                                    <h2 class="stat-number display-4 fw-bold">24/7</h2>
+                                    <p class="stat-label">Customer Support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Features Modal -->
+                <div class="modal fade" id="featuresModal" tabindex="-1" aria-labelledby="featuresModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title" id="featuresModalLabel">
+                                    <i class="fas fa-list me-2"></i>Bus Features
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" id="featuresModalBody">
+                                <!-- Features will be populated here by JavaScript -->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Preview Modal -->
+                <div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content bg-dark">
+                            <div class="modal-header bg-dark border-0 text-white">
+                                <h5 class="modal-title" id="imagePreviewModalLabel">
+                                    <i class="fas fa-image me-2"></i><span id="imagePreviewTitle">Bus Image</span>
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-light btn-sm" onclick="zoomOut()" title="Zoom Out">
+                                        <i class="fas fa-search-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-light btn-sm" onclick="resetZoom()" title="Reset Zoom">
+                                        <i class="fas fa-expand-alt"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-light btn-sm" onclick="zoomIn()" title="Zoom In">
+                                        <i class="fas fa-search-plus"></i>
+                                    </button>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            </div>
+                            <div class="modal-body p-0 d-flex align-items-center justify-content-center position-relative" style="height: calc(100vh - 60px); overflow: hidden;">
+                                <div class="image-container position-relative" style="cursor: grab;">
+                                    <img id="previewImage"
+                                         src=""
+                                         alt="Bus Preview"
+                                         class="img-fluid"
+                                         style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s ease; user-select: none;"
+                                         draggable="false"/>
+                                </div>
+
+                                <!-- Zoom controls overlay -->
+                                <div class="zoom-controls position-absolute bottom-0 start-50 translate-middle-x mb-3">
+                                    <div class="bg-dark bg-opacity-75 rounded-pill px-3 py-2 d-flex gap-2 align-items-center">
+                                        <button class="btn btn-sm btn-outline-light border-0" onclick="zoomOut()">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <span class="text-white small" id="zoomLevel">100%</span>
+                                        <button class="btn btn-sm btn-outline-light border-0" onclick="zoomIn()">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Custom CSS -->
+                <style>
+                    .fleet-gallery {
+                        background: #f8f9fa;
+                        padding: 15px;
+                    }
+
+                    .main-fleet-img {
+                        height: 250px;
+                        object-fit: cover;
+                        border-radius: 8px;
+                        cursor: pointer;
+                    }
+
+                    .fleet-placeholder {
+                        height: 250px;
+                        border-radius: 8px;
+                    }
+
+                    .fleet-status .badge,
+                    .fleet-price .badge {
+                        font-size: 0.85rem;
+                        font-weight: 600;
+                        border-radius: 20px;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    }
+
+                    .fleet-status .badge {
+                        backdrop-filter: blur(10px);
+                    }
+
+                    .fleet-price .badge {
+                        backdrop-filter: blur(10px);
+                    }
+
+                    .thumbnail-img {
+                        width: 60px;
+                        height: 45px;
+                        object-fit: cover;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        border: 2px solid transparent;
+                        transition: all 0.3s ease;
+                        flex-shrink: 0;
+                    }
+
+                    .thumbnail-img:hover {
+                        border-color: #007bff;
+                        transform: scale(1.05);
+                    }
+
+                    .thumbnail-img.active {
+                        border-color: #007bff;
+                        box-shadow: 0 2px 8px rgba(0,123,255,0.3);
+                    }
+
+                    .thumbnail-scroll {
+                        max-height: 55px;
+                        scrollbar-width: thin;
+                    }
+
+                    .gallery-nav {
+                        background: rgba(0,0,0,0.5);
+                        border: none;
+                        color: white;
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 10;
+                        transition: all 0.3s ease;
+                    }
+
+                    .gallery-nav:hover {
+                        background: rgba(0,0,0,0.8);
+                        color: white;
+                        transform: translateY(-50%) scale(1.1);
+                    }
+
+                    .filter-btn {
+                        background: #f8f9fa;
+                        border: 1px solid #dee2e6;
+                        color: #495057;
+                        padding: 8px 20px;
+                        margin: 0 5px;
+                        border-radius: 25px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .filter-btn:hover,
+                    .filter-btn.active {
+                        background: #007bff;
+                        color: white;
+                        border-color: #007bff;
+                    }
+
+                    .feature-item {
+                        display: flex;
+                        align-items: center;
+                        padding: 10px 0;
+                        border-bottom: 1px solid #f0f0f0;
+                    }
+
+                    .feature-item:last-child {
+                        border-bottom: none;
+                    }
+
+                    .feature-item i {
+                        width: 25px;
+                        margin-right: 12px;
+                    }
+
+                    .fleet-actions .btn {
+                        transition: all 0.3s ease;
+                    }
+
+                    .fleet-actions .btn:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    }
+
+                    /* Features Section Styles */
+                    .bus-features-section {
+                        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                    }
+
+                    .section-title {
+                        color: #2c3e50;
+                        font-size: 2.5rem;
+                    }
+
+                    .section-subtitle {
+                        font-size: 1.1rem;
+                        line-height: 1.6;
+                    }
+
+                    .feature-category {
+                        position: relative;
+                    }
+
+                    .category-icon {
+                        width: 80px;
+                        height: 80px;
+                        margin: 0 auto;
+                    }
+
+                    .category-title {
+                        font-size: 1.8rem;
+                        margin-bottom: 0;
+                    }
+
+                    .feature-item {
+                        transition: all 0.3s ease;
+                        border: 1px solid #e9ecef;
+                        position: relative;
+                        overflow: hidden;
+                    }
+
+                    .feature-item:hover {
+                        transform: translateY(-8px);
+                        box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+                        border-color: #007bff;
+                    }
+
+                    .feature-item::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 4px;
+                        background: linear-gradient(90deg, #007bff, #28a745, #ffc107);
+                        transform: scaleX(0);
+                        transition: transform 0.3s ease;
+                    }
+
+                    .feature-item:hover::before {
+                        transform: scaleX(1);
+                    }
+
+                    .feature-icon {
+                        transition: all 0.3s ease;
+                    }
+
+                    .feature-item:hover .feature-icon {
+                        transform: scale(1.1);
+                    }
+
+                    .feature-title {
+                        color: #2c3e50;
+                        font-size: 1.2rem;
+                    }
+
+                    .feature-description {
+                        font-size: 0.95rem;
+                        line-height: 1.6;
+                        margin-bottom: 0;
+                    }
+
+                    /* Category specific colors */
+                    .feature-category:nth-child(1) .feature-item:hover .feature-icon {
+                        color: #007bff !important;
+                    }
+
+                    .feature-category:nth-child(2) .feature-item:hover .feature-icon {
+                        color: #28a745 !important;
+                    }
+
+                    .feature-category:nth-child(3) .feature-item:hover .feature-icon {
+                        color: #ffc107 !important;
+                    }
+
+                    /* Responsive Design */
+                    @media (max-width: 768px) {
+                        .section-title {
+                            font-size: 2rem;
+                        }
+
+                        .category-title {
+                            font-size: 1.5rem;
+                        }
+
+                        .category-icon {
+                            width: 60px;
+                            height: 60px;
+                        }
+
+                        .feature-icon i {
+                            font-size: 1.5rem !important;
+                        }
+                    }
+
+                    /* Image Preview Modal Styles */
+                    #imagePreviewModal .modal-content {
+                        border: none;
+                    }
+
+                    #imagePreviewModal .image-container {
+                        transition: transform 0.3s ease;
+                        transform-origin: center center;
+                    }
+
+                    #imagePreviewModal .image-container:active {
+                        cursor: grabbing;
+                    }
+
+                    .zoom-controls {
+                        z-index: 1060;
+                    }
+
+                    .zoom-controls .btn:hover {
+                        background-color: rgba(255,255,255,0.2) !important;
+                    }
+
+                    /* Enhanced main image cursor */
+                    .main-fleet-img {
+                        cursor: zoom-in;
+                    }
+
+                    .main-fleet-img:hover {
+                        opacity: 0.9;
+                        transition: opacity 0.3s ease;
+                    }
+
+                    /* Share button styles */
+                    .share-options {
+                        padding: 20px 0;
+                    }
+
+                    .share-buttons a {
+                        text-decoration: none;
+                        transition: all 0.3s ease;
+                    }
+
+                    .share-buttons a:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    }
+
+                    .share-text textarea {
+                        resize: none;
+                        font-size: 0.9rem;
+                        background-color: #f8f9fa;
+                    }
+
+                    /* Mobile responsive share buttons */
+                    @media (max-width: 576px) {
+                        .fleet-actions .row .col-6 {
+                            margin-bottom: 8px;
+                        }
+
+                        .fleet-actions .btn {
+                            font-size: 0.875rem;
+                            padding: 8px 12px;
+                        }
+                    }
+                </style>
+
+                <!-- Load Bootstrap JS and Custom Scripts -->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    <![CDATA[
+                    // Gallery functionality
+                    function setMainImage(busId, thumbnailElement) {
+                        const mainImg = document.getElementById('mainImg' + busId);
+                        if (mainImg && thumbnailElement) {
+                            mainImg.src = thumbnailElement.src;
+                            mainImg.alt = thumbnailElement.alt;
+
+                            // Update active thumbnail
+                            const thumbnailContainer = thumbnailElement.closest('.thumbnail-gallery');
+                            if (thumbnailContainer) {
+                                thumbnailContainer.querySelectorAll('.thumbnail-img').forEach(img => {
+                                    img.classList.remove('active');
+                                });
+                                thumbnailElement.classList.add('active');
+                            }
+                        }
+                    }
+
+                    function changeImage(busId, direction) {
+                        const thumbnailContainer = document.querySelector('[data-category] img[id="mainImg' + busId + '"]');
+                        if (!thumbnailContainer) return;
+
+                        const galleryContainer = thumbnailContainer.closest('.fleet-card').querySelector('.thumbnail-gallery');
+                        if (!galleryContainer) return;
+
+                        const thumbnails = galleryContainer.querySelectorAll('.thumbnail-img');
+                        if (thumbnails.length === 0) return;
+
+                        const activeIndex = Array.from(thumbnails).findIndex(img => img.classList.contains('active'));
+                        let newIndex = activeIndex + direction;
+
+                        if (newIndex >= thumbnails.length) newIndex = 0;
+                        if (newIndex < 0) newIndex = thumbnails.length - 1;
+
+                        setMainImage(busId, thumbnails[newIndex]);
+                    }
+
+                    // Features Modal functionality
+                    function showFeatures(busId) {
+                        const featuresData = document.querySelector('.bus-features-data[data-bus-id="' + busId + '"]');
+                        const modalBody = document.getElementById('featuresModalBody');
+
+                        if (featuresData && modalBody) {
+                            const features = featuresData.querySelectorAll('.feature-item');
+
+                            if (features.length > 0) {
+                                let featuresHTML = '<div class="features-list">';
+                                features.forEach(feature => {
+                                    featuresHTML += '<div class="feature-item">' + feature.innerHTML + '</div>';
+                                });
+                                featuresHTML += '</div>';
+                                modalBody.innerHTML = featuresHTML;
+                            } else {
+                                modalBody.innerHTML = '<p class="text-muted text-center py-3">No special features available for this bus.</p>';
+                            }
+
+                            // Wait for Bootstrap to be available, then show modal
+                            if (typeof bootstrap !== 'undefined') {
+                                const modal = new bootstrap.Modal(document.getElementById('featuresModal'));
+                                modal.show();
+                            } else {
+                                console.error('Bootstrap is not loaded yet');
+                                // Fallback: You could manually show/hide the modal here
+                                alert('Feature details will be shown in a popup once the page fully loads.');
+                            }
+                        }
+                    }
+
+                    // Share Bus functionality
+                    function shareBus(busId, busName, dailyRate) {
+                        // Create clean URL slug from bus name
+                        const busSlug = busName.toLowerCase()
+                            .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+                            .replace(/\s+/g, '-') // Replace spaces with hyphens
+                            .replace(/-+/g, '-') // Replace multiple hyphens with single
+                            .trim();
+
+                        // Create share URL with bus name
+                        const currentUrl = window.location.href.split('#')[0]; // Remove any existing hash
+                        const busUrl = currentUrl + '#' + busSlug;
+
+
+                        // Check if Web Share API is supported
+                        if (navigator.share && navigator.canShare(shareData)) {
+                            navigator.share(shareData)
+                                .then(() => console.log('Successfully shared'))
+                                .catch((error) => console.log('Error sharing', error));
+                        } else {
+                            // Fallback: Copy just the URL to clipboard and show options
+                            if (navigator.clipboard && window.isSecureContext) {
+                                navigator.clipboard.writeText(busUrl).then(() => {
+                                    showShareFallback(shareData, busName, true);
+                                }).catch(() => {
+                                    showShareFallback(shareData, busName, false);
+                                });
+                            } else {
+                                showShareFallback(shareData, busName, false);
+                            }
+                        }
+                    }
+
+                    function showShareFallback(shareData, busName, copiedToClipboard) {
+                        // Create modal content for share options
+                        const modalBody = document.getElementById('featuresModalBody');
+                        const modalTitle = document.getElementById('featuresModalLabel');
+
+                        modalTitle.innerHTML = '<i class="fas fa-share-alt me-2"></i>Share ' + busName;
+
+                        // Create clean share text for social media
+                        const cleanShareText = shareData.text + ' - ' + shareData.url;
+
+                        let shareOptions = `
+                            <div class="share-options text-center">
+                                ${copiedToClipboard ?
+                                    '<div class="alert alert-success mb-3"><i class="fas fa-check-circle me-2"></i>Link copied to clipboard!</div>' :
+                                    '<div class="alert alert-info mb-3"><i class="fas fa-info-circle me-2"></i>Click the links below to share:</div>'
+                                }
+
+                                <div class="share-buttons d-grid gap-2 mb-3">
+                                    <a href="https://wa.me/?text=${encodeURIComponent(cleanShareText)}"
+                                       target="_blank"
+                                       class="btn btn-success">
+                                        <i class="fab fa-whatsapp me-2"></i>Share on WhatsApp
+                                    </a>
+                                    <a href="https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}"
+                                       target="_blank"
+                                       class="btn btn-primary">
+                                        <i class="fab fa-telegram me-2"></i>Share on Telegram
+                                    </a>
+                                    <a href="mailto:?subject=${encodeURIComponent(shareData.title)}&body=${encodeURIComponent(cleanShareText)}"
+                                       class="btn btn-secondary">
+                                        <i class="fas fa-envelope me-2"></i>Share via Email
+                                    </a>
+                                </div>
+
+                                <div class="share-text">
+                                    <label class="form-label fw-bold">Or copy this link:</label>
+                                    <textarea class="form-control" rows="2" readonly onclick="this.select()">${shareData.url}</textarea>
+                                    <button class="btn btn-outline-primary btn-sm mt-2" onclick="copyShareText(this)">
+                                        <i class="fas fa-copy me-1"></i>Copy Link
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+
+                        modalBody.innerHTML = shareOptions;
+
+                        // Show modal
+                        if (typeof bootstrap !== 'undefined') {
+                            const modal = new bootstrap.Modal(document.getElementById('featuresModal'));
+                            modal.show();
+                        }
+                    }
+
+                    function copyShareText(button) {
+                        const textarea = button.previousElementSibling;
+                        textarea.select();
+                        document.execCommand('copy');
+
+                        // Show feedback
+                        const originalText = button.innerHTML;
+                        button.innerHTML = '<i class="fas fa-check me-1"></i>Copied!';
+                        button.classList.remove('btn-outline-primary');
+                        button.classList.add('btn-success');
+
+                        setTimeout(() => {
+                            button.innerHTML = originalText;
+                            button.classList.remove('btn-success');
+                            button.classList.add('btn-outline-primary');
+                        }, 2000);
+                    }
+
+                    // Filter functionality
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const filterButtons = document.querySelectorAll('.filter-btn');
+                        const fleetCards = document.querySelectorAll('[data-category]');
+                        const noResults = document.getElementById('noResults');
+
+                        filterButtons.forEach(button => {
+                            button.addEventListener('click', function() {
+                                const category = this.getAttribute('data-category');
+
+                                // Update active button
+                                filterButtons.forEach(btn => btn.classList.remove('active'));
+                                this.classList.add('active');
+
+                                // Filter cards
+                                let visibleCount = 0;
+                                fleetCards.forEach(card => {
+                                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                                        card.style.display = 'block';
+                                        visibleCount++;
+                                    } else {
+                                        card.style.display = 'none';
+                                    }
+                                });
+
+                                // Show/hide no results message
+                                if (visibleCount === 0) {
+                                    noResults.style.display = 'block';
+                                } else {
+                                    noResults.style.display = 'none';
+                                }
+                            });
+                        });
+
+                        // Initialize first thumbnail as active
+                        document.querySelectorAll('.thumbnail-gallery').forEach(gallery => {
+                            const firstThumbnail = gallery.querySelector('.thumbnail-img');
+                            if (firstThumbnail) {
+                                firstThumbnail.classList.add('active');
+                            }
+                        });
+                    });
+
+                    // Image Preview functionality
+                    let currentZoom = 1;
+                    let isDragging = false;
+                    let startX = 0;
+                    let startY = 0;
+                    let translateX = 0;
+                    let translateY = 0;
+
+                    function openImagePreview(imageSrc, busName) {
+                        const modal = document.getElementById('imagePreviewModal');
+                        const previewImage = document.getElementById('previewImage');
+                        const titleElement = document.getElementById('imagePreviewTitle');
+
+                        // Set image and title
+                        previewImage.src = imageSrc;
+                        titleElement.textContent = busName || 'Bus Image';
+
+                        // Reset zoom and position
+                        currentZoom = 1;
+                        translateX = 0;
+                        translateY = 0;
+                        updateImageTransform();
+
+                        // Show modal
+                        if (typeof bootstrap !== 'undefined') {
+                            const imageModal = new bootstrap.Modal(modal);
+                            imageModal.show();
+                        }
+                    }
+
+                    function updateImageTransform() {
+                        const previewImage = document.getElementById('previewImage');
+                        const container = previewImage.parentElement;
+
+                        previewImage.style.transform = `translate(${translateX}px, ${translateY}px) scale(${currentZoom})`;
+
+                        // Update zoom level display
+                        document.getElementById('zoomLevel').textContent = Math.round(currentZoom * 100) + '%';
+
+                        // Update cursor based on zoom level
+                        if (currentZoom > 1) {
+                            container.style.cursor = 'grab';
+                        } else {
+                            container.style.cursor = 'zoom-in';
+                        }
+                    }
+
+                    function zoomIn() {
+                        if (currentZoom < 3) {
+                            currentZoom += 0.25;
+                            updateImageTransform();
+                        }
+                    }
+
+                    function zoomOut() {
+                        if (currentZoom > 0.5) {
+                            currentZoom -= 0.25;
+                            // Reset position if zooming out beyond 1x
+                            if (currentZoom <= 1) {
+                                translateX = 0;
+                                translateY = 0;
+                            }
+                            updateImageTransform();
+                        }
+                    }
+
+                    function resetZoom() {
+                        currentZoom = 1;
+                        translateX = 0;
+                        translateY = 0;
+                        updateImageTransform();
+                    }
+
+                    // Add event listeners for image preview modal
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const previewModal = document.getElementById('imagePreviewModal');
+                        const previewImage = document.getElementById('previewImage');
+                        const container = previewImage.parentElement;
+
+                        // Mouse wheel zoom
+                        container.addEventListener('wheel', function(e) {
+                            e.preventDefault();
+                            if (e.deltaY < 0) {
+                                zoomIn();
+                            } else {
+                                zoomOut();
+                            }
+                        });
+
+                        // Click to zoom
+                        container.addEventListener('click', function(e) {
+                            if (currentZoom === 1) {
+                                zoomIn();
+                            }
+                        });
+
+                        // Drag functionality for zoomed images
+                        container.addEventListener('mousedown', function(e) {
+                            if (currentZoom > 1) {
+                                isDragging = true;
+                                startX = e.clientX - translateX;
+                                startY = e.clientY - translateY;
+                                container.style.cursor = 'grabbing';
+                                e.preventDefault();
+                            }
+                        });
+
+                        document.addEventListener('mousemove', function(e) {
+                            if (isDragging && currentZoom > 1) {
+                                translateX = e.clientX - startX;
+                                translateY = e.clientY - startY;
+                                updateImageTransform();
+                            }
+                        });
+
+                        document.addEventListener('mouseup', function() {
+                            if (isDragging) {
+                                isDragging = false;
+                                if (currentZoom > 1) {
+                                    container.style.cursor = 'grab';
+                                }
+                            }
+                        });
+
+                        // Keyboard shortcuts
+                        document.addEventListener('keydown', function(e) {
+                            if (previewModal.classList.contains('show')) {
+                                switch(e.key) {
+                                    case '+':
+                                    case '=':
+                                        e.preventDefault();
+                                        zoomIn();
+                                        break;
+                                    case '-':
+                                        e.preventDefault();
+                                        zoomOut();
+                                        break;
+                                    case '0':
+                                        e.preventDefault();
+                                        resetZoom();
+                                        break;
+                                    case 'Escape':
+                                        bootstrap.Modal.getInstance(previewModal).hide();
+                                        break;
+                                }
+                            }
+                        });
+                    });
+                    ]]>
+                </script>
+
+            </t>
+        </template>
+
+    </data>
+</odoo>

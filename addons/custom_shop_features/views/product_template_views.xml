@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Hide only the price display directly -->
+    <template id="hide_product_price" inherit_id="website_sale.product" name="Hide Product Price">
+        <!-- Find and hide the price element -->
+        <xpath expr="//h1" position="after">
+            <style>
+                /* Hide price elements */
+                .oe_currency_value, 
+                .oe_price,
+                .product_price {
+                    display: none !important;
+                }
+                /* Hide add to cart button */
+                #add_to_cart {
+                    display: none !important;
+                }
+            </style>
+        </xpath>
+    </template>
+    <!-- Add social share buttons below product description -->
+    <template id="add_share_buttons" inherit_id="website_sale.product" name="Add Share Buttons">
+        <!-- Target the product description to place sharing buttons after it -->
+        <xpath expr="//div[hasclass('o_not_editable')]" position="after">
+            <div class="mt-3 mb-3">
+                <span class="me-2">Share:</span>
+                <!-- Facebook -->
+                <a t-att-href="'https://www.facebook.com/sharer/sharer.php?u=' + 'https://annapurnatravels.co.in' + request.httprequest.path" 
+                   target="_blank" class="btn btn-sm btn-outline-secondary me-1 mb-1">
+                    <i class="fa fa-facebook"></i>
+                </a>
+                <!-- WhatsApp -->
+                <a t-att-href="'https://api.whatsapp.com/send?text=' + product.name + ' ' + 'https://annapurnatravels.co.in' + request.httprequest.path" 
+                   target="_blank" class="btn btn-sm btn-outline-success me-1 mb-1">
+                    <i class="fa fa-whatsapp"></i>
+                </a>
+                <!-- Twitter -->
+                <a t-att-href="'https://twitter.com/intent/tweet?text=' + product.name + '&amp;url=' + 'https://annapurnatravels.co.in' + request.httprequest.path" 
+                   target="_blank" class="btn btn-sm btn-outline-info me-1 mb-1">
+                    <i class="fa fa-twitter"></i>
+                </a>
+                <!-- LinkedIn -->
+                <a t-att-href="'https://www.linkedin.com/sharing/share-offsite/?url=' + 'https://annapurnatravels.co.in' + request.httprequest.path" 
+                   target="_blank" class="btn btn-sm btn-outline-primary me-1 mb-1">
+                    <i class="fa fa-linkedin"></i>
+                </a>
+                <!-- Email -->
+                <a t-att-href="'mailto:?subject=' + product.name + '&amp;body=Check out this product: ' + 'https://annapurnatravels.co.in' + request.httprequest.path" 
+                   class="btn btn-sm btn-outline-secondary me-1 mb-1">
+                   <i class="fa fa-envelope"></i>
+                </a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

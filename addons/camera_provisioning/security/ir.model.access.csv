@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cctv_camera,cctv.camera,model_cctv_camera,base.group_user,1,1,1,1
+access_cctv_camera_provision_wizard,cctv.camera.provision.wizard,model_cctv_camera_provision_wizard,base.group_user,1,1,1,1

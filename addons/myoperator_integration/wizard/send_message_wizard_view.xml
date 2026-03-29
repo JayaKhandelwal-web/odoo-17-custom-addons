@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Send Message Wizard Form -->
+    <record id="view_send_message_wizard_form" model="ir.ui.view">
+        <field name="name">myoperator.send.message.wizard.form</field>
+        <field name="model">myoperator.send.message.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send WhatsApp Message">
+                <header>
+                    <button name="action_refresh_templates" type="object" string="Refresh Templates"
+                            class="btn-secondary" icon="fa-refresh"
+                            invisible="message_type != 'template'"/>
+                </header>
+
+                <group>
+                    <field name="conversation_id" readonly="1" invisible="conversation_id == False"/>
+                    <field name="phone_number" placeholder="e.g., +919999999999" required="1"/>
+                    <field name="message_type" widget="radio" options="{'horizontal': true}"/>
+                </group>
+
+                <!-- Text Message Section -->
+                <group string="Text Message" invisible="message_type != 'text'">
+                    <field name="message_text" placeholder="Type your message here..."
+                           widget="text" required="message_type == 'text'"/>
+                </group>
+
+                <!-- Template Message Section -->
+                <group string="Template Message" invisible="message_type != 'template'">
+                    <field name="template_selection" placeholder="Select from available templates"
+                           required="message_type == 'template' and not template_name"/>
+                    <label for="template_name" string="Or enter template name manually:"/>
+                    <field name="template_name" placeholder="e.g., hello_world" nolabel="1"/>
+                    <field name="template_parameters" placeholder='{"1": "parameter_value"}'
+                           widget="text" help="For templates with variables. Use JSON format."/>
+                </group>
+
+                <!-- Available Templates Display -->
+                <group string="Available Templates" invisible="message_type != 'template'">
+                    <field name="available_templates" readonly="1" nolabel="1"
+                           widget="text" height="120"/>
+                </group>
+
+                <!-- Info Messages -->
+                <div class="alert alert-info" role="alert" invisible="message_type != 'template'">
+                    <strong><i class="fa fa-info-circle"/> Template Messages:</strong>
+                    Can be sent anytime, even after 24 hours of last customer message.
+                    Perfect for re-engaging inactive conversations or sending promotional content.
+                </div>
+
+                <div class="alert alert-warning" role="alert" invisible="message_type != 'text'">
+                    <strong><i class="fa fa-clock-o"/> Text Messages:</strong>
+                    Can only be sent within 24 hours of the last customer message.
+                    For older conversations, switch to template messages.
+                </div>
+
+                <footer>
+                    <button name="action_send_message" type="object" string="Send Message"
+                            class="btn-primary" icon="fa-paper-plane"/>
+                    <button name="action_send_template" type="object" string="Quick Send Template"
+                            class="btn-warning" icon="fa-file-text-o"
+                            invisible="message_type == 'template'"
+                            help="Quickly send a template message (switches to template mode)"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" icon="fa-times"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Send Message Wizard Action -->
+    <record id="action_send_message_wizard" model="ir.actions.act_window">
+        <field name="name">Send WhatsApp Message</field>
+        <field name="res_model">myoperator.send.message.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Send Template Message Action (Direct Template Mode) -->
+    <record id="action_send_template_wizard" model="ir.actions.act_window">
+        <field name="name">Send WhatsApp Template</field>
+        <field name="res_model">myoperator.send.message.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_message_type': 'template'}</field>
+    </record>
+
+    <!-- Quick Actions Menu Items -->
+    <menuitem id="menu_send_whatsapp_message" name="Send WhatsApp Message"
+              parent="menu_myoperator_quick_actions"
+              action="action_send_message_wizard" sequence="10"/>
+
+    <menuitem id="menu_send_whatsapp_template" name="Send WhatsApp Template"
+              parent="menu_myoperator_quick_actions"
+              action="action_send_template_wizard" sequence="11"/>
+</odoo>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Tree View -->
+        <record id="view_client_logo_tree" model="ir.ui.view">
+            <field name="name">annapurna.client.logo.tree</field>
+            <field name="model">annapurna.client.logo</field>
+            <field name="arch" type="xml">
+                <tree string="Client Logos" default_order="sequence, name">
+                    <field name="sequence" widget="handle"/>
+                    <field name="logo" widget="image" options="{'size': [64, 64]}"/>
+                    <field name="name"/>
+                    <field name="website_url"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_client_logo_form" model="ir.ui.view">
+            <field name="name">annapurna.client.logo.form</field>
+            <field name="model">annapurna.client.logo</field>
+            <field name="arch" type="xml">
+                <form string="Client Logo">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger"
+                                invisible="active"/>
+
+                        <field name="logo" widget="image" class="oe_avatar"
+                               options="{'preview_image': 'logo', 'size': [200, 200]}"/>
+
+                        <div class="oe_title">
+                            <label for="name" string="Client Name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g., ABC Corporation"/>
+                            </h1>
+                        </div>
+
+                        <group>
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="website_url" widget="url"
+                                       placeholder="https://www.example.com"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" placeholder="Optional: Add details about this client..."/>
+                            </page>
+                            <page string="History">
+                                <group>
+                                    <group>
+                                        <field name="create_date"/>
+                                    </group>
+                                    <group>
+                                        <field name="write_date"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_client_logo_kanban" model="ir.ui.view">
+            <field name="name">annapurna.client.logo.kanban</field>
+            <field name="model">annapurna.client.logo</field>
+            <field name="arch" type="xml">
+                <kanban string="Client Logos" default_order="sequence, name">
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="logo"/>
+                    <field name="website_url"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('annapurna.client.logo', 'logo', record.id.raw_value)"
+                                         alt="Client Logo" class="o_image_64_cover"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="name"/>
+                                    </strong>
+                                    <div t-if="record.website_url.raw_value">
+                                        <i class="fa fa-globe"/>
+                                        <field name="website_url" widget="url"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action - THIS WAS MISSING -->
+        <record id="action_client_logo" model="ir.actions.act_window">
+            <field name="name">Client Logos</field>
+            <field name="res_model">annapurna.client.logo</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Add your first client logo!
+                </p>
+                <p>
+                    Upload client logos to display on your website's "Our Clients" section.
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

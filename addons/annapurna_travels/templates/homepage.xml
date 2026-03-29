@@ -1,0 +1,727 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Homepage Template -->
+        <template id="homepage" name="Annapurna Travels - Homepage">
+            <t t-call="website.layout">
+                <t t-set="title">Annapurna Travels - Luxurious Journey with Care</t>
+                <t t-set="additional_title">Best Bus Services in Bhopal</t>
+
+                <!-- Custom CSS for Marquee -->
+                <style>
+                    .fleet-marquee-container {
+                        overflow: hidden;
+                        position: relative;
+                        width: 100%;
+                        padding: 20px 0;
+                    }
+
+                    .fleet-marquee-wrapper {
+                        display: flex;
+                        width: fit-content;
+                        animation: marquee 30s linear infinite;
+                    }
+
+                    .fleet-marquee-wrapper:hover {
+                        animation-play-state: paused;
+                    }
+
+                    .fleet-card-marquee {
+                        flex: 0 0 380px;
+                        margin: 0 15px;
+                        background: white;
+                        border-radius: 1rem;
+                        overflow: hidden;
+                        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    }
+
+                    .fleet-card-marquee:hover {
+                        transform: translateY(-10px);
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+                    }
+
+                    @keyframes marquee {
+                        0% {
+                            transform: translateX(0);
+                        }
+                        100% {
+                            transform: translateX(-50%);
+                        }
+                    }
+
+                    .fleet-image {
+                        position: relative;
+                        height: 250px;
+                        overflow: hidden;
+                    }
+
+                    .fleet-image img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .fleet-placeholder {
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .fleet-badge {
+                        z-index: 10;
+                    }
+
+                    .fleet-content {
+                        padding: 1.5rem;
+                    }
+
+                    .fleet-title {
+                        font-size: 1.25rem;
+                        margin-bottom: 0.5rem;
+                        color: #2c3e50;
+                    }
+
+                    .fleet-category {
+                        font-size: 0.95rem;
+                        color: #3498db;
+                        margin-bottom: 0.75rem;
+                    }
+
+                    .fleet-features {
+                        margin-bottom: 1rem;
+                    }
+
+                    .fleet-price {
+                        font-size: 1.1rem;
+                        color: #2c3e50;
+                    }
+
+                    /* Gradient overlay for edges */
+                    .fleet-marquee-container::before,
+                    .fleet-marquee-container::after {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        width: 100px;
+                        height: 100%;
+                        z-index: 2;
+                        pointer-events: none;
+                    }
+
+                    .fleet-marquee-container::before {
+                        left: 0;
+                        background: linear-gradient(to right, rgba(248,249,250,1), rgba(248,249,250,0));
+                    }
+
+                    .fleet-marquee-container::after {
+                        right: 0;
+                        background: linear-gradient(to left, rgba(248,249,250,1), rgba(248,249,250,0));
+                    }
+
+                    /* Responsive adjustments */
+                    @media (max-width: 768px) {
+                        .fleet-card-marquee {
+                            flex: 0 0 300px;
+                        }
+
+                        .fleet-marquee-wrapper {
+                            animation: marquee 20s linear infinite;
+                        }
+                    }
+                </style>
+
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <!-- Hero Content -->
+                    <div class="hero-content">
+                        <h1 class="hero-title animate-fade-up">
+                            Luxurious Journey with Care
+                        </h1>
+                        <p class="hero-subtitle animate-fade-up">
+                            Experience premium travel services with comfort, safety, and reliability across India
+                        </p>
+                        <div class="hero-buttons animate-fade-up">
+                            <a href="/booking" class="btn btn-hero btn-primary">
+                                <i class="fas fa-calendar-check me-2"></i>PLAN YOUR TRIP
+                            </a>
+                            <a href="/fleet" class="btn btn-hero btn-outline">
+                                <i class="fas fa-bus me-2"></i>EXPLORE FLEET
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Floating Elements -->
+                    <div class="floating-elements">
+                        <div class="floating-icon floating-1">
+                            <i class="fas fa-bus"></i>
+                        </div>
+                        <div class="floating-icon floating-2">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="floating-icon floating-3">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fleet Preview Section with Marquee -->
+                <section class="fleet-section py-5" style="background-color: #f8f9fa;">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-6 mx-auto text-center mb-5">
+                                <h2 class="section-title display-5 fw-bold mb-3">Our Modern Fleet</h2>
+                                <p class="section-subtitle text-muted">
+                                    Well-maintained buses with modern amenities for your comfort
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Marquee Container -->
+                        <div class="fleet-marquee-container">
+                            <div class="fleet-marquee-wrapper" id="fleetMarquee">
+                                <!-- Dynamic Fleet Cards -->
+                                <t t-if="buses">
+                                    <t t-foreach="buses" t-as="bus">
+                                        <div class="fleet-card-marquee">
+                                            <div class="fleet-image position-relative">
+                                                <img t-if="bus.image"
+                                                     t-attf-src="data:image/png;base64,#{bus.image.decode()}"
+                                                     t-att-alt="bus.name"/>
+                                                <div t-if="not bus.image" class="fleet-placeholder bg-primary">
+                                                    <i class="fas fa-bus fa-3x text-white"></i>
+                                                </div>
+                                                <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                    <span class="badge bg-success" t-if="bus.state == 'available'">Available</span>
+                                                    <span class="badge bg-warning" t-if="bus.state == 'booked'">Booked</span>
+                                                    <span class="badge bg-secondary" t-if="bus.state == 'maintenance'">Maintenance</span>
+                                                </div>
+                                            </div>
+                                            <div class="fleet-content">
+                                                <h5 class="fleet-title fw-bold" t-field="bus.name"/>
+                                                <p class="fleet-category" t-field="bus.category_id.name"/>
+                                                <div class="fleet-features">
+                                                    <small class="text-muted me-3">
+                                                        <i class="fas fa-users me-1"></i><t t-esc="bus.seating_capacity"/> Seats
+                                                    </small>
+                                                    <small class="text-muted" t-if="bus.is_ac">
+                                                        <i class="fas fa-snowflake me-1"></i>AC
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                    <!-- Duplicate for seamless loop -->
+                                    <t t-foreach="buses" t-as="bus">
+                                        <div class="fleet-card-marquee">
+                                            <div class="fleet-image position-relative">
+                                                <img t-if="bus.image"
+                                                     t-attf-src="data:image/png;base64,#{bus.image.decode()}"
+                                                     t-att-alt="bus.name"/>
+                                                <div t-if="not bus.image" class="fleet-placeholder bg-primary">
+                                                    <i class="fas fa-bus fa-3x text-white"></i>
+                                                </div>
+                                                <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                    <span class="badge bg-success" t-if="bus.state == 'available'">Available</span>
+                                                    <span class="badge bg-warning" t-if="bus.state == 'booked'">Booked</span>
+                                                    <span class="badge bg-secondary" t-if="bus.state == 'maintenance'">Maintenance</span>
+                                                </div>
+                                            </div>
+                                            <div class="fleet-content">
+                                                <h5 class="fleet-title fw-bold" t-field="bus.name"/>
+                                                <p class="fleet-category" t-field="bus.category_id.name"/>
+                                                <div class="fleet-features">
+                                                    <small class="text-muted me-3">
+                                                        <i class="fas fa-users me-1"></i><t t-esc="bus.seating_capacity"/> Seats
+                                                    </small>
+                                                    <small class="text-muted" t-if="bus.is_ac">
+                                                        <i class="fas fa-snowflake me-1"></i>AC
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+
+                                <!-- Static Fleet Cards (if no dynamic data) -->
+                                <t t-if="not buses">
+                                    <!-- Card 1 -->
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-hawamahal.jpg"
+                                                 alt="28 Seater Mini Bus"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">28 Seater Mini Bus</h5>
+                                            <p class="fleet-category">Mini Buses</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>28 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹2,500/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 2 -->
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-tajmahal.jpg"
+                                                 alt="48 Seater BUS"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">48 Seater BUS</h5>
+                                            <p class="fleet-category">Business Class Coaches</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>48 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹4,000/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 3 -->
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-london.jpg"
+                                                 alt="52 Seater Luxury AC Coach"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">52 Seater Luxury AC Coach</h5>
+                                            <p class="fleet-category">Luxury AC Coaches</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>52 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹5,500/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 4 -->
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-hawamahal.jpg"
+                                                 alt="Tourist Bus"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-warning">Booked</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">35 Seater Tourist Bus</h5>
+                                            <p class="fleet-category">Standard Category</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>35 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹3,200/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 5 -->
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-tajmahal.jpg"
+                                                 alt="Deluxe Coach"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">45 Seater Deluxe Coach</h5>
+                                            <p class="fleet-category">Premium Category</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>45 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹4,500/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Duplicate cards for seamless loop -->
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-hawamahal.jpg"
+                                                 alt="28 Seater Mini Bus"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">28 Seater Mini Bus</h5>
+                                            <p class="fleet-category">Mini Buses</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>28 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹2,500/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-tajmahal.jpg"
+                                                 alt="48 Seater BUS"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">48 Seater BUS</h5>
+                                            <p class="fleet-category">Business Class Coaches</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>48 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹4,000/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-london.jpg"
+                                                 alt="52 Seater Luxury AC Coach"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">52 Seater Luxury AC Coach</h5>
+                                            <p class="fleet-category">Luxury AC Coaches</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>52 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹5,500/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-hawamahal.jpg"
+                                                 alt="Tourist Bus"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-warning">Booked</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">35 Seater Tourist Bus</h5>
+                                            <p class="fleet-category">Standard Category</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>35 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹3,200/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="fleet-card-marquee">
+                                        <div class="fleet-image position-relative">
+                                            <img src="/annapurna_travels/static/src/img/bus-tajmahal.jpg"
+                                                 alt="Deluxe Coach"/>
+                                            <div class="fleet-badge position-absolute" style="top: 15px; left: 15px;">
+                                                <span class="badge bg-success">Available</span>
+                                            </div>
+                                        </div>
+                                        <div class="fleet-content">
+                                            <h5 class="fleet-title fw-bold">45 Seater Deluxe Coach</h5>
+                                            <p class="fleet-category">Premium Category</p>
+                                            <div class="fleet-features">
+                                                <small class="text-muted me-3">
+                                                    <i class="fas fa-users me-1"></i>45 Seats
+                                                </small>
+                                                <small class="text-muted">
+                                                    <i class="fas fa-snowflake me-1"></i>AC
+                                                </small>
+                                            </div>
+                                            <div class="fleet-price">
+                                                <span class="fw-bold">₹4,500/day</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col text-center">
+                                <a href="/fleet" class="btn btn-outline-primary btn-lg rounded-pill px-5">
+                                    View Complete Fleet <i class="fas fa-arrow-right ms-2"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services Section -->
+                <section class="services-section pt-3 pb-5 pt-lg-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 mx-auto text-center mb-5">
+                                <h2 class="section-title display-5 fw-bold mb-3">Our Premium Services</h2>
+                                <p class="section-subtitle text-muted">
+                                    We provide comprehensive travel solutions designed to make your journey comfortable and memorable
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row g-4">
+                            <t t-foreach="services" t-as="service">
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="service-card h-100 bg-white rounded-4 p-4 shadow-sm position-relative overflow-hidden">
+                                        <div class="service-icon mb-3">
+                                            <i t-attf-class="fas #{service.icon or 'fa-bus'} fa-2x"></i>
+                                        </div>
+                                        <h4 class="service-title h5 fw-bold mb-3" t-field="service.name"/>
+                                        <p class="service-description text-muted mb-4" t-field="service.description"/>
+                                        <div class="service-features mb-3">
+                                            <small class="text-success" t-if="service.includes_driver">
+                                                <i class="fas fa-check me-1"></i>Driver Included
+                                            </small>
+                                            <small class="text-success ms-3" t-if="service.includes_fuel">
+                                                <i class="fas fa-check me-1"></i>Fuel Included
+                                            </small>
+                                        </div>
+                                        <div class="service-hover-effect position-absolute top-0 start-0 w-100 h-100 bg-primary opacity-0"></div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <!-- Static Services if no dynamic data -->
+                        <div class="row g-4" t-if="not services">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="service-card h-100 bg-white rounded-4 p-4 shadow-sm position-relative overflow-hidden">
+                                    <div class="service-icon mb-3">
+                                        <i class="fas fa-building fa-2x"></i>
+                                    </div>
+                                    <h4 class="service-title h5 fw-bold mb-3">Corporate Travel</h4>
+                                    <p class="service-description text-muted mb-4">Professional transportation services for business meetings and corporate events with premium comfort.</p>
+                                    <div class="service-features mb-3">
+                                        <small class="text-success">
+                                            <i class="fas fa-check me-1"></i>Driver Included
+                                        </small>
+                                        <small class="text-success ms-3">
+                                            <i class="fas fa-check me-1"></i>Fuel Included
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="service-card h-100 bg-white rounded-4 p-4 shadow-sm position-relative overflow-hidden">
+                                    <div class="service-icon mb-3">
+                                        <i class="fas fa-heart fa-2x"></i>
+                                    </div>
+                                    <h4 class="service-title h5 fw-bold mb-3">Marriage &amp; Events</h4>
+                                    <p class="service-description text-muted mb-4">Special occasion transportation for weddings and celebrations with decorated vehicles.</p>
+                                    <div class="service-features mb-3">
+                                        <small class="text-success">
+                                            <i class="fas fa-check me-1"></i>Driver Included
+                                        </small>
+                                        <small class="text-success ms-3">
+                                            <i class="fas fa-check me-1"></i>Decoration Available
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="service-card h-100 bg-white rounded-4 p-4 shadow-sm position-relative overflow-hidden">
+                                    <div class="service-icon mb-3">
+                                        <i class="fas fa-graduation-cap fa-2x"></i>
+                                    </div>
+                                    <h4 class="service-title h5 fw-bold mb-3">School Bus Service</h4>
+                                    <p class="service-description text-muted mb-4">Safe and reliable transportation for educational institutions with trained drivers.</p>
+                                    <div class="service-features mb-3">
+                                        <small class="text-success">
+                                            <i class="fas fa-check me-1"></i>Safety First
+                                        </small>
+                                        <small class="text-success ms-3">
+                                            <i class="fas fa-check me-1"></i>GPS Tracking
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Features Section -->
+                <section class="features-section py-5 bg-gradient-primary text-white">
+                    <div class="container">
+                        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="feature-item">
+                                    <div class="feature-icon mb-3">
+                                        <i class="fas fa-shield-alt fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="feature-title fw-bold">100% Safe</h5>
+                                    <p class="feature-description">Well-maintained buses with safety checks</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="feature-item">
+                                    <div class="feature-icon mb-3">
+                                        <i class="fas fa-clock fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="feature-title fw-bold">On-Time Service</h5>
+                                    <p class="feature-description">Punctual and reliable transportation</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="feature-item">
+                                    <div class="feature-icon mb-3">
+                                        <i class="fas fa-headset fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="feature-title fw-bold">24/7 Support</h5>
+                                    <p class="feature-description">Round-the-clock customer assistance</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="feature-item">
+                                    <div class="feature-icon mb-3">
+                                        <i class="fas fa-map-marked-alt fa-3x text-warning"></i>
+                                    </div>
+                                    <h5 class="feature-title fw-bold">GPS Tracking</h5>
+                                    <p class="feature-description">Real-time bus location tracking</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Testimonials Section -->
+                <section class="testimonials-section py-5" t-if="testimonials">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 mx-auto text-center mb-5">
+                                <h2 class="section-title display-5 fw-bold mb-3">What Our Customers Say</h2>
+                                <p class="section-subtitle text-muted">
+                                    Real experiences from our satisfied customers
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        <t t-foreach="testimonials" t-as="testimonial">
+                                            <div t-attf-class="carousel-item #{'active' if testimonial_first else ''}">
+                                                <div class="testimonial-card bg-white rounded-4 p-5 shadow-sm text-center">
+                                                    <div class="testimonial-stars mb-3">
+                                                        <t t-foreach="range(int(testimonial.rating))" t-as="star">
+                                                            <i class="fas fa-star text-warning"></i>
+                                                        </t>
+                                                    </div>
+                                                    <blockquote class="testimonial-text h5 mb-4 text-muted fst-italic">
+                                                        "<t t-esc="testimonial.testimonial"/>"
+                                                    </blockquote>
+                                                    <div class="testimonial-author">
+                                                        <div class="author-avatar bg-primary rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                                            <span class="text-white fw-bold">
+                                                                <t t-esc="testimonial.name[:2].upper()"/>
+                                                            </span>
+                                                        </div>
+                                                        <h6 class="author-name fw-bold mb-1" t-field="testimonial.name"/>
+                                                        <p class="author-designation text-muted small" t-field="testimonial.designation"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon"></span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Our Clients Section -->
+                <t t-call="annapurna_travels.clients_section"/>
+
+                <!-- CTA Section -->
+                <section class="cta-section py-5 bg-gradient-primary text-white">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h3 class="cta-title display-6 fw-bold mb-3">Ready to Start Your Journey?</h3>
+                                <p class="cta-subtitle lead mb-0">
+                                    Book your comfortable and safe travel experience with Annapurna Travels today.
+                                </p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="/booking" class="btn btn-light btn-lg rounded-pill px-5">
+                                    <i class="fas fa-calendar-check me-2"></i>Book Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+    </data>
+</odoo>

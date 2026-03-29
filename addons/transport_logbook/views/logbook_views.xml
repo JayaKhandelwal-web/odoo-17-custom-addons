@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <record id="view_transport_logbook_entry_form" model="ir.ui.view">
+    <field name="name">transport.logbook.entry.form</field>
+    <field name="model">transport.logbook.entry</field>
+    <field name="arch" type="xml">
+        <form string="Logbook Entry">
+            <header>
+                <!-- Add Save & New button in header -->
+                <button name="action_save_and_new" string="Save &amp; New" type="object" class="btn-primary"/>
+            </header>
+            <sheet>
+                <group>
+                    <group>
+                        <field name="vehicle_id" options="{'no_create': True, 'no_open': False}"/>
+                        <field name="vehicle_type"/>
+                        <field name="company_id"/>
+                        <!-- REMOVED driver_id field -->
+                        <field name="date"/>
+                        <field name="day" invisible="1"/>
+                    </group>
+                    <group>
+                        <!-- Bus specific fields -->
+                        <field name="trip_number" 
+                               invisible="vehicle_type != 'bus'" 
+                               required="vehicle_type == 'bus'"/>
+                        <field name="running_km" 
+                               invisible="vehicle_type != 'bus'" 
+                               required="vehicle_type == 'bus'"/>
+                        
+                        <!-- Changed from checkbox to numeric field -->
+                        <field name="extra_distance" 
+                               invisible="vehicle_type != 'bus'" 
+                               widget="odometer"/>
+                        
+                        <!-- Cab specific fields -->
+                        <field name="start_odometer" 
+                               invisible="vehicle_type != 'cab'" 
+                               required="vehicle_type == 'cab'" 
+                               widget="odometer"/>
+                        <field name="end_odometer" 
+                               invisible="vehicle_type != 'cab'" 
+                               required="vehicle_type == 'cab'" 
+                               widget="odometer"/>
+                        
+                        <!-- Common field -->
+                        <field name="distance" readonly="1" widget="odometer"/>
+                    </group>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+    <!-- Unified Logbook List View with Conditional Columns -->
+    <record id="view_transport_logbook_entry_tree" model="ir.ui.view">
+        <field name="name">transport.logbook.entry.tree</field>
+        <field name="model">transport.logbook.entry</field>
+        <field name="arch" type="xml">
+            <tree string="Logbook Entries">
+                <field name="date"/>
+                <field name="day"/>
+                <field name="vehicle_id"/>
+                <field name="vehicle_type"/>
+                <!-- REMOVED driver_id field -->
+                <field name="company_id"/>
+                <!-- Bus specific columns - REMOVED sum from running_km and extra_distance -->
+                <field name="trip_number" sum="Total Trips"/>
+                <field name="running_km"/>
+                <field name="extra_distance"/>
+                
+                <!-- Cab specific columns -->
+                <field name="start_odometer" widget="odometer"/>
+                <field name="end_odometer" widget="odometer"/>
+                
+                <!-- Common field -->
+                <field name="distance" sum="Total Distance" widget="odometer"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Enhanced Search View for better filtering -->
+    <record id="view_transport_logbook_entry_search" model="ir.ui.view">
+        <field name="name">transport.logbook.entry.search</field>
+        <field name="model">transport.logbook.entry</field>
+        <field name="arch" type="xml">
+            <search string="Search Logbook Entries">
+                <field name="vehicle_id"/>
+                <!-- REMOVED driver_id field -->
+                <field name="company_id"/>
+                <field name="date"/>
+                <field name="day"/>
+                <field name="month"/>
+                
+                <filter string="Bus" name="bus_filter" domain="[('vehicle_type', '=', 'bus')]"/>
+                <filter string="Cab" name="cab_filter" domain="[('vehicle_type', '=', 'cab')]"/>
+                
+                <!-- Simple date filters -->
+                <separator/>
+                <filter string="Today" name="today" domain="[('date', '=', context_today())]"/>
+                
+                <!-- This Week filter -->
+                <filter string="This Week" name="week" domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')), ('date', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                
+                <!-- FIXED: This Month filter -->
+                <filter string="This Month" name="this_month" domain="[('date', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle Type" name="group_vehicle_type" context="{'group_by': 'vehicle_type'}"/>
+                    <filter string="Vehicle" name="group_vehicle" context="{'group_by': 'vehicle_id'}"/>
+                    <!-- REMOVED driver group by -->
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"/>
+                    <filter string="Day" name="group_day" context="{'group_by': 'day'}"/>
+                    <filter string="Month" name="group_month" context="{'group_by': 'month'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Main Logbook Entry Action - FIXED: Removed calendar view -->
+    <record id="action_transport_logbook_entry" model="ir.actions.act_window">
+        <field name="name">Logbooks</field>
+        <field name="res_model">transport.logbook.entry</field>
+        <field name="view_mode">tree,form,pivot,graph</field>
+        <field name="search_view_id" ref="view_transport_logbook_entry_search"/>
+        <!-- REMOVED default month filter to fix the "1" issue -->
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first logbook entry
+            </p>
+        </field>
+    </record>
+    
+    <!-- Bus-only action -->
+    <record id="action_transport_bus_logbook" model="ir.actions.act_window">
+        <field name="name">Bus Logbook</field>
+        <field name="res_model">transport.logbook.entry</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vehicle_type', '=', 'bus')]</field>
+        <field name="context">{'default_vehicle_type': 'bus'}</field>
+        <field name="search_view_id" ref="view_transport_logbook_entry_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first bus logbook entry
+            </p>
+        </field>
+    </record>
+    
+    <!-- Cab-only action -->
+    <record id="action_transport_cab_logbook" model="ir.actions.act_window">
+        <field name="name">Cab Logbook</field>
+        <field name="res_model">transport.logbook.entry</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vehicle_type', '=', 'cab')]</field>
+        <field name="context">{'default_vehicle_type': 'cab'}</field>
+        <field name="search_view_id" ref="view_transport_logbook_entry_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first cab logbook entry
+            </p>
+        </field>
+    </record>
+
+    <!-- Quick Entry Form View for Dashboard -->
+    <record id="view_transport_logbook_entry_quick_form" model="ir.ui.view">
+        <field name="name">transport.logbook.entry.quick.form</field>
+        <field name="model">transport.logbook.entry</field>
+        <field name="arch" type="xml">
+            <form string="Quick Logbook Entry">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="vehicle_id" options="{'no_create': True, 'no_open': False}"/>
+                            <field name="vehicle_type"/>
+                            <field name="company_id"/>
+                            <field name="date"/>
+                        </group>
+                        <group>
+                            <!-- Bus specific fields -->
+                            <field name="trip_number" 
+                                   invisible="vehicle_type != 'bus'" 
+                                   required="vehicle_type == 'bus'"/>
+                            <field name="running_km" 
+                                   invisible="vehicle_type != 'bus'" 
+                                   required="vehicle_type == 'bus'"/>
+                            <field name="extra_distance" 
+                                   invisible="vehicle_type != 'bus'" 
+                                   widget="odometer"/>
+                            
+                            <!-- Cab specific fields -->
+                            <field name="start_odometer" 
+                                   invisible="vehicle_type != 'cab'" 
+                                   required="vehicle_type == 'cab'" 
+                                   widget="odometer"/>
+                            <field name="end_odometer" 
+                                   invisible="vehicle_type != 'cab'" 
+                                   required="vehicle_type == 'cab'" 
+                                   widget="odometer"/>
+                            
+                            <!-- Common field -->
+                            <field name="distance" readonly="1" widget="odometer"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_save_and_new" string="Save &amp; New" type="object" class="btn-primary"/>
+                    <button string="Save &amp; Close" special="save" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

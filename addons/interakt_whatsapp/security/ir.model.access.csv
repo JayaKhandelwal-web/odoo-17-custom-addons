@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_interakt_config_user,interakt.config.user,model_interakt_config,group_interakt_user,1,0,0,0
+access_interakt_config_manager,interakt.config.manager,model_interakt_config,group_interakt_manager,1,1,1,1
+access_interakt_template_user,interakt.template.user,model_interakt_template,group_interakt_user,1,0,0,0
+access_interakt_template_manager,interakt.template.manager,model_interakt_template,group_interakt_manager,1,1,1,1
+access_interakt_message_log_user,interakt.message.log.user,model_interakt_message_log,group_interakt_user,1,0,0,0
+access_interakt_message_log_manager,interakt.message.log.manager,model_interakt_message_log,group_interakt_manager,1,1,1,0
+access_interakt_config_system,interakt.config.system,model_interakt_config,base.group_system,1,1,1,1
+access_interakt_template_system,interakt.template.system,model_interakt_template,base.group_system,1,1,1,1
+access_interakt_message_log_system,interakt.message.log.system,model_interakt_message_log,base.group_system,1,1,1,1

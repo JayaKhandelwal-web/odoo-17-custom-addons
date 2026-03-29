@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Search Wizard Form (For Future Search Implementation) -->
+    <record id="image_search_wizard_form_view" model="ir.ui.view">
+        <field name="name">image.search.wizard.form</field>
+        <field name="model">image.search.wizard</field>
+        <field name="arch" type="xml">
+            <form string="AI Image Search">
+                
+                <header>
+                    <field name="search_status" widget="statusbar" 
+                           statusbar_visible="ready,searching,completed"/>
+                </header>
+                
+                <sheet>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <i class="fa fa-search-plus"/> AI Image Search
+                        </h1>
+                        <h2 class="text-muted">Find similar vehicle parts by uploading an image</h2>
+                    </div>
+                    
+                    <!-- Hidden fields for conditions -->
+                    <field name="has_results" invisible="1"/>
+                    <field name="search_error" invisible="1"/>
+                    <field name="total_matches" invisible="1"/>
+                    
+                    <!-- Search Configuration -->
+                    <group string="Search Configuration">
+                        <group>
+                            <field name="search_image" widget="image" class="oe_avatar" required="1"/>
+                            <field name="search_image_name" placeholder="e.g., bearing_search.jpg"/>
+                        </group>
+                        <group>
+                            <field name="min_confidence" 
+                                   help="Only show results above this confidence threshold"/>
+                            <field name="max_results" 
+                                   help="Maximum number of products to display"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Search Status and Error Display -->
+                    <group string="Search Status" 
+                           invisible="search_status == 'ready'">
+                        <field name="search_error" readonly="1" 
+                               invisible="search_status != 'error'"/>
+                        <field name="total_matches" readonly="1" 
+                               invisible="search_status != 'completed'"/>
+                    </group>
+                    
+                    <!-- Search Results Summary -->
+                    <div class="alert alert-success" role="alert" 
+                         invisible="has_results == False">
+                        <strong><i class="fa fa-check-circle"/> Search Completed!</strong><br/>
+                        Found <field name="total_matches" readonly="1"/> similar products 
+                        with confidence ≥ <field name="min_confidence" readonly="1"/>%
+                    </div>
+                    
+                    <!-- No Results Message -->
+                    <div class="alert alert-warning" role="alert" 
+                         invisible="search_status != 'completed' or has_results == True">
+                        <strong><i class="fa fa-exclamation-triangle"/> No Similar Products Found</strong><br/>
+                        Try lowering the confidence threshold or uploading a different image.
+                    </div>
+                    
+                    <!-- Search Instructions -->
+                    <div class="alert alert-info" role="alert" 
+                         invisible="search_status != 'ready'">
+                        <strong><i class="fa fa-info-circle"/> Tips for Better Results:</strong>
+                        <ul class="mb-0 mt-2">
+                            <li>Use clear, well-lit photos of the part</li>
+                            <li>Include the entire part in the image</li>
+                            <li>Avoid cluttered backgrounds</li>
+                            <li>Multiple angles work best if available</li>
+                        </ul>
+                    </div>
+                    
+                </sheet>
+                
+                <footer>
+                    <!-- Search Button -->
+                    <button name="action_search_similar_products" type="object" 
+                            string="Search Similar Products" 
+                            class="btn-primary"
+                            icon="fa-search-plus"
+                            invisible="search_status in ['searching', 'processing']"/>
+                    
+                    <!-- New Search Button -->
+                    <button name="action_new_search" type="object" 
+                            string="New Search" 
+                            class="btn-secondary"
+                            icon="fa-refresh"
+                            invisible="search_status in ['ready', 'searching']"/>
+                    
+                    <!-- Cancel Button -->
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+                
+            </form>
+        </field>
+    </record>
+
+    <!-- Image Search Wizard Action (For Future Use) -->
+    <record id="action_image_search_wizard" model="ir.actions.act_window">
+        <field name="name">AI Image Search</field>
+        <field name="res_model">image.search.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'form_view_initial_mode': 'edit'}</field>
+    </record>
+
+    <!-- Menu Item for Image Search (Future Feature) -->
+    <menuitem id="menu_ai_image_search"
+              name="AI Image Search"
+              parent="stock.menu_stock_root"
+              action="action_image_search_wizard"
+              sequence="25"
+              groups="stock.group_stock_user"/>
+
+</odoo>

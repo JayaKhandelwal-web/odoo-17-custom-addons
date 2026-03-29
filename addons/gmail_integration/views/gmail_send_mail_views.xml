@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Gmail Send Mail Form View - Improved Gmail-like Interface -->
+    <record id="view_gmail_send_mail_form" model="ir.ui.view">
+        <field name="name">gmail.send.mail.form</field>
+        <field name="model">gmail.send.mail</field>
+        <field name="arch" type="xml">
+            <form string="Compose Email" class="gmail_compose_wizard">
+                <header>
+                    <!-- Status Bar (if needed) -->
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent" invisible="1"/>
+                </header>
+                
+                <sheet class="gmail_compose_sheet">
+                    <!-- Gmail Account Selection (Compact) -->
+                    <div class="gmail_account_bar" style="padding: 8px 16px; border-bottom: 1px solid #e0e0e0; background: #f8f9fa; text-align: left; padding-left: 40px;">
+                        <field name="account_id" 
+                               options="{'no_create': True, 'no_edit': True}" 
+                               style="width: 300px; font-size: 13px;"
+                               placeholder="Select Gmail Account"/>
+                        <field name="from_email" readonly="1" invisible="1"/>
+                    </div>
+                    
+                    <!-- Recipients Section (Compact Gmail Style) -->
+                    <div class="gmail_recipients_section" style="border-bottom: 1px solid #e0e0e0;">
+                        <!-- To Field (Always Visible) -->
+                        <div class="gmail_recipient_row" style="display: flex; align-items: center; padding: 2px 16px; min-height: 20px; border-bottom: 1px solid #f0f0f0;">
+                            <div class="o_form_label" style="width: 30px; color: #5f6368; font-size: 13px; margin: 0; line-height: 1.2;">To</div>
+                            <field name="to_emails" 
+                                   style="flex: 1; border: none; outline: none; font-size: 13px; padding: 1px 8px; height: 18px;"
+                                   placeholder="Recipients"/>
+                        </div>
+                        
+                        <!-- CC Field (Hidden by Default) -->
+                        <div class="gmail_recipient_row gmail_cc_row" 
+                             style="display: none; flex-direction: row; align-items: center; padding: 2px 16px; min-height: 20px; border-bottom: 1px solid #f0f0f0;">
+                            <div class="o_form_label" style="width: 30px; color: #5f6368; font-size: 13px; margin: 0; line-height: 1.2;">Cc</div>
+                            <field name="cc_emails" 
+                                   style="flex: 1; border: none; outline: none; font-size: 13px; padding: 1px 8px; height: 18px;"
+                                   placeholder="Carbon copy"/>
+                        </div>
+                        
+                        <!-- BCC Field (Hidden by Default) -->
+                        <div class="gmail_recipient_row gmail_bcc_row" 
+                             style="display: none; flex-direction: row; align-items: center; padding: 2px 16px; min-height: 20px; border-bottom: 1px solid #f0f0f0;">
+                            <div class="o_form_label" style="width: 30px; color: #5f6368; font-size: 13px; margin: 0; line-height: 1.2;">Bcc</div>
+                            <field name="bcc_emails" 
+                                   style="flex: 1; border: none; outline: none; font-size: 13px; padding: 1px 8px; height: 18px;"
+                                   placeholder="Blind carbon copy"/>
+                        </div>
+                        
+                        <!-- Subject Field (More Prominent) -->
+                        <div class="gmail_subject_row" style="display: flex; align-items: center; padding: 8px 16px; min-height: 44px;">
+                            <field name="subject" 
+                                   style="width: 100%; border: none; outline: none; font-size: 16px; font-weight: 500; padding: 8px;"
+                                   placeholder="Subject"/>
+                        </div>
+                    </div>
+                    
+                    <!-- Message Body (Reduced Height) -->
+                    <div class="gmail_message_container" style="height: 280px; display: flex; flex-direction: column;">
+                        <div class="gmail_message_body" style="flex: 1; overflow-y: auto; padding: 16px;">
+                            <field name="body_html" 
+                                   widget="html" 
+                                   style="min-height: 240px; border: none; outline: none;"
+                                   placeholder="Compose your message..."
+                                   options="{'style-inline': true, 'resizable': false}"/>
+                        </div>
+                    </div>
+                    
+                    <!-- Attachments Section (Compact) -->
+                    <div class="gmail_attachments_section" invisible="not attachment_ids" 
+                         style="border-top: 1px solid #e0e0e0; max-height: 80px; overflow-y: auto;">
+                        <field name="attachment_ids" nolabel="1">
+                            <tree editable="bottom" create="true" delete="true">
+                                <field name="filename" width="200"/>
+                                <field name="file_data" widget="binary" filename="filename"/>
+                                <field name="file_size_display" width="80"/>
+                            </tree>
+                        </field>
+                    </div>
+                    
+                    <!-- Hidden Fields -->
+                    <field name="state" invisible="1"/>
+                    <field name="error_message" invisible="1"/>
+                    
+                </sheet>
+                
+                <!-- Custom Footer replacing default buttons -->
+                <footer>
+                    <div class="gmail_compose_footer" 
+                         style="padding: 16px; border-top: 1px solid #e0e0e0; background: #f9f9f9; display: flex; align-items: center; justify-content: space-between;">
+                        
+                        <!-- Left Side - Send Button -->
+                        <div class="gmail_footer_left" style="display: flex; align-items: center; gap: 12px;">
+                            <button name="send_email" type="object" 
+                                    string="Send" 
+                                    class="btn-primary gmail_send_btn"
+                                    style="background: #1a73e8; border: none; border-radius: 20px; padding: 8px 24px; color: white; font-weight: 600; font-size: 14px; box-shadow: 0 1px 2px rgba(60,64,67,.3);">
+                                <i class="fa fa-paper-plane"/> Send
+                            </button>
+                            
+                            <button name="save_as_draft" type="object" 
+                                    string="Save Draft" 
+                                    class="btn btn-link gmail_draft_btn"
+                                    style="color: #5f6368; text-decoration: none; font-size: 14px; padding: 8px 16px;">
+                                <i class="fa fa-save"/> Save Draft
+                            </button>
+                        </div>
+                        
+                        <!-- Right Side - Attachment & Other Actions -->
+                        <div class="gmail_footer_right" style="display: flex; align-items: center; gap: 8px;">
+                            <!-- Add Attachment Button -->
+                            <button type="button" 
+                                    name="add_attachment"
+                                    class="btn btn-link gmail_attach_btn" 
+                                    onclick="addAttachment()"
+                                    style="color: #5f6368; font-size: 18px; padding: 8px;"
+                                    title="Attach files">
+                                <i class="fa fa-paperclip"/>
+                            </button>
+                            
+                            <!-- More Options -->
+                            <button type="button" 
+                                    name="more_options"
+                                    class="btn btn-link gmail_more_btn" 
+                                    style="color: #5f6368; font-size: 18px; padding: 8px;"
+                                    title="More options">
+                                <i class="fa fa-ellipsis-v"/>
+                            </button>
+                            
+                            <!-- Delete Draft -->
+                            <button type="button" 
+                                    name="delete_draft"
+                                    class="btn btn-link gmail_cancel_btn"
+                                    style="color: #5f6368; font-size: 18px; padding: 8px;"
+                                    title="Delete draft">
+                                <i class="fa fa-trash"/>
+                            </button>
+                            
+                            <!-- Discard Button -->
+                            <button string="Discard" special="cancel" 
+                                    class="btn btn-secondary"
+                                    style="padding: 8px 16px; font-size: 14px;"
+                                    title="Discard and close">
+                                Discard
+                            </button>
+                        </div>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Send Mail Action -->
+    <record id="action_gmail_send_mail" model="ir.actions.act_window">
+        <field name="name">Compose Email</field>
+        <field name="res_model">gmail.send.mail</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_gmail_send_mail_form"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+    
+    <!-- JavaScript for Toggle Functions -->
+    <template id="gmail_compose_scripts" name="Gmail Compose Scripts">
+        <script type="text/javascript">
+            function toggleCcField() {
+                var ccRow = document.querySelector('.gmail_cc_row');
+                if (ccRow) {
+                    if (ccRow.style.display === 'none' || ccRow.style.display === '') {
+                        ccRow.style.display = 'flex';
+                        ccRow.querySelector('input').focus();
+                    } else {
+                        ccRow.style.display = 'none';
+                    }
+                }
+            }
+            
+            function toggleBccField() {
+                var bccRow = document.querySelector('.gmail_bcc_row');
+                if (bccRow) {
+                    if (bccRow.style.display === 'none' || bccRow.style.display === '') {
+                        bccRow.style.display = 'flex';
+                        bccRow.querySelector('input').focus();
+                    } else {
+                        bccRow.style.display = 'none';
+                    }
+                }
+            }
+            
+            function addAttachment() {
+                // Find the attachment section and add a new line
+                var attachmentSection = document.querySelector('.gmail_attachments_section');
+                if (attachmentSection) {
+                    attachmentSection.style.display = 'block';
+                    // Trigger add line in Odoo list view
+                    var addButton = attachmentSection.querySelector('.o_field_x2many_list_row_add a');
+                    if (addButton) {
+                        addButton.click();
+                    }
+                }
+            }
+        </script>
+    </template>
+
+</odoo>

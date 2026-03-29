@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default FleetX Configuration -->
+        <record id="default_fleetx_config" model="fleetx.config">
+            <field name="name">Default FleetX Configuration</field>
+            <field name="base_url">https://api.fleetx.io/api/v1</field>
+            <field name="access_token">23008902-6d1c-4d37-90b0-531982d5fbb2</field>
+            <field name="sync_interval">5</field>
+            <field name="active" eval="True"/>
+        </record>
+        
+        <!-- System Parameters - Only create if they don't exist -->
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.base_url</value>
+            <value>https://api.fleetx.io/api/v1</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.access_token</value>
+            <value>23008902-6d1c-4d37-90b0-531982d5fbb2</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.sync_interval</value>
+            <value>5</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.auto_sync</value>
+            <value>True</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.log_level</value>
+            <value>info</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.dashboard_refresh</value>
+            <value>30</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.map_zoom</value>
+            <value>10</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.enable_notifications</value>
+            <value>True</value>
+        </function>
+        
+        <function model="ir.config_parameter" name="set_param">
+            <value>fleetx_integration.notification_types</value>
+            <value>critical</value>
+        </function>
+    </data>
+</odoo>

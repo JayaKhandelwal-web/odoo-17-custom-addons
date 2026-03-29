@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_camera_root" 
+              name="📹 Cameras" 
+              sequence="100"/>
+    
+    <!-- Sub Menus -->
+    <menuitem id="menu_camera_all" 
+              name="All Cameras" 
+              parent="menu_camera_root"
+              action="action_cctv_camera"
+              sequence="10"/>
+    
+    <!-- Client Action for BLE Scanning -->
+    <record id="action_camera_scan_ble" model="ir.actions.client">
+        <field name="name">Scan for Cameras (Bluetooth)</field>
+        <field name="tag">camera_ble_scan</field>
+    </record>
+    
+    <menuitem id="menu_camera_scan" 
+              name="📶 Scan New Camera" 
+              parent="menu_camera_root"
+              action="action_camera_scan_ble"
+              sequence="20"/>
+</odoo>

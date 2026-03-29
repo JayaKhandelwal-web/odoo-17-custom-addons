@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Gmail User Groups -->
+    <record id="group_gmail_user" model="res.groups">
+        <field name="name">Gmail User</field>
+        <field name="category_id" ref="base.module_category_productivity"/>
+        <field name="comment">Can view and use Gmail features, send emails, and use templates</field>
+    </record>
+    
+    <record id="group_gmail_admin" model="res.groups">
+        <field name="name">Gmail Administrator</field>
+        <field name="category_id" ref="base.module_category_productivity"/>
+        <field name="implied_ids" eval="[(4, ref('group_gmail_user'))]"/>
+        <field name="comment">Full access to Gmail integration including account configuration, system templates, and sync logs</field>
+    </record>
+    
+    <!-- Record Rules for Gmail Account -->
+    <record id="rule_gmail_account_user" model="ir.rule">
+        <field name="name">Gmail Account: User Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_account"/>
+        <field name="groups" eval="[(4, ref('group_gmail_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force"><![CDATA[
+            [
+                '|', '|', '|',
+                ('user_id', '=', user.id),
+                '&', ('access_level', '=', 'shared'), ('shared_user_ids', 'in', [user.id]),
+                '&', ('access_level', '=', 'company'), ('user_id.company_id', '=', user.company_id.id),
+                ('access_level', '=', 'company')
+            ]
+        ]]></field>
+    </record>
+    
+    <record id="rule_gmail_account_admin" model="ir.rule">
+        <field name="name">Gmail Account: Admin Full Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_account"/>
+        <field name="groups" eval="[(4, ref('group_gmail_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    
+    <!-- Record Rules for Settings Group Access -->
+    <record id="rule_gmail_account_settings" model="ir.rule">
+        <field name="name">Gmail Account: Settings Group Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_account"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    
+    <!-- Record Rules for Gmail Templates -->
+    <record id="rule_gmail_template_user" model="ir.rule">
+        <field name="name">Gmail Template: User Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_template"/>
+        <field name="groups" eval="[(4, ref('group_gmail_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force"><![CDATA[
+            [
+                '|',
+                ('is_system', '=', False),
+                ('is_system', '=', True)
+            ]
+        ]]></field>
+    </record>
+    
+    <record id="rule_gmail_template_admin" model="ir.rule">
+        <field name="name">Gmail Template: Admin Full Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_template"/>
+        <field name="groups" eval="[(4, ref('group_gmail_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    
+    <record id="rule_gmail_template_settings" model="ir.rule">
+        <field name="name">Gmail Template: Settings Group Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_template"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    
+    <!-- Record Rules for Gmail Dashboard (Transient Model) -->
+    <record id="rule_gmail_dashboard_user" model="ir.rule">
+        <field name="name">Gmail Dashboard: User Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_dashboard"/>
+        <field name="groups" eval="[(4, ref('group_gmail_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    
+    <!-- Record Rules for Alert Handler -->
+    <record id="rule_gmail_alert_handler_admin" model="ir.rule">
+        <field name="name">Gmail Alert Handler: Admin Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_alert_handler"/>
+        <field name="groups" eval="[(4, ref('group_gmail_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+    
+    <!-- Record Rules for Alert Settings -->
+    <record id="rule_gmail_alert_settings_admin" model="ir.rule">
+        <field name="name">Gmail Alert Settings: Admin Access</field>
+        <field name="model_id" ref="gmail_integration.model_gmail_alert_settings"/>
+        <field name="groups" eval="[(4, ref('group_gmail_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

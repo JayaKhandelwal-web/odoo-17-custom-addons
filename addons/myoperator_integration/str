@@ -1,0 +1,31 @@
+myoperator_integration/
+├── __init__.py
+├── __manifest__.py
+├── models/
+│   ├── __init__.py
+│   ├── myoperator_config.py
+│   ├── myoperator_call_log.py
+│   ├── myoperator_user.py
+│   └── res_partner.py
+├── controllers/
+│   ├── __init__.py
+│   └── webhook_controller.py
+├── views/
+│   ├── myoperator_config_views.xml
+│   ├── myoperator_call_log_views.xml
+│   ├── myoperator_user_views.xml
+│   └── res_partner_views.xml
+├── security/
+│   └── ir.model.access.csv
+├── data/
+│   └── cron_jobs.xml
+├── static/
+│   ├── description/
+│   │   ├── icon.png
+│   │   └── index.html
+│   └── src/
+│       └── js/
+│           └── phone_widget.js
+└── wizard/
+    ├── __init__.py
+    └── sync_call_logs_wizard.py

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Gmail Account Sharing Wizard Form -->
+        <record id="view_gmail_account_share_wizard_form" model="ir.ui.view">
+            <field name="name">gmail.account.share.wizard.form</field>
+            <field name="model">gmail.account.share.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Share Gmail Account">
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="account_name" readonly="1"/>
+                            </h1>
+                            <h3>
+                                <field name="email_address" readonly="1"/>
+                            </h3>
+                        </div>
+                        
+                        <!-- Current Owner Info -->
+                        <group string="Account Information">
+                            <field name="current_owner" readonly="1"/>
+                            <field name="current_shared_users" widget="many2many_tags" readonly="1"/>
+                        </group>
+                        
+                        <!-- Sharing Configuration -->
+                        <group string="Access Configuration">
+                            <field name="access_level" widget="radio" options="{'horizontal': False}"/>
+                            
+                            <field name="shared_user_ids" 
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"
+                                   invisible="access_level != 'shared'"
+                                   required="access_level == 'shared'"/>
+                        </group>
+                        
+                        <!-- Permission Settings -->
+                        <group string="Permissions" invisible="access_level == 'private'">
+                            <field name="allow_send_emails"/>
+                            <field name="allow_manage_settings"/>
+                            
+                            <div class="alert alert-info" role="alert" invisible="allow_manage_settings != True">
+                                <strong>Note:</strong> Users with management permissions can modify account settings, 
+                                including sync preferences and sharing settings.
+                            </div>
+                        </group>
+                        
+                        <!-- Warning Messages -->
+                        <group string="Important Information" invisible="warning_message == False">
+                            <field name="warning_message" widget="text" readonly="1" nolabel="1"/>
+                            <div class="alert alert-warning" role="alert">
+                                <i class="fa fa-exclamation-triangle"></i>
+                                <strong>Please review the information above before proceeding.</strong>
+                            </div>
+                        </group>
+                        
+                        <!-- Access Level Descriptions -->
+                        <group string="Access Level Descriptions">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header bg-info text-white">
+                                            <strong>Private</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <small>
+                                                • Only you can access this account<br/>
+                                                • Maximum security and privacy<br/>
+                                                • Best for personal email accounts
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header bg-warning text-white">
+                                            <strong>Shared</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <small>
+                                                • Selected users can access this account<br/>
+                                                • You control who has access<br/>
+                                                • Good for team or departmental accounts
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card">
+                                        <div class="card-header bg-success text-white">
+                                            <strong>Company Wide</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <small>
+                                                • All company users can access<br/>
+                                                • Automatic access for new users<br/>
+                                                • Best for general company accounts
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </group>
+                        
+                        <!-- Hidden fields -->
+                        <field name="account_id" invisible="1"/>
+                        
+                    </sheet>
+                    
+                    <footer>
+                        <button string="Apply Changes" 
+                                name="action_apply_sharing" 
+                                type="object" 
+                                class="btn-primary"/>
+                        
+                        <button string="Preview Access" 
+                                name="action_preview_access" 
+                                type="object" 
+                                class="btn-secondary"/>
+                        
+                        <button string="Cancel" special="cancel" class="btn-secondary"/>
+                    </footer>
+                    
+                </form>
+            </field>
+        </record>
+
+        <!-- Sharing Wizard Action -->
+        <record id="action_gmail_account_share_wizard" model="ir.actions.act_window">
+            <field name="name">Share Gmail Account</field>
+            <field name="res_model">gmail.account.share.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
+                'default_account_id': active_id,
+                'default_access_level': 'private'
+            }</field>
+        </record>
+
+    </data>
+</odoo>

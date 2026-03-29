@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Wizard Form View -->
+    <record id="view_transport_logbook_report_wizard_form" model="ir.ui.view">
+        <field name="name">transport.logbook.report.wizard.form</field>
+        <field name="model">transport.logbook.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Logbook Report">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Generate Transport Report</h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="vehicle_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="route" placeholder="e.g. Bhopal to Indore"/>
+                            <label for="start_date" string="For the period"/>
+                            <div class="o_row">
+                                <field name="start_date" class="oe_inline"/> to
+                                <field name="end_date" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="print_report" string="Print Report" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Report Wizard Action -->
+    <record id="action_transport_logbook_report_wizard" model="ir.actions.act_window">
+        <field name="name">Print Reports</field>
+        <field name="res_model">transport.logbook.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

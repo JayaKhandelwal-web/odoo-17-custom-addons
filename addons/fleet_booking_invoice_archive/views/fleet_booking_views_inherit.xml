@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit Fleet Booking Form View to add smart button -->
+    <record id="view_fleet_booking_form_invoice_archive" model="ir.ui.view">
+        <field name="name">fleet.booking.form.invoice.archive</field>
+        <field name="model">fleet.booking</field>
+        <field name="inherit_id" ref="fleet_booking.view_fleet_booking_form"/>
+        <field name="arch" type="xml">
+            <!-- Add smart button after existing buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_invoice_documents"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-file-pdf-o">
+                    <field name="invoice_document_count" widget="statinfo"
+                           string="Invoices"/>
+                </button>
+            </xpath>
+
+            <!-- Add auto-generate checkbox and manual generation buttons -->
+            <xpath expr="//sheet" position="before">
+                <field name="auto_generate_invoices" invisible="1"/>
+                <field name="invoice_document_count" invisible="1"/>
+            </xpath>
+
+            <!-- Add invoice generation buttons in header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_generate_invoice_current_stage"
+                        string="Generate Invoice PDF"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-file-pdf-o"
+                        invisible="state == 'cancelled'"
+                        help="Manually generate invoice PDF for current stage"/>
+
+                <button name="action_generate_all_stage_invoices"
+                        string="Generate All Stage PDFs"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-files-o"
+                        groups="fleet_booking.group_fleet_booking_manager"
+                        help="Generate invoice PDFs for Quotation, Confirmed, and Completed stages"/>
+            </xpath>
+
+            <!-- FIXED: Use @name instead of @string for xpath selector -->
+            <xpath expr="//page[@name='notes']" position="after">
+                <page string="Invoice Archive Settings" name="invoice_archive_settings">
+                    <group>
+                        <group string="Automatic Invoice Generation">
+                            <field name="auto_generate_invoices"
+                                   help="Automatically generate invoice PDFs when this booking reaches Quotation, Confirmed, or Completed stages"/>
+                        </group>
+                        <group string="Generated Documents">
+                            <field name="invoice_document_count" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Invoice Generation History">
+                        <field name="invoice_document_ids" nolabel="1" readonly="1">
+                            <tree string="Generated Invoices" create="false" delete="false">
+                                <field name="document_name"/>
+                                <field name="booking_state"/>
+                                <field name="generation_date"/>
+                                <field name="file_size_formatted"/>
+                                <button name="action_download_pdf"
+                                        string="Download"
+                                        type="object"
+                                        icon="fa-download"/>
+                                <button name="action_view_pdf"
+                                        string="View"
+                                        type="object"
+                                        icon="fa-eye"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

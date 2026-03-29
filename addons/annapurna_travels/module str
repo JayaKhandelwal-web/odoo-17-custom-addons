@@ -1,0 +1,49 @@
+annapurna_travels/
+├── __init__.py
+├── __manifest__.py
+├── controllers/
+│   ├── __init__.py
+│   └── main.py
+├── data/
+│   ├── bus_category_data.xml
+│   ├── service_type_data.xml
+│   └── website_data.xml
+├── models/
+│   ├── __init__.py
+│   ├── bus_fleet.py
+│   ├── booking.py
+│   ├── tour_package.py
+│   ├── service_type.py
+│   └── customer_testimonial.py
+├── security/
+│   └── ir.model.access.csv
+├── static/
+│   ├── description/
+│   │   ├── icon.png
+│   │   └── index.html
+│   └── src/
+│       ├── css/
+│       │   └── annapurna_style.css
+│       ├── js/
+│       │   └── annapurna_main.js
+│       └── img/
+│           ├── hero-bg.jpg
+│           ├── bus1.jpg
+│           ├── bus2.jpg
+│           └── service-icons/
+├── templates/
+│   ├── __init__.py
+│   ├── website_layout.xml
+│   ├── homepage.xml
+│   ├── services.xml
+│   ├── fleet.xml
+│   ├── booking.xml
+│   ├── about.xml
+│   └── contact.xml
+└── views/
+    ├── bus_fleet_views.xml
+    ├── booking_views.xml
+    ├── tour_package_views.xml
+    ├── service_type_views.xml
+    ├── customer_testimonial_views.xml
+    └── menu_views.xml

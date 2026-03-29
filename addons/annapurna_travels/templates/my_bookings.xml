@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- My Bookings Page -->
+        <template id="my_bookings_page" name="My Bookings">
+            <t t-call="website.layout">
+                <t t-set="title">My Bookings - Annapurna Travels</t>
+
+                <div class="container my-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1 class="display-4 mb-4">My Bookings</h1>
+                            <p class="lead text-muted mb-5">Manage and track all your travel bookings</p>
+                        </div>
+                    </div>
+
+                    <!-- Bus Bookings -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <h3 class="mb-4"><i class="fas fa-bus me-2"></i>Bus Bookings</h3>
+
+                            <t t-if="bookings">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Booking ID</th>
+                                                <th>Service</th>
+                                                <th>Pickup Date</th>
+                                                <th>Pickup Location</th>
+                                                <th>Status</th>
+                                                <th>Total Amount</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="bookings" t-as="booking">
+                                                <tr>
+                                                    <td><strong><span t-field="booking.name"/></strong></td>
+                                                    <td><span t-field="booking.service_type_id.name"/></td>
+                                                    <td><span t-field="booking.pickup_date" t-options='{"widget": "datetime", "format": "dd MMM yyyy, hh:mm a"}'/></td>
+                                                    <td><span t-field="booking.pickup_location"/></td>
+                                                    <td>
+                                                        <span t-if="booking.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                                        <span t-elif="booking.state == 'confirmed'" class="badge bg-primary">Confirmed</span>
+                                                        <span t-elif="booking.state == 'in_progress'" class="badge bg-info">In Progress</span>
+                                                        <span t-elif="booking.state == 'completed'" class="badge bg-success">Completed</span>
+                                                        <span t-elif="booking.state == 'cancelled'" class="badge bg-danger">Cancelled</span>
+                                                    </td>
+                                                    <td>₹<span t-field="booking.total_amount" t-options='{"widget": "monetary", "display_currency": "user.company_id.currency_id"}'/></td>
+                                                    <td>
+                                                        <a t-attf-href="/my/booking/{{booking.id}}" class="btn btn-sm btn-outline-primary">
+                                                            View Details
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    You don't have any bus bookings yet.
+                                    <a href="/booking" class="alert-link">Book your first trip now!</a>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+
+                    <!-- Tour Bookings -->
+                    <div class="row" t-if="tour_bookings">
+                        <div class="col-12">
+                            <h3 class="mb-4"><i class="fas fa-map-marked-alt me-2"></i>Tour Bookings</h3>
+
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Tour Package</th>
+                                            <th>Start Date</th>
+                                            <th>Passengers</th>
+                                            <th>Status</th>
+                                            <th>Total Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="tour_bookings" t-as="tour_booking">
+                                            <tr>
+                                                <td><strong><span t-field="tour_booking.name"/></strong></td>
+                                                <td><span t-field="tour_booking.package_id.name"/></td>
+                                                <td><span t-field="tour_booking.start_date" t-options='{"widget": "date", "format": "dd MMM yyyy"}'/></td>
+                                                <td><span t-field="tour_booking.number_of_passengers"/></td>
+                                                <td>
+                                                    <span t-if="tour_booking.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                                    <span t-elif="tour_booking.state == 'confirmed'" class="badge bg-primary">Confirmed</span>
+                                                    <span t-elif="tour_booking.state == 'in_progress'" class="badge bg-info">In Progress</span>
+                                                    <span t-elif="tour_booking.state == 'completed'" class="badge bg-success">Completed</span>
+                                                    <span t-elif="tour_booking.state == 'cancelled'" class="badge bg-danger">Cancelled</span>
+                                                </td>
+                                                <td>₹<span t-field="tour_booking.total_amount" t-options='{"widget": "monetary", "display_currency": "user.company_id.currency_id"}'/></td>
+                                                <td>
+                                                    <a t-attf-href="/my/tour-booking/{{tour_booking.id}}" class="btn btn-sm btn-outline-primary">
+                                                        View Details
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

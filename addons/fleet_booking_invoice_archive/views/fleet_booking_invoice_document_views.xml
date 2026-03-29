@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_fleet_booking_invoice_document_tree" model="ir.ui.view">
+        <field name="name">fleet.booking.invoice.document.tree</field>
+        <field name="model">fleet.booking.invoice.document</field>
+        <field name="arch" type="xml">
+            <tree string="Invoice Documents"
+                  decoration-info="booking_state == 'quotation'"
+                  decoration-success="booking_state == 'confirmed'"
+                  decoration-primary="booking_state == 'completed'"
+                  create="false">
+                <field name="document_name"/>
+                <field name="booking_name"/>
+                <field name="customer_id"/>
+                <field name="company_name" optional="show"/>
+                <field name="booking_state"/>
+                <field name="generation_date"/>
+                <field name="file_size_formatted"/>
+                <field name="total_amount" optional="show"/>
+                <field name="generated_by" optional="show"/>
+                <field name="pdf_filename" optional="hide"/>
+                <field name="active" optional="hide" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_fleet_booking_invoice_document_form" model="ir.ui.view">
+        <field name="name">fleet.booking.invoice.document.form</field>
+        <field name="model">fleet.booking.invoice.document</field>
+        <field name="arch" type="xml">
+            <form string="Invoice Document" create="false">
+                <header>
+                    <button name="action_download_pdf" string="Download PDF" type="object"
+                            class="oe_highlight" icon="fa-download"/>
+                    <button name="action_view_pdf" string="View PDF" type="object"
+                            icon="fa-eye"/>
+                    <button name="action_regenerate_pdf" string="Regenerate PDF" type="object"
+                            icon="fa-refresh" groups="fleet_booking.group_fleet_booking_manager"/>
+                    <button name="action_open_booking" string="Open Booking" type="object"
+                            icon="fa-external-link"/>
+                    <field name="active" widget="boolean_button"
+                           options="{'terminology': 'archive'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_booking" type="object"
+                                class="oe_stat_button" icon="fa-file-text-o">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">View</span>
+                                <span class="o_stat_text">Booking</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="document_name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Document Information">
+                            <field name="pdf_filename" readonly="1"/>
+                            <field name="file_size_formatted" readonly="1"/>
+                            <field name="generation_date" readonly="1"/>
+                            <field name="generated_by" readonly="1"/>
+                        </group>
+                        <group string="Booking Information">
+                            <field name="booking_id" readonly="1"
+                                   options="{'no_create': True, 'no_open': False}"/>
+                            <field name="booking_name" readonly="1"/>
+                            <field name="booking_state" readonly="1"/>
+                            <field name="customer_id" readonly="1"/>
+                            <field name="company_name" readonly="1"
+                                   invisible="not company_name"/>
+                        </group>
+                    </group>
+
+                    <group string="Financial Information">
+                        <field name="currency_id" readonly="1" invisible="1"/>
+                        <field name="total_amount" readonly="1"/>
+                        <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                    </group>
+
+                    <group string="PDF Preview">
+                        <field name="pdf_file" filename="pdf_filename" readonly="1"
+                               widget="pdf_viewer"/>
+                    </group>
+
+                    <group string="Notes">
+                        <field name="notes" placeholder="Additional notes about this document..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_fleet_booking_invoice_document_search" model="ir.ui.view">
+        <field name="name">fleet.booking.invoice.document.search</field>
+        <field name="model">fleet.booking.invoice.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="document_name"/>
+                <field name="booking_name"/>
+                <field name="booking_id"/>
+                <field name="customer_id"/>
+                <field name="company_name"/>
+                <field name="pdf_filename"/>
+                <separator/>
+                <filter string="Quotation Stage" name="quotation_stage"
+                        domain="[('booking_state', '=', 'quotation')]"/>
+                <filter string="Confirmed Stage" name="confirmed_stage"
+                        domain="[('booking_state', '=', 'confirmed')]"/>
+                <filter string="Completed Stage" name="completed_stage"
+                        domain="[('booking_state', '=', 'completed')]"/>
+                <separator/>
+                <filter string="This Month" name="this_month"
+                        domain="[('generation_date', '>=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <filter string="This Year" name="this_year"
+                        domain="[('generation_date', '>=', (context_today().strftime('%Y-01-01')))]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Booking" name="group_booking" context="{'group_by': 'booking_id'}"/>
+                    <filter string="Customer" name="group_customer" context="{'group_by': 'customer_id'}"/>
+                    <filter string="Booking Stage" name="group_stage" context="{'group_by': 'booking_state'}"/>
+                    <filter string="Generation Date" name="group_date" context="{'group_by': 'generation_date'}"/>
+                    <filter string="Generated By" name="group_user" context="{'group_by': 'generated_by'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_fleet_booking_invoice_document_kanban" model="ir.ui.view">
+        <field name="name">fleet.booking.invoice.document.kanban</field>
+        <field name="model">fleet.booking.invoice.document</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" create="false">
+                <field name="document_name"/>
+                <field name="booking_name"/>
+                <field name="booking_state"/>
+                <field name="generation_date"/>
+                <field name="file_size_formatted"/>
+                <field name="customer_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="document_name"/>
+                                    </strong>
+                                    <small class="o_kanban_record_subtitle text-muted">
+                                        <field name="booking_name"/>
+                                    </small>
+                                </div>
+                                <field name="booking_state" widget="label_selection"
+                                       options="{'classes': {
+                                           'quotation': 'primary',
+                                           'confirmed': 'success',
+                                           'completed': 'info'
+                                       }}"/>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <field name="customer_id"/>
+                                <div>
+                                    <i class="fa fa-clock-o"/> <field name="generation_date"/>
+                                </div>
+                                <div>
+                                    <i class="fa fa-file-pdf-o"/> <field name="file_size_formatted"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_fleet_booking_invoice_documents" model="ir.actions.act_window">
+        <field name="name">Invoice Documents</field>
+        <field name="res_model">fleet.booking.invoice.document</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No invoice documents yet!
+            </p>
+            <p>
+                Invoice PDFs are automatically generated when bookings reach
+                Quotation, Confirmed, or Completed stages.
+            </p>
+        </field>
+    </record>
+</odoo>

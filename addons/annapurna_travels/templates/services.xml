@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Services Page Template -->
+        <template id="services_page" name="Annapurna Travels - Services">
+            <t t-call="website.layout">
+                <t t-set="title">Our Services - Annapurna Travels</t>
+                <t t-set="additional_title">Complete Travel Solutions</t>
+
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center">
+                                <h1 class="page-title">Our Premium Services</h1>
+                                <p class="page-subtitle">
+                                    Comprehensive travel solutions designed to meet all your transportation needs
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services Grid -->
+                <section class="services-detail-section py-5">
+                    <div class="container">
+                        <div class="row g-4">
+                            <t t-foreach="services" t-as="service">
+                                <div class="col-lg-6 col-xl-4">
+                                    <div t-attf-id="service-#{service.code.lower()}" class="service-detail-card h-100 bg-white rounded-4 shadow-sm overflow-hidden">
+                                        <div class="service-header p-4 bg-light-primary">
+                                            <div class="service-icon-large mb-3">
+                                                <i t-attf-class="fas #{service.icon or 'fa-bus'} fa-3x text-primary"></i>
+                                            </div>
+
+                                            <div class="service-pricing mb-4">
+                                                <h6 class="fw-bold mb-3">Pricing:</h6>
+                                                <div class="pricing-details">
+                                                    <div class="price-item d-flex justify-content-between" t-if="service.base_price > 0">
+                                                        <span>Base Price:</span>
+                                                        <strong class="text-primary">₹<t t-esc="'{:,.0f}'.format(service.base_price)"/></strong>
+                                                    </div>
+                                                    <div class="price-item d-flex justify-content-between" t-if="service.price_per_km > 0">
+                                                        <span>Per KM:</span>
+                                                        <strong class="text-primary">₹<t t-esc="'{:,.0f}'.format(service.price_per_km)"/></strong>
+                                                    </div>
+                                                    <div class="price-item d-flex justify-content-between" t-if="service.price_per_day > 0">
+                                                        <span>Per Day:</span>
+                                                        <strong class="text-primary">₹<t t-esc="'{:,.0f}'.format(service.price_per_day)"/></strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="service-actions text-center">
+                                                <a href="/booking" class="btn btn-primary rounded-pill px-4">
+                                                    <i class="fas fa-calendar-check me-2"></i>Book Now
+                                                </a>
+                                                <a href="/contact" class="btn btn-outline-primary rounded-pill px-4 ms-2">
+                                                    <i class="fas fa-phone me-2"></i>Get Quote
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Why Choose Us Section -->
+                <section class="why-choose-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-6 mx-auto text-center mb-5">
+                                <h2 class="section-title display-6 fw-bold mb-3">Why Choose Annapurna Travels?</h2>
+                                <p class="section-subtitle text-muted">
+                                    Experience the difference with our commitment to excellence
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="why-choose-item p-4">
+                                    <div class="why-choose-icon mb-3">
+                                        <i class="fas fa-award fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">20+ Years Experience</h5>
+                                    <p class="text-muted">Trusted service since 2001 with thousands of satisfied customers</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="why-choose-item p-4">
+                                    <div class="why-choose-icon mb-3">
+                                        <i class="fas fa-bus fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Modern Fleet</h5>
+                                    <p class="text-muted">Well-maintained buses with latest amenities and safety features</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="why-choose-item p-4">
+                                    <div class="why-choose-icon mb-3">
+                                        <i class="fas fa-users fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Professional Staff</h5>
+                                    <p class="text-muted">Experienced drivers and courteous staff for your comfort</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="why-choose-item p-4">
+                                    <div class="why-choose-icon mb-3">
+                                        <i class="fas fa-clock fa-3x text-primary"></i>
+                                    </div>
+                                    <h5 class="fw-bold mb-2">24/7 Support</h5>
+                                    <p class="text-muted">Round-the-clock customer support for your peace of mind</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Service Areas Section -->
+                <section class="service-areas-section py-5">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                                <h2 class="display-6 fw-bold mb-4">Our Service Areas</h2>
+                                <p class="lead mb-4">
+                                    We provide comprehensive transportation services across Central India and beyond.
+                                </p>
+
+                                <div class="service-areas-list">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="area-item d-flex align-items-center">
+                                                <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                                <span>Bhopal - Indore</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="area-item d-flex align-items-center">
+                                                <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                                <span>Delhi - Mumbai</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="area-item d-flex align-items-center">
+                                                <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                                <span>Rajasthan Tours</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="area-item d-flex align-items-center">
+                                                <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                                <span>Goa Packages</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="area-item d-flex align-items-center">
+                                                <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                                <span>Himachal Tours</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="area-item d-flex align-items-center">
+                                                <i class="fas fa-map-marker-alt text-primary me-3"></i>
+                                                <span>Corporate Routes</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <a href="/contact" class="btn btn-primary btn-lg rounded-pill px-5">
+                                        <i class="fas fa-route me-2"></i>Plan Your Route
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="service-areas-image text-center">
+                                    <div class="image-placeholder bg-light rounded-4 p-5">
+                                        <i class="fas fa-map fa-5x text-primary opacity-50"></i>
+                                        <p class="text-muted mt-3">Service Coverage Map</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CTA Section -->
+                <section class="cta-section py-5 bg-gradient-primary text-white">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h3 class="display-6 fw-bold mb-3">Ready to Book Your Journey?</h3>
+                                <p class="lead mb-0">
+                                    Get instant quotes and book your preferred service with just a few clicks.
+                                </p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                                <div class="cta-buttons">
+                                    <a href="/booking" class="btn btn-light btn-lg rounded-pill px-4 me-3">
+                                        <i class="fas fa-calendar-check me-2"></i>Book Online
+                                    </a>
+                                    <a href="tel:+91XXXXXXXXXX" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                                        <i class="fas fa-phone me-2"></i>Call Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </t>
+        </template>
+
+    </data>
+</odoo>

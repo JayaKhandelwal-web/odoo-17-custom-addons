@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Interakt Configuration Form View -->
+    <record id="view_interakt_config_form" model="ir.ui.view">
+        <field name="name">interakt.config.form</field>
+        <field name="model">interakt.config</field>
+        <field name="arch" type="xml">
+            <form string="Interakt Configuration">
+                <header>
+                    <button name="test_connection" string="Test Connection" type="object"
+                            class="oe_highlight" icon="fa-plug"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_message_logs" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="total_messages_sent" widget="statinfo"
+                                   string="Total Messages"/>
+                        </button>
+                        <button name="action_view_message_logs" type="object"
+                                class="oe_stat_button" icon="fa-check-circle"
+                                context="{'search_default_status_sent': 1}">
+                            <field name="successful_messages" widget="statinfo"
+                                   string="Successful"/>
+                        </button>
+                        <button name="action_view_message_logs" type="object"
+                                class="oe_stat_button" icon="fa-times-circle"
+                                context="{'search_default_status_failed': 1}">
+                            <field name="failed_messages" widget="statinfo"
+                                   string="Failed"/>
+                        </button>
+                    </div>
+
+                    <widget name="web_ribbon" title="Active" bg_color="bg-success"
+                            invisible="not active"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Configuration Name..."/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="API Configuration">
+                            <field name="active"/>
+                            <field name="api_key" password="True"/>
+                            <field name="base_url"/>
+                        </group>
+                        <group string="Test Configuration">
+                            <field name="test_country_code" placeholder="+91"/>
+                            <field name="test_phone" placeholder="8298913646"/>
+                        </group>
+                    </group>
+
+                    <group string="Company">
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Instructions" name="instructions">
+                            <group>
+                                <div class="alert alert-info" role="alert">
+                                    <h4>Setup Instructions:</h4>
+                                    <ol>
+                                        <li>Get your API key from Interakt dashboard</li>
+                                        <li>Enter the API key in Basic Auth format (e.g., "NG5EZVhCTmgtN0JNWjVIWVVLMGpSTjFDNDQxSUJ4bi1yN3BsOXI0T1gxczo=")</li>
+                                        <li>Configure a test phone number</li>
+                                        <li>Click "Test Connection" to verify</li>
+                                        <li>Only one configuration can be active at a time</li>
+                                    </ol>
+                                    <p class="mt-3">
+                                        <strong>Note:</strong> Make sure your templates are approved in Interakt before sending messages.
+                                    </p>
+                                </div>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Interakt Configuration Tree View -->
+    <record id="view_interakt_config_tree" model="ir.ui.view">
+        <field name="name">interakt.config.tree</field>
+        <field name="model">interakt.config</field>
+        <field name="arch" type="xml">
+            <tree decoration-success="active" decoration-muted="not active">
+                <field name="name"/>
+                <field name="base_url"/>
+                <field name="total_messages_sent"/>
+                <field name="successful_messages"/>
+                <field name="failed_messages"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Interakt Configuration Action -->
+    <record id="action_interakt_config" model="ir.actions.act_window">
+        <field name="name">Interakt Configuration</field>
+        <field name="res_model">interakt.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure Interakt WhatsApp API
+            </p>
+            <p>
+                Set up your Interakt API credentials to start sending WhatsApp messages.
+            </p>
+        </field>
+    </record>
+</odoo>

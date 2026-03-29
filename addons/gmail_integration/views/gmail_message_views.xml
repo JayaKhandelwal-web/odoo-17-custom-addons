@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Gmail-style Message List View for Inbox - NO CHECKBOXES -->
+    <record id="view_gmail_message_inbox_tree" model="ir.ui.view">
+        <field name="name">gmail.message.inbox.tree</field>
+        <field name="model">gmail.message</field>
+        <field name="arch" type="xml">
+            <tree decoration-bf="not is_read" 
+                  decoration-muted="is_read"
+                  create="false" 
+                  edit="false" 
+                  delete="false"
+                  multi_edit="false"
+                  export_xlsx="false"
+                  default_order="date desc">
+                
+                <!-- ALL fields must have nolabel="1" to remove headers -->
+                <field name="is_read" invisible="1" nolabel="1"/>
+                <field name="direction" invisible="1" nolabel="1"/>
+                <field name="has_attachments" invisible="1" nolabel="1"/>
+                <field name="is_important" invisible="1" nolabel="1"/>
+                
+                <!-- Visible columns with nolabel -->
+                <field name="is_starred" widget="boolean_toggle" width="30" nolabel="1"/>
+                <field name="from_name" width="200" nolabel="1"/>
+                <field name="subject" width="500" nolabel="1"/>
+                <field name="date" width="120" nolabel="1"/>
+                
+            </tree>
+        </field>
+    </record>
+
+    <!-- Gmail Message List View for All Messages -->
+    <record id="view_gmail_message_tree" model="ir.ui.view">
+        <field name="name">gmail.message.tree</field>
+        <field name="model">gmail.message</field>
+        <field name="arch" type="xml">
+            <tree decoration-bf="not is_read" 
+                  decoration-info="direction == 'inbound'" 
+                  decoration-success="direction == 'outbound'"
+                  decoration-muted="direction == 'draft'"
+                  default_order="date desc">
+                
+                <!-- ALL fields must have nolabel="1" -->
+                <field name="is_read" invisible="1" nolabel="1"/>
+                <field name="direction" invisible="1" nolabel="1"/>
+                <field name="has_attachments" invisible="1" nolabel="1"/>
+                <field name="is_important" invisible="1" nolabel="1"/>
+                
+                <!-- Visible columns with nolabel -->
+                <field name="is_starred" widget="boolean_toggle" width="30" nolabel="1"/>
+                <field name="from_name" width="180" nolabel="1"/>
+                <field name="subject" width="400" nolabel="1"/>
+                <field name="date" width="120" nolabel="1"/>
+                
+            </tree>
+        </field>
+    </record>
+
+    <!-- Clean tree view for Sent messages -->
+    <record id="view_gmail_message_sent_tree" model="ir.ui.view">
+        <field name="name">gmail.message.sent.tree</field>
+        <field name="model">gmail.message</field>
+        <field name="arch" type="xml">
+            <tree decoration-bf="not is_read" 
+                  decoration-muted="is_read"
+                  create="false" 
+                  edit="false" 
+                  delete="true"
+                  multi_edit="false"
+                  export_xlsx="false"
+                  default_order="date desc">
+                
+                <!-- ALL fields must have nolabel="1" -->
+                <field name="is_read" invisible="1" nolabel="1"/>
+                <field name="direction" invisible="1" nolabel="1"/>
+                <field name="has_attachments" invisible="1" nolabel="1"/>
+                <field name="is_important" invisible="1" nolabel="1"/>
+                
+                <!-- Visible columns with nolabel -->
+                <field name="is_starred" widget="boolean_toggle" width="30" nolabel="1"/>
+                <field name="to_emails" width="200" nolabel="1"/>
+                <field name="subject" width="500" nolabel="1"/>
+                <field name="date" width="120" nolabel="1"/>
+                
+            </tree>
+        </field>
+    </record>
+
+    <!-- Clean tree view for Drafts -->
+    <record id="view_gmail_message_drafts_tree" model="ir.ui.view">
+        <field name="name">gmail.message.drafts.tree</field>
+        <field name="model">gmail.message</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="direction == 'draft'"
+                  create="false" 
+                  edit="false" 
+                  delete="true"
+                  multi_edit="false"
+                  export_xlsx="false"
+                  default_order="date desc">
+                
+                <!-- ALL fields must have nolabel="1" -->
+                <field name="is_read" invisible="1" nolabel="1"/>
+                <field name="direction" invisible="1" nolabel="1"/>
+                <field name="has_attachments" invisible="1" nolabel="1"/>
+                <field name="is_important" invisible="1" nolabel="1"/>
+                
+                <!-- Visible columns with nolabel -->
+                <field name="is_starred" widget="boolean_toggle" width="30" nolabel="1"/>
+                <field name="to_emails" width="200" nolabel="1"/>
+                <field name="subject" width="500" nolabel="1"/>
+                <field name="date" width="120" nolabel="1"/>
+                
+            </tree>
+        </field>
+    </record>
+
+    <!-- Keep other views unchanged -->
+    <record id="view_gmail_message_form" model="ir.ui.view">
+        <field name="name">gmail.message.form</field>
+        <field name="model">gmail.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_mark_read" type="object" 
+                            string="Mark as Read" class="btn-secondary"
+                            invisible="is_read"/>
+                    <button name="action_mark_unread" type="object" 
+                            string="Mark as Unread" class="btn-secondary"
+                            invisible="not is_read"/>
+                    <button name="action_star" type="object" 
+                            string="Star" class="btn-secondary"
+                            invisible="is_starred"/>
+                    <button name="action_unstar" type="object" 
+                            string="Unstar" class="btn-secondary"
+                            invisible="not is_starred"/>
+                    <button name="action_reply" type="object" 
+                            string="Reply" class="btn-primary"
+                            invisible="direction == 'draft'"/>
+                    <button name="action_forward" type="object" 
+                            string="Forward" class="btn-secondary"/>
+                    <field name="sync_status" widget="statusbar" statusbar_visible="pending,synced"/>
+                </header>
+                <sheet>
+                    <field name="has_attachments" invisible="1"/>
+                    <field name="attachment_count" invisible="1"/>
+                    
+                    <div class="oe_title">
+                        <label for="subject" class="oe_edit_only"/>
+                        <h1><field name="subject" readonly="1"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group name="message_info">
+                            <field name="gmail_message_id" readonly="1"/>
+                            <field name="account_id" readonly="1"/>
+                            <field name="direction" readonly="1"/>
+                            <field name="date" readonly="1"/>
+                            <field name="message_size" readonly="1" widget="integer"/>
+                        </group>
+                        <group name="message_status">
+                            <field name="is_read" readonly="1"/>
+                            <field name="is_starred" readonly="1"/>
+                            <field name="is_important" readonly="1"/>
+                            <field name="sync_date" readonly="1"/>
+                            <field name="last_updated" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Message Content" name="content">
+                            <group>
+                                <group name="sender_info">
+                                    <field name="from_email" readonly="1" widget="email"/>
+                                    <field name="from_name" readonly="1"/>
+                                    <field name="reply_to" readonly="1" widget="email"/>
+                                </group>
+                                <group name="recipient_info">
+                                    <field name="to_emails" readonly="1"/>
+                                    <field name="cc_emails" readonly="1"/>
+                                    <field name="bcc_emails" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Message Body"/>
+                            <field name="snippet" readonly="1" string="Preview"/>
+                            
+                            <field name="body_html" readonly="1" widget="html" 
+                                   invisible="not body_html"/>
+                            <field name="body_plain" readonly="1" widget="text" 
+                                   invisible="not body_plain or body_html"/>
+                        </page>
+                        
+                        <page string="Attachments" name="attachments" 
+                              invisible="not has_attachments">
+                            <field name="attachment_ids" readonly="1">
+                                <tree>
+                                    <field name="filename"/>
+                                    <field name="mimetype"/>
+                                    <field name="size_formatted"/>
+                                    <field name="is_downloaded"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Thread Info" name="thread" 
+                              invisible="not thread_id">
+                            <group>
+                                <field name="thread_id" readonly="1"/>
+                                <field name="gmail_thread_id" readonly="1"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Labels &amp; Metadata" name="metadata">
+                            <group>
+                                <group name="gmail_data">
+                                    <field name="gmail_labels" readonly="1"/>
+                                    <field name="label_ids" readonly="1"/>
+                                </group>
+                                <group name="partner_info">
+                                    <field name="partner_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Message Search View -->
+    <record id="view_gmail_message_search" model="ir.ui.view">
+        <field name="name">gmail.message.search</field>
+        <field name="model">gmail.message</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subject" string="Subject"/>
+                <field name="from_email" string="From"/>
+                <field name="to_emails" string="To"/>
+                <field name="account_id" string="Account"/>
+                <separator/>
+                <filter string="Unread" name="unread" domain="[('is_read', '=', False)]"/>
+                <filter string="Starred" name="starred" domain="[('is_starred', '=', True)]"/>
+                <filter string="Important" name="important" domain="[('is_important', '=', True)]"/>
+                <separator/>
+                <filter string="Inbox" name="inbox" domain="[('direction', '=', 'inbound')]"/>
+                <filter string="Sent" name="sent" domain="[('direction', '=', 'outbound')]"/>
+                <filter string="Drafts" name="drafts" domain="[('direction', '=', 'draft')]"/>
+                <separator/>
+                <filter string="Today" name="today" 
+                        domain="[('date', '&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]"/>
+                <filter string="This Week" name="week" 
+                        domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <filter string="This Month" name="month" 
+                        domain="[('date', '&gt;=', (context_today().replace(day=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Account" name="group_account" context="{'group_by': 'account_id'}"/>
+                    <filter string="Direction" name="group_direction" context="{'group_by': 'direction'}"/>
+                    <filter string="Date" name="group_date" context="{'group_by': 'date:day'}"/>
+                    <filter string="Sender" name="group_sender" context="{'group_by': 'from_email'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Actions remain the same -->
+    <record id="action_gmail_message" model="ir.actions.act_window">
+        <field name="name">Gmail Messages</field>
+        <field name="res_model">gmail.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_message_tree"/>
+        <field name="search_view_id" ref="view_gmail_message_search"/>
+        <field name="context">{'search_default_unread': 1, 'create': False}</field>
+    </record>
+
+    <record id="action_gmail_message_inbox" model="ir.actions.act_window">
+        <field name="name">Inbox</field>
+        <field name="res_model">gmail.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_message_inbox_tree"/>
+        <field name="domain">[('direction', '=', 'inbound')]</field>
+        <field name="context">{'search_default_unread': 1, 'create': False}</field>
+    </record>
+
+    <record id="action_gmail_message_sent" model="ir.actions.act_window">
+        <field name="name">Sent</field>
+        <field name="res_model">gmail.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_message_sent_tree"/>
+        <field name="domain">[('direction', '=', 'outbound')]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+    <record id="action_gmail_message_drafts" model="ir.actions.act_window">
+        <field name="name">Drafts</field>
+        <field name="res_model">gmail.message</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_message_drafts_tree"/>
+        <field name="domain">[('direction', '=', 'draft')]</field>
+        <field name="context">{'create': False}</field>
+    </record>
+
+</odoo>

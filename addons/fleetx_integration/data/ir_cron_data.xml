@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- FleetX Auto Sync Cron Job -->
+        <record id="ir_cron_fleetx_auto_sync" model="ir.cron">
+            <field name="name">FleetX: Auto Sync Vehicles</field>
+            <field name="model_id" ref="model_fleetx_config"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_sync_vehicles()</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- FleetX Analytics Cleanup Cron Job -->
+        <record id="ir_cron_fleetx_cleanup_analytics" model="ir.cron">
+            <field name="name">FleetX: Cleanup Old Analytics</field>
+            <field name="model_id" ref="model_fleetx_analytics"/>
+            <field name="state">code</field>
+            <field name="code">model.cleanup_old_analytics()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+        <!-- FleetX Health Check Cron Job -->
+        <record id="ir_cron_fleetx_health_check" model="ir.cron">
+            <field name="name">FleetX: API Health Check</field>
+            <field name="model_id" ref="model_fleetx_config"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_health_check()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+    </data>
+</odoo>

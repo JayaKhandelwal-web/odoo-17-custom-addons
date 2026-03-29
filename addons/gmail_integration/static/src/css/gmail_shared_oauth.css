@@ -1,0 +1,335 @@
+/* Gmail Integration - Shared OAuth Styling */
+/* Scoped to gmail_integration module only */
+
+/* Share Wizard Styling */
+.gmail_share_wizard .oe_title h1 {
+    color: #34495e;
+    font-weight: 600;
+}
+
+.gmail_share_wizard .oe_title h3 {
+    color: #7f8c8d;
+    font-style: italic;
+}
+
+.gmail_share_wizard .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.gmail_share_wizard .card-header {
+    padding: 8px 12px;
+    border-radius: 8px 8px 0 0;
+    font-weight: bold;
+}
+
+.gmail_share_wizard .card-body {
+    padding: 10px 12px;
+}
+
+/* OAuth Configuration Styling */
+.gmail_oauth_config .o_form_sheet {
+    max-width: 1000px;
+}
+
+.gmail_oauth_config .alert {
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.gmail_oauth_config .alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.gmail_oauth_config .alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.gmail_oauth_config .alert-danger {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.gmail_oauth_config .config_status_badge {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.gmail_oauth_config .config_status_badge.configured {
+    background-color: #28a745;
+    color: white;
+}
+
+.gmail_oauth_config .config_status_badge.not_configured {
+    background-color: #6c757d;
+    color: white;
+}
+
+.gmail_oauth_config .config_status_badge.error {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Account Views Enhancement */
+.gmail_account_form .o_form_sheet {
+    background: #f8f9fa;
+}
+
+.gmail_account_form .oe_title {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.gmail_account_form .account_status_connected {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.gmail_account_form .account_status_disconnected {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.gmail_account_form .account_status_error {
+    color: #fd7e14;
+    font-weight: bold;
+}
+
+.gmail_account_form .sharing_info {
+    background: #e9ecef;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 10px 0;
+}
+
+.gmail_account_form .sharing_info .badge {
+    margin-right: 5px;
+}
+
+/* Multi-User Support Indicators */
+.gmail_multi_user_indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.gmail_multi_user_indicator .user_count {
+    background: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.gmail_multi_user_indicator .access_level {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.gmail_multi_user_indicator .access_level.private {
+    background: #6c757d;
+    color: white;
+}
+
+.gmail_multi_user_indicator .access_level.shared {
+    background: #ffc107;
+    color: #212529;
+}
+
+.gmail_multi_user_indicator .access_level.company {
+    background: #28a745;
+    color: white;
+}
+
+/* Action Buttons */
+.gmail_action_buttons {
+    margin-top: 15px;
+}
+
+.gmail_action_buttons .btn {
+    margin-right: 10px;
+    border-radius: 6px;
+}
+
+.gmail_action_buttons .btn-connect {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+}
+
+.gmail_action_buttons .btn-connect:hover {
+    background: #218838;
+    border-color: #1e7e34;
+}
+
+.gmail_action_buttons .btn-share {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.gmail_action_buttons .btn-share:hover {
+    background: #0056b3;
+    border-color: #004085;
+}
+
+.gmail_action_buttons .btn-disconnect {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.gmail_action_buttons .btn-disconnect:hover {
+    background: #c82333;
+    border-color: #bd2130;
+}
+
+/* Dashboard Enhancement */
+.gmail_dashboard_card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.gmail_dashboard_card .card_header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    font-weight: bold;
+}
+
+.gmail_dashboard_card .card_body {
+    padding: 20px;
+}
+
+.gmail_dashboard_card .stat_number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #495057;
+}
+
+.gmail_dashboard_card .stat_label {
+    color: #6c757d;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .gmail_share_wizard .row .col-md-4 {
+        margin-bottom: 15px;
+    }
+    
+    .gmail_oauth_config .o_form_sheet {
+        padding: 15px;
+    }
+    
+    .gmail_action_buttons .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+}
+
+/* Loading and Status Indicators */
+.gmail_loading_spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: gmail_spin 1s linear infinite;
+}
+
+@keyframes gmail_spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.gmail_status_indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.gmail_status_indicator.connected {
+    background-color: #28a745;
+}
+
+.gmail_status_indicator.disconnected {
+    background-color: #dc3545;
+}
+
+.gmail_status_indicator.syncing {
+    background-color: #ffc107;
+    animation: gmail_pulse 2s infinite;
+}
+
+@keyframes gmail_pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Form Field Enhancements */
+.gmail_integration .o_field_many2many_tags .badge {
+    background-color: #007bff;
+    color: white;
+    margin: 2px;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.gmail_integration .o_field_radio .o_radio_item {
+    margin-bottom: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.gmail_integration .o_field_radio .o_radio_item:hover {
+    background-color: #f8f9fa;
+}
+
+/* Notification Enhancements */
+.gmail_notification {
+    border-left: 4px solid #007bff;
+    background: #f8f9fa;
+    padding: 12px 16px;
+    margin: 10px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.gmail_notification.success {
+    border-left-color: #28a745;
+}
+
+.gmail_notification.warning {
+    border-left-color: #ffc107;
+}
+
+.gmail_notification.error {
+    border-left-color: #dc3545;
+}

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Main Menu -->
+        <menuitem id="menu_fleet_booking_root" 
+                  name="Fleet Booking" 
+                  web_icon="fleet_booking,static/description/icon.png" 
+                  sequence="40"/>
+        
+        <!-- Orders Menu -->
+        <menuitem id="menu_fleet_booking_orders"
+                  name="Orders"
+                  parent="menu_fleet_booking_root"
+                  sequence="10"/>
+
+        <menuitem id="menu_fleet_booking_all_orders"
+                  name="All Orders"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings"
+                  sequence="1"/>
+
+        <menuitem id="menu_fleet_booking_enquiries"
+                  name="Enquiries"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings_enquiry"
+                  sequence="2"/>
+
+        <menuitem id="menu_fleet_booking_quotations"
+                  name="Quotations"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings_quotation"
+                  sequence="3"/>
+
+        <menuitem id="menu_fleet_booking_followups"
+                  name="Follow Ups"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings_followup"
+                  sequence="4"/>
+
+        <menuitem id="menu_fleet_booking_confirmed"
+                  name="Confirmed"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings_confirmed"
+                  sequence="5"/>
+
+        <menuitem id="menu_fleet_booking_completed"
+                  name="Completed"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings_completed"
+                  sequence="6"/>
+
+        <!-- NEW: Cancellation Menu -->
+        <menuitem id="menu_fleet_booking_cancelled"
+                  name="Cancelled"
+                  parent="menu_fleet_booking_orders"
+                  action="action_fleet_bookings_cancelled"
+                  sequence="7"/>
+
+        <!-- Booking Types Menu -->
+        <menuitem id="menu_fleet_booking_types"
+                  name="Booking Types"
+                  parent="menu_fleet_booking_root"
+                  sequence="15"/>
+
+        <menuitem id="menu_fleet_booking_individual"
+                  name="Individual Bookings"
+                  parent="menu_fleet_booking_types"
+                  action="action_fleet_bookings_individual"
+                  sequence="1"/>
+
+        <menuitem id="menu_fleet_booking_company"
+                  name="Company Bookings"
+                  parent="menu_fleet_booking_types"
+                  action="action_fleet_bookings_company"
+                  sequence="2"/>
+
+        <!-- Customers Menu -->
+        <menuitem id="menu_fleet_booking_customers"
+                  name="Customers"
+                  parent="menu_fleet_booking_root"
+                  action="base.action_partner_form"
+                  sequence="20"/>
+
+        <!-- Drivers Menu -->
+        <menuitem id="menu_fleet_booking_drivers"
+                  name="Drivers"
+                  parent="menu_fleet_booking_root"
+                  action="action_fleet_drivers"
+                  sequence="30"/>
+
+        <!-- Finance Menu -->
+        <menuitem id="menu_fleet_booking_finance"
+                  name="Finance"
+                  parent="menu_fleet_booking_root"
+                  sequence="40"/>
+
+        <!-- NEW: Refund Management Menu -->
+        <menuitem id="menu_fleet_booking_refunds"
+                  name="Refund Management"
+                  parent="menu_fleet_booking_finance"
+                  action="action_fleet_bookings_refunds"
+                  sequence="1"/>
+
+        <!-- Transport Menu -->
+        <menuitem id="menu_fleet_booking_transport"
+                  name="Transport"
+                  parent="menu_fleet_booking_root"
+                  sequence="50"/>
+
+        <menuitem id="menu_fleet_booking_vehicles"
+                  name="Vehicles"
+                  parent="menu_fleet_booking_transport"
+                  action="action_fleet_vehicles"
+                  sequence="1"/>
+
+        <menuitem id="menu_fleet_routes"
+                  name="Routes"
+                  parent="menu_fleet_booking_transport"
+                  action="action_fleet_routes"
+                  sequence="2"/>
+
+        <menuitem id="menu_fleet_cargo_manifests"
+                  name="Cargo Manifests"
+                  parent="menu_fleet_booking_transport"
+                  action="action_fleet_cargo_manifests"
+                  sequence="3"/>
+
+        <!-- Reports Menu -->
+        <menuitem id="menu_fleet_booking_reports"
+                  name="Reports"
+                  parent="menu_fleet_booking_root"
+                  sequence="60"/>
+
+        <!-- Settings Menu -->
+        <menuitem id="menu_fleet_booking_settings"
+                  name="Settings"
+                  parent="menu_fleet_booking_root"
+                  sequence="99"
+                  groups="fleet_booking.group_fleet_booking_manager"/>
+
+        <!-- Settings Sub-menus -->
+        <menuitem id="menu_fleet_booking_status"
+                  name="Booking Statuses"
+                  parent="menu_fleet_booking_settings"
+                  action="action_fleet_booking_status"
+                  sequence="10"/>
+
+        <menuitem id="menu_fleet_booking_status_changes"
+                  name="Status Changes"
+                  parent="menu_fleet_booking_settings"
+                  action="action_fleet_booking_status_changes"
+                  sequence="11"/>
+
+        <!-- Terms Templates Menu - Added to Settings -->
+        <menuitem id="menu_fleet_booking_terms_templates"
+                  name="Terms Templates"
+                  parent="menu_fleet_booking_settings"
+                  action="action_fleet_booking_terms_templates"
+                  sequence="12"/>
+    </data>
+</odoo>

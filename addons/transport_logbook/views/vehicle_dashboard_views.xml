@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vehicle Dashboard Kanban with Compact Design -->
+    <record id="view_transport_vehicle_dashboard_kanban" model="ir.ui.view">
+        <field name="name">transport.vehicle.dashboard.kanban</field>
+        <field name="model">simply.fleet.vehicle</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard o_transport_vehicle_kanban" create="0" sample="0">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="logbook_trip_count"/>
+                <field name="logbook_total_distance"/>
+                <field name="logbook_entry_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-if="record.logbook_entry_count.raw_value > 0">
+                            <div class="oe_kanban_card" style="min-height: 110px; border: none; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 8px; background: white;">
+                                <!-- Purple Gradient Header - Only Vehicle Number -->
+                                <div class="o_kanban_card_header" style="background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%); color: white; padding: 10px; border-radius: 8px 8px 0 0;">
+                                    <div class="o_kanban_card_header_title">
+                                        <div class="o_primary" style="font-size: 18px; font-weight: bold; color: white; text-align: center;">
+                                            <field name="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Stats Content with Purple Border -->
+                                <div class="container o_kanban_card_content" style="padding: 8px; border-left: 2px solid #4a148c; border-right: 2px solid #4a148c; border-bottom: 2px solid #4a148c; border-radius: 0 0 8px 8px;">
+                                    <div class="row text-center" style="margin: 0 3px;">
+                                        <!-- Total Trips Card -->
+                                        <div class="col-4 mb-2" style="padding: 0 2px;">
+                                            <div class="o_kanban_primary_box" style="background-color: #e3f2fd; border-radius: 4px; padding: 4px; max-width: 90%; margin: 0 auto;">
+                                                <div style="color: #1976d2; font-size: 9px; font-weight: 500; line-height: 1.1;">
+                                                    <i class="fa fa-road" style="font-size: 12px; margin-bottom: 2px; display: block;"/>
+                                                    Total<br/>Trips
+                                                </div>
+                                                <div style="color: #1976d2; font-size: 14px; font-weight: bold; margin-top: 2px;">
+                                                    <field name="logbook_trip_count"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Total Distance Card -->
+                                        <div class="col-4 mb-2" style="padding: 0 2px;">
+                                            <div class="o_kanban_primary_box" style="background-color: #e8f5e9; border-radius: 4px; padding: 4px; max-width: 90%; margin: 0 auto;">
+                                                <div style="color: #388e3c; font-size: 9px; font-weight: 500; line-height: 1.1;">
+                                                    <i class="fa fa-tachometer" style="font-size: 12px; margin-bottom: 2px; display: block;"/>
+                                                    Total<br/>Distance
+                                                </div>
+                                                <div style="color: #388e3c; font-size: 14px; font-weight: bold; margin-top: 2px;">
+                                                    <t t-esc="Math.round(record.logbook_total_distance.raw_value)"/>
+                                                    <span style="font-size: 9px;">KM</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Total Entries Card -->
+                                        <div class="col-4 mb-2" style="padding: 0 2px;">
+                                            <div class="o_kanban_primary_box" style="background-color: #fff3e0; border-radius: 4px; padding: 4px; max-width: 90%; margin: 0 auto;">
+                                                <div style="color: #f57c00; font-size: 9px; font-weight: 500; line-height: 1.1;">
+                                                    <i class="fa fa-book" style="font-size: 12px; margin-bottom: 2px; display: block;"/>
+                                                    Log<br/>Entries
+                                                </div>
+                                                <div style="color: #f57c00; font-size: 14px; font-weight: bold; margin-top: 2px;">
+                                                    <field name="logbook_entry_count"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- View Logbook Button -->
+                                    <div class="row mt-2">
+                                        <div class="col-12 text-center">
+                                            <button class="btn btn-sm" 
+                                                    name="action_view_vehicle_logbook_from_dashboard" 
+                                                    type="object"
+                                                    style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%); color: white; border: none; padding: 6px 16px; border-radius: 18px; font-size: 11px; font-weight: 600; box-shadow: 0 2px 6px rgba(108, 117, 125, 0.3);">
+                                                <i class="fa fa-book"/> View Logbook
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vehicle Dashboard Action -->
+    <record id="action_transport_vehicle_dashboard" model="ir.actions.act_window">
+        <field name="name">Vehicle Dashboard</field>
+        <field name="res_model">simply.fleet.vehicle</field>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="view_transport_vehicle_dashboard_kanban"/>
+        <field name="domain">[('logbook_entry_count', '>', 0)]</field>
+        <field name="help" type="html">
+            <div class="o_view_nocontent_smiling_face text-center" style="padding: 50px;">
+                <i class="fa fa-car" style="font-size: 48px; color: #4a148c; margin-bottom: 20px; display: block;"/>
+                <p style="font-size: 24px; color: #333; margin-bottom: 10px;">No vehicles with logbook entries yet</p>
+                <p style="color: #666;">Create logbook entries for vehicles to see them here in this beautiful dashboard.</p>
+            </div>
+        </field>
+    </record>
+
+    <!-- Action to open vehicle logbook -->
+    <record id="action_vehicle_logbook_from_kanban" model="ir.actions.act_window">
+        <field name="name">Vehicle Logbook</field>
+        <field name="res_model">transport.logbook.entry</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('vehicle_id', '=', active_id)]</field>
+        <field name="context">{'default_vehicle_id': active_id, 'search_default_vehicle_id': active_id}</field>
+    </record>
+</odoo>

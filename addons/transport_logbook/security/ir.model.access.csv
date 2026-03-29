@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_transport_company,transport.company,model_transport_company,,1,1,1,1
+access_transport_vehicle,transport.vehicle,model_transport_vehicle,,1,1,1,1
+access_transport_logbook_entry,transport.logbook.entry,model_transport_logbook_entry,,1,1,1,1
+access_transport_logbook_report_wizard,transport.logbook.report.wizard,model_transport_logbook_report_wizard,,1,1,1,1

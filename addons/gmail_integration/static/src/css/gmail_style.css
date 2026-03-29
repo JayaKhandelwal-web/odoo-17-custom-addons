@@ -1,0 +1,185 @@
+/* Gmail Integration Module Styles - Scoped to gmail_integration */
+
+/* Base Gmail Integration Styles */
+.gmail_integration_module {
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+}
+
+/* ==================================================
+   GMAIL MESSAGE LIST VIEWS - STYLING ONLY (NO HEADER HIDING)
+   ================================================== */
+
+/* Reduce left spacing for Gmail message views - SCOPED */
+.gmail_integration_module .o_list_view[data-model="gmail.message"] {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border: none;
+}
+
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_list_table {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_data_row {
+    padding-left: 8px !important;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_data_cell:first-child {
+    padding-left: 8px !important;
+}
+
+/* Remove any container left spacing - SCOPED */
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_list_table_ungrouped {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+}
+
+/* Style the Gmail message list to look more like Gmail - SCOPED */
+.gmail_integration_module .gmail_message_list .o_list_view,
+.gmail_integration_module .gmail_inbox_view .o_list_view,
+.gmail_integration_module .gmail_sent_view .o_list_view,
+.gmail_integration_module .gmail_drafts_view .o_list_view {
+    border: none;
+}
+
+.gmail_integration_module .gmail_message_list .o_list_table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.gmail_integration_module .gmail_message_list .o_data_row {
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.gmail_integration_module .gmail_message_list .o_data_row:hover,
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_data_row:hover {
+    background-color: #f5f5f5;
+}
+
+/* Make unread messages bold - SCOPED */
+.gmail_integration_module .gmail_message_list .o_data_row.text-decoration-bf,
+.gmail_integration_module .gmail-message-unread,
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_data_row.text-decoration-bf {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+/* ==================================================
+   GMAIL MESSAGE VIEWS - REMOVE CHECKBOX GAP - SCOPED
+   ================================================== */
+
+/* Hide checkbox column for Gmail messages - SCOPED */
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_list_record_selector,
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_list_record_selector_wrapper,
+.gmail_integration_module .o_list_view[data-model="gmail.message"] th.o_list_record_selector,
+.gmail_integration_module .o_list_view[data-model="gmail.message"] td.o_list_record_selector {
+    display: none !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Remove left padding from first data cell - SCOPED */
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_data_cell:first-child {
+    padding-left: 16px !important;
+}
+
+/* Remove table left margin - SCOPED */
+.gmail_integration_module .o_list_view[data-model="gmail.message"] .o_list_table {
+    margin-left: 0 !important;
+}
+
+/* ==================================================
+   GMAIL STATUS INDICATORS - SCOPED
+   ================================================== */
+
+/* Gmail Account Status Indicators */
+.gmail_integration_module .gmail-status-connected {
+    color: #28a745 !important;
+    font-weight: 500;
+}
+
+.gmail_integration_module .gmail-status-error {
+    color: #dc3545 !important;
+    font-weight: 500;
+}
+
+.gmail_integration_module .gmail-status-connecting {
+    color: #ffc107 !important;
+    font-weight: 500;
+}
+
+.gmail_integration_module .gmail-status-draft {
+    color: #6c757d !important;
+    font-weight: 500;
+}
+
+/* Gmail Message Enhancement Icons */
+.gmail_integration_module .gmail-message-starred::before {
+    content: "⭐";
+    margin-right: 5px;
+    color: #ffc107;
+}
+
+.gmail_integration_module .gmail-message-important::before {
+    content: "❗";
+    margin-right: 5px;
+    color: #dc3545;
+}
+
+.gmail_integration_module .gmail-message-attachment::after {
+    content: "📎";
+    margin-left: 5px;
+    color: #6c757d;
+}
+
+/* Gmail Thread Indicators */
+.gmail_integration_module .gmail-thread-count {
+    background: #007bff;
+    color: white;
+    border-radius: 10px;
+    padding: 2px 6px;
+    font-size: 0.75em;
+    margin-left: 5px;
+}
+
+/* ==================================================
+   GMAIL ACCOUNT CARDS - SCOPED
+   ================================================== */
+
+.gmail_integration_module .gmail-account-card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px 0;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.gmail_integration_module .gmail-account-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.gmail_integration_module .gmail-account-card.connected {
+    border-left: 4px solid #28a745;
+}
+
+.gmail_integration_module .gmail-account-card.error {
+    border-left: 4px solid #dc3545;
+}
+
+.gmail_integration_module .gmail-account-card.connecting {
+    border-left: 4px solid #ffc107;
+}
+
+/* Continue with remaining styles... */
+}

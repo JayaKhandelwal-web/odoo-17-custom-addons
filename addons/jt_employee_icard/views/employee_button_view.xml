@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Remove the old button and keep only the enhanced one -->
+    <record id="view_employee_form_with_idcard_button" model="ir.ui.view">
+        <field name="name">hr.employee.form.idcard.button</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <!-- Generate ID Card Button -->
+                <button name="%(jt_employee_icard.action_print_employee_idcard)d" 
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-id-card">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Generate ID Card</span>
+                    </div>
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

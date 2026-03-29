@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Asset Bundle for Dashboard -->
+        <record id="fleet_booking_dashboard_assets" model="ir.asset">
+            <field name="name">Fleet Booking Dashboard Assets</field>
+            <field name="bundle">web.assets_backend</field>
+            <field name="path">fleet_booking/static/src/js/dashboard_controller.js</field>
+        </record>
+
+        <record id="fleet_booking_dashboard_css_assets" model="ir.asset">
+            <field name="name">Fleet Booking Dashboard CSS</field>
+            <field name="bundle">web.assets_backend</field>
+            <field name="path">fleet_booking/static/src/css/dashboard.css</field>
+        </record>
+
+        <!-- Dashboard Model Definition -->
+        <record id="view_fleet_booking_dashboard_form" model="ir.ui.view">
+            <field name="name">fleet.booking.dashboard.form</field>
+            <field name="model">fleet.booking.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Fleet Booking Dashboard" class="o_fleet_booking_dashboard" js_class="fleet_booking_dashboard_form">
+                    <header>
+                        <button name="action_refresh_dashboard" type="object" string="Refresh Data"
+                                class="btn-primary" icon="fa-refresh"/>
+                        <button name="action_export_report" type="object" string="Export Report"
+                                class="btn-secondary" icon="fa-download"/>
+                    </header>
+
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <!-- Filters Section -->
+                        <group>
+                            <group name="date_filters" string="Filters">
+                                <field name="date_range"/>
+                                <field name="booking_type"/>
+                                <field name="status"/>
+                                <field name="vehicle_type"/>
+                            </group>
+                            <group name="date_range_filters" string="Date Range">
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                            </group>
+                        </group>
+
+                        <!-- Hidden fields for chart data -->
+                        <div style="display: none;">
+                            <field name="status_chart_data"/>
+                            <field name="booking_type_chart_data"/>
+                            <field name="revenue_chart_data"/>
+                            <field name="vehicle_utilization_chart_data"/>
+                            <field name="daily_trend_chart_data"/>
+                            <field name="cancellation_chart_data"/>
+                        </div>
+
+                        <!-- KPI Cards Row 1 - Main Metrics -->
+                        <div class="row o_dashboard_kpis mb-3">
+                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                <div class="card text-center h-100 border-primary">
+                                    <div class="card-body">
+                                        <h2 class="text-primary mb-1">
+                                            <field name="total_bookings" readonly="1"/>
+                                        </h2>
+                                        <p class="card-text text-muted">Total Bookings</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                <div class="card text-center h-100 border-success">
+                                    <div class="card-body">
+                                        <h2 class="text-success mb-1">
+                                            <field name="confirmed_bookings" readonly="1"/>
+                                        </h2>
+                                        <p class="card-text text-muted">Confirmed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                <div class="card text-center h-100 border-warning">
+                                    <div class="card-body">
+                                        <h2 class="text-warning mb-1">
+                                            <field name="completed_bookings" readonly="1"/>
+                                        </h2>
+                                        <p class="card-text text-muted">Completed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                <div class="card text-center h-100 border-danger">
+                                    <div class="card-body">
+                                        <h2 class="text-danger mb-1">
+                                            <field name="cancelled_bookings" readonly="1"/>
+                                        </h2>
+                                        <p class="card-text text-muted">Cancelled</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                <div class="card text-center h-100 border-info">
+                                    <div class="card-body">
+                                        <h2 class="text-info mb-1">
+                                            ₹<field name="total_revenue" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                        </h2>
+                                        <p class="card-text text-muted">Total Revenue</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                                <div class="card text-center h-100 border-purple">
+                                    <div class="card-body">
+                                        <h2 class="text-purple mb-1">
+                                            <field name="completion_rate" readonly="1" widget="float" digits="[16,1]"/>%
+                                        </h2>
+                                        <p class="card-text text-muted">Completion Rate</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Section using Notebook (Tabs) -->
+                        <notebook>
+                            <!-- Booking Analytics Tab -->
+                            <page name="booking_analytics" string="📊 Booking Analytics">
+                                <div class="row">
+                                    <!-- Booking Status Distribution -->
+                                    <div class="col-lg-6 col-md-12 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Booking Status Distribution</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="o_chart_container">
+                                                    <canvas id="statusPieChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Booking Types -->
+                                    <div class="col-lg-6 col-md-12 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Booking Types Distribution</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="o_chart_container">
+                                                    <canvas id="bookingTypeChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Vehicle Utilization -->
+                                    <div class="col-12 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Vehicle Utilization</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="o_chart_container" style="height: 400px;">
+                                                    <canvas id="vehicleUtilizationChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+
+                            <!-- Revenue Analytics Tab -->
+                            <page name="revenue_analytics" string="💰 Revenue Analytics">
+                                <div class="row">
+                                    <!-- Monthly Revenue -->
+                                    <div class="col-12 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Monthly Revenue Trend</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="o_chart_container" style="height: 400px;">
+                                                    <canvas id="revenueChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+
+                            <!-- Trends Analytics Tab -->
+                            <page name="trends_analytics" string="📈 Trends Analytics">
+                                <div class="row">
+                                    <!-- Daily Bookings Trend -->
+                                    <div class="col-12 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Daily Bookings Trend (Last 30 Days)</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="o_chart_container" style="height: 400px;">
+                                                    <canvas id="dailyTrendChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <!-- Cancellation Analysis -->
+                                    <div class="col-12 mb-4">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Cancellation and Refund Analysis</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="o_chart_container" style="height: 400px;">
+                                                    <canvas id="cancellationChart"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+
+                            <!-- Performance Metrics Tab -->
+                            <page name="performance_metrics" string="📋 Performance Metrics">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Booking Performance</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-striped">
+                                                    <tr>
+                                                        <td><strong>Total Bookings</strong></td>
+                                                        <td>
+                                                            <field name="total_bookings" readonly="1"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Average Booking Value</strong></td>
+                                                        <td>
+                                                            ₹<field name="avg_booking_value" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Completion Rate</strong></td>
+                                                        <td>
+                                                            <field name="completion_rate" readonly="1" widget="float" digits="[16,1]"/>%
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Cancellation Rate</strong></td>
+                                                        <td>
+                                                            <field name="cancellation_rate" readonly="1" widget="float" digits="[16,1]"/>%
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-12 mb-4">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5 class="mb-0">Revenue Performance</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <table class="table table-striped">
+                                                    <tr>
+                                                        <td><strong>Total Revenue</strong></td>
+                                                        <td>
+                                                            ₹<field name="total_revenue" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Monthly Growth</strong></td>
+                                                        <td>
+                                                            <field name="monthly_growth" readonly="1" widget="float" digits="[16,1]"/>%
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Refunded Amount</strong></td>
+                                                        <td>
+                                                            ₹<field name="total_refunded" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td><strong>Net Revenue</strong></td>
+                                                        <td>
+                                                            ₹<field name="net_revenue" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Dashboard Tree View -->
+        <record id="view_fleet_booking_dashboard_tree" model="ir.ui.view">
+            <field name="name">fleet.booking.dashboard.tree</field>
+            <field name="model">fleet.booking.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="Fleet Booking Dashboards">
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="total_bookings"/>
+                    <field name="total_revenue"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Dashboard Action -->
+        <record id="action_fleet_booking_analytics_dashboard" model="ir.actions.act_window">
+            <field name="name">Fleet Booking Analytics Dashboard</field>
+            <field name="res_model">fleet.booking.dashboard</field>
+            <field name="view_mode">tree,form</field>
+            <field name="target">current</field>
+            <field name="context">{'default_name': 'Fleet Booking Analytics Dashboard'}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Welcome to Fleet Booking Analytics Dashboard!
+                </p>
+                <p>
+                    This dashboard provides comprehensive insights into your fleet booking operations.
+                    Create a new dashboard to start analyzing your data.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_fleet_booking_analytics_dashboard"
+                  name="Analytics Dashboard"
+                  parent="menu_fleet_booking_root"
+                  action="action_fleet_booking_analytics_dashboard"
+                  sequence="50"/>
+
+    </data>
+</odoo>

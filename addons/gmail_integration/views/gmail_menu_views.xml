@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ========================================== -->
+        <!-- PART 1: ALL ACTIONS FIRST (COMPLETE & WORKING) -->
+        <!-- ========================================== -->
+
+        <!-- Gmail Dashboard Action -->
+        <record id="action_gmail_dashboard" model="ir.actions.act_window">
+            <field name="name">Gmail</field>
+            <field name="res_model">gmail.dashboard</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Welcome to Gmail!
+                </p>
+                <p>
+                    Your Gmail dashboard helps you manage multiple accounts and messages.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Account User Action -->
+        <record id="action_gmail_account_user" model="ir.actions.act_window">
+            <field name="name">My Gmail Accounts</field>
+            <field name="res_model">gmail.account</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('user_id', '=', uid)]</field>
+            <field name="context">{'default_user_id': uid}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Connect your first Gmail account!
+                </p>
+                <p>
+                    Click "Create" to add your Gmail account and start syncing emails.
+                    Make sure the Gmail OAuth configuration is set up by your administrator.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Account All Action -->
+        <record id="action_gmail_account_all" model="ir.actions.act_window">
+            <field name="name">All Gmail Accounts</field>
+            <field name="res_model">gmail.account</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No Gmail accounts configured yet.
+                </p>
+                <p>
+                    Gmail accounts will appear here when users connect their accounts.
+                    Configure Gmail OAuth settings first to enable account connections.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Template Action -->
+        <record id="action_gmail_template" model="ir.actions.act_window">
+            <field name="name">Email Templates</field>
+            <field name="res_model">gmail.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first email template!
+                </p>
+                <p>
+                    Email templates help you send consistent messages quickly.
+                    Use variables like {{contact_name}} to personalize your emails.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Template Category Action -->
+        <record id="action_gmail_template_category" model="ir.actions.act_window">
+            <field name="name">Template Categories</field>
+            <field name="res_model">gmail.template.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create template categories!
+                </p>
+                <p>
+                    Organize your email templates by creating categories like Business, Marketing, Support, etc.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Mass Mail Action -->
+        <record id="action_gmail_mass_mail" model="ir.actions.act_window">
+            <field name="name">Mass Mail Campaigns</field>
+            <field name="res_model">gmail.mass.mail</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first mass mail campaign!
+                </p>
+                <p>
+                    Send emails to multiple recipients at once using your Gmail accounts.
+                    Use templates and personalization for better results.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Send Mail Action -->
+        <record id="action_gmail_send_mail" model="ir.actions.act_window">
+            <field name="name">Send Email</field>
+            <field name="res_model">gmail.send.mail</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- Gmail Message Actions -->
+        <record id="action_gmail_message" model="ir.actions.act_window">
+            <field name="name">All Gmail Messages</field>
+            <field name="res_model">gmail.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_unread': 1, 'create': False}</field>
+        </record>
+
+        <record id="action_gmail_message_inbox" model="ir.actions.act_window">
+            <field name="name">Inbox</field>
+            <field name="res_model">gmail.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('direction', '=', 'inbound')]</field>
+            <field name="context">{'search_default_unread': 1, 'create': False}</field>
+        </record>
+
+        <record id="action_gmail_message_sent" model="ir.actions.act_window">
+            <field name="name">Sent</field>
+            <field name="res_model">gmail.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('direction', '=', 'outbound')]</field>
+            <field name="context">{'create': False}</field>
+        </record>
+
+        <record id="action_gmail_message_drafts" model="ir.actions.act_window">
+            <field name="name">Drafts</field>
+            <field name="res_model">gmail.message</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('direction', '=', 'draft')]</field>
+            <field name="context">{'create': False}</field>
+        </record>
+
+        <!-- Gmail Sync Log Action -->
+        <record id="action_gmail_sync_log" model="ir.actions.act_window">
+            <field name="name">Gmail Sync Logs</field>
+            <field name="res_model">gmail.sync.log</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No sync logs found
+                </p>
+                <p>
+                    Sync logs will appear here after Gmail accounts start synchronizing.
+                </p>
+            </field>
+        </record>
+
+        <!-- Alert Handler Action -->
+        <record id="action_gmail_alert_handler" model="ir.actions.act_window">
+            <field name="name">Alert Logs</field>
+            <field name="res_model">gmail.alert.handler</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_recent': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No alerts sent yet!
+                </p>
+                <p>
+                    Alert logs will appear here when modules send alerts through the alert system.
+                    Configure the alert system in Alert Configuration.
+                </p>
+            </field>
+        </record>
+
+        <!-- Gmail Alert Settings Action -->
+        <record id="action_gmail_alert_settings" model="ir.actions.act_window">
+            <field name="name">Alert Configuration</field>
+            <field name="res_model">gmail.alert.settings</field>
+            <field name="view_mode">form,tree</field>
+            <field name="target">current</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Alert System!
+                </p>
+                <p>
+                    Set up the alert system to handle notifications from any module (Fleet, Inventory, HR, etc.).
+                    Configure default accounts, recipients, and processing options.
+                </p>
+            </field>
+        </record>
+
+        <!-- Account Switcher Action -->
+        <record id="action_gmail_account_switcher" model="ir.actions.act_window">
+            <field name="name">Switch Gmail Account</field>
+            <field name="res_model">gmail.account.switcher</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{}</field>
+        </record>
+
+        <!-- OAuth Wizard Action -->
+        <record id="action_gmail_oauth_wizard" model="ir.actions.act_window">
+            <field name="name">Gmail OAuth Authorization</field>
+            <field name="res_model">gmail.oauth.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{'default_account_id': active_id}</field>
+        </record>
+
+        <!-- Configuration Action -->
+        <record id="action_gmail_configuration" model="ir.actions.act_window">
+            <field name="name">Gmail Settings</field>
+            <field name="res_model">gmail.configuration</field>
+            <field name="view_mode">form,tree</field>
+            <field name="target">current</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Gmail Integration!
+                </p>
+                <p>
+                    Set up OAuth credentials to enable Gmail integration for all users.
+                    This configuration allows users to connect their personal Gmail accounts securely.
+                </p>
+            </field>
+        </record>
+
+        <!-- Notification Settings Action -->
+        <record id="action_gmail_notification_settings" model="ir.actions.act_window">
+            <field name="name">Gmail Notification Settings</field>
+            <field name="res_model">gmail.notification.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- Mass Mail Recipient Action -->
+        <record id="action_gmail_mass_mail_recipient" model="ir.actions.act_window">
+            <field name="name">Campaign Recipients</field>
+            <field name="res_model">gmail.mass.mail.recipient</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Template Mapping Action -->
+        <record id="action_gmail_alert_template_mapping" model="ir.actions.act_window">
+            <field name="name">Template Mappings</field>
+            <field name="res_model">gmail.alert.template.mapping</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_enabled': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Template Mappings!
+                </p>
+                <p>
+                    Set up which email template to use for each type of alert from any module.
+                    Use the Auto-Discover feature to automatically find existing templates.
+                </p>
+            </field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- PART 2: MENU STRUCTURE (Apps Bar Compatible) -->
+        <!-- ========================================== -->
+
+        <!-- Main Gmail Menu - APPS BAR COMPATIBLE -->
+        <menuitem id="menu_gmail_main" 
+                  name="Gmail" 
+                  sequence="50"
+                  web_icon="gmail_integration,static/description/icon.png"/>
+
+        <!-- Dashboard Menu Item (Primary Navigation) -->
+        <menuitem id="menu_gmail_dashboard_link" 
+                  name="📊 Dashboard" 
+                  parent="menu_gmail_main" 
+                  action="action_gmail_dashboard" 
+                  sequence="1"/>
+
+        <!-- My Gmail Accounts Menu (for users) -->
+        <menuitem id="menu_gmail_my_accounts" 
+                  name="My Gmail Accounts" 
+                  parent="menu_gmail_main" 
+                  action="action_gmail_account_user" 
+                  sequence="10"/>
+
+        <!-- Templates and Mass Mail Submenu -->
+        <menuitem id="menu_gmail_templates" 
+                  name="Templates and Mass Mail" 
+                  parent="menu_gmail_main" 
+                  sequence="20"/>
+
+        <!-- Email Templates Menu -->
+        <menuitem id="menu_gmail_email_templates" 
+                  name="Email Templates" 
+                  parent="menu_gmail_templates" 
+                  action="action_gmail_template" 
+                  sequence="10"/>
+
+        <!-- Template Categories Menu -->
+        <menuitem id="menu_gmail_template_categories" 
+                  name="Template Categories" 
+                  parent="menu_gmail_templates" 
+                  action="action_gmail_template_category" 
+                  sequence="20"/>
+
+        <!-- Mass Mail Campaigns Menu -->
+        <menuitem id="menu_gmail_mass_mail" 
+                  name="Mass Mail Campaigns" 
+                  parent="menu_gmail_templates" 
+                  action="action_gmail_mass_mail" 
+                  sequence="30"/>
+
+        <!-- Configuration Submenu (Admin Only) -->
+        <menuitem id="menu_gmail_config" 
+                  name="Configuration" 
+                  parent="menu_gmail_main" 
+                  sequence="90"
+                  groups="base.group_system"/>
+
+        <!-- Gmail Settings Menu (OAuth Configuration) -->
+        <menuitem id="menu_gmail_oauth_settings" 
+                  name="Gmail Settings" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_configuration" 
+                  sequence="1"/>
+
+        <!-- Alert Configuration Menu -->
+        <menuitem id="menu_gmail_alert_configuration" 
+                  name="Alert Configuration" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_alert_settings" 
+                  sequence="2"/>
+
+        <!-- Notification Settings Menu -->
+        <menuitem id="menu_gmail_notification_settings" 
+                  name="Notification Settings" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_notification_settings" 
+                  sequence="3"/>
+
+        <!-- All Gmail Accounts Menu (admin view) -->
+        <menuitem id="menu_gmail_all_accounts" 
+                  name="All Gmail Accounts" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_account_all" 
+                  sequence="5"/>
+
+        <!-- Sync Logs Menu -->
+        <menuitem id="menu_gmail_sync_logs" 
+                  name="Sync Logs" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_sync_log" 
+                  sequence="10"/>
+
+        <!-- Alert Logs Menu -->
+        <menuitem id="menu_gmail_alert_logs" 
+                  name="Alert Logs" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_alert_handler" 
+                  sequence="11"/>
+
+        <!-- Template Mappings Menu -->
+        <menuitem id="menu_gmail_template_mappings" 
+                  name="Template Mappings" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_alert_template_mapping" 
+                  sequence="12"/>
+
+    </data>
+</odoo>

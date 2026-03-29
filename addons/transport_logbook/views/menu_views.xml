@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_transport_logbook_root" name="Transport Logbook"/>
+    
+    <!-- Dashboard Menu - Direct link to vehicle dashboard -->
+    <menuitem id="menu_transport_dashboard" 
+              name="Dashboard" 
+              parent="menu_transport_logbook_root" 
+              action="action_transport_vehicle_dashboard"
+              sequence="1"/>
+    
+    <!-- Logbooks Menu - Direct link to all logbooks -->
+    <menuitem id="menu_transport_logbook" 
+              name="Logbooks" 
+              parent="menu_transport_logbook_root" 
+              action="action_transport_logbook_entry"
+              sequence="10"/>
+              
+    <!-- Configuration Menu -->
+    <menuitem id="menu_transport_configuration" 
+              name="Configuration" 
+              parent="menu_transport_logbook_root" 
+              sequence="100"/>
+              
+    <menuitem id="menu_transport_company" 
+              name="Companies" 
+              parent="menu_transport_configuration" 
+              action="action_transport_company"
+              sequence="1"/>
+              
+    <!-- Reports Menu -->
+    <menuitem id="menu_transport_reports" 
+              name="Print Reports" 
+              parent="menu_transport_logbook_root" 
+              sequence="15"/>
+          
+    <menuitem id="menu_transport_logbook_report" 
+              name="Generate Report" 
+              parent="menu_transport_reports" 
+              action="action_transport_logbook_report_wizard"
+              sequence="1"/>          
+</odoo>
