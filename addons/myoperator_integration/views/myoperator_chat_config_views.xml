@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- MyOperator Chat Configuration Form View -->
+    <record id="view_myoperator_chat_config_form" model="ir.ui.view">
+        <field name="name">myoperator.chat.config.form</field>
+        <field name="model">myoperator.chat.config</field>
+        <field name="arch" type="xml">
+            <form string="MyOperator Chat Configuration">
+                <header>
+                    <button name="test_connection" type="object" string="Test Connection"
+                            class="btn-primary" icon="fa-plug"/>
+                    <button name="sync_conversations" type="object" string="Sync Conversations"
+                            class="btn-secondary" icon="fa-comments"/>
+                    <field name="connection_status" widget="statusbar"
+                           statusbar_visible="not_tested,connected,failed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Chat Configuration Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="api_details" string="API Details">
+                            <field name="api_key" password="True"/>
+                            <field name="base_url"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group name="whatsapp_details" string="WhatsApp Details">
+                            <field name="phone_number_id"/>
+                            <field name="waba_id"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="sync_settings" string="Sync Settings">
+                            <field name="auto_sync_enabled"/>
+                            <field name="sync_interval" invisible="auto_sync_enabled == False"/>
+                            <field name="last_sync_date"/>
+                        </group>
+                        <group name="chat_settings" string="Chat Settings">
+                            <field name="default_template"/>
+                            <field name="auto_reply_enabled"/>
+                            <field name="auto_reply_message" invisible="auto_reply_enabled == False"
+                                   placeholder="Enter automatic reply message..."/>
+                        </group>
+                    </group>
+                    <group>
+                        <group name="webhook_settings" string="Webhook Settings">
+                            <field name="webhook_url" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MyOperator Chat Configuration Tree View -->
+    <record id="view_myoperator_chat_config_tree" model="ir.ui.view">
+        <field name="name">myoperator.chat.config.tree</field>
+        <field name="model">myoperator.chat.config</field>
+        <field name="arch" type="xml">
+            <tree string="Chat Configurations">
+                <field name="name"/>
+                <field name="connection_status" widget="badge"
+                       decoration-success="connection_status == 'connected'"
+                       decoration-danger="connection_status == 'failed'"
+                       decoration-muted="connection_status == 'not_tested'"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="auto_sync_enabled" widget="boolean_toggle"/>
+                <field name="last_sync_date"/>
+                <field name="company_id"/>
+                <field name="phone_number_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- MyOperator Chat Configuration Action -->
+    <record id="action_myoperator_chat_config" model="ir.actions.act_window">
+        <field name="name">Chat Configuration</field>
+        <field name="res_model">myoperator.chat.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first MyOperator Chat configuration!
+            </p>
+            <p>
+                Configure your MyOperator Chat API settings to start managing WhatsApp conversations.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_myoperator_chat_config" name="Chat Configuration" 
+              parent="menu_myoperator_configuration"
+              action="action_myoperator_chat_config" sequence="20"/>
+</odoo>

@@ -1,0 +1,284 @@
+fleetx_integration/
+├── __init__.py
+├── __manifest__.py
+├── models/
+│   ├── __init__.py
+│   ├── fleetx_config.py
+│   ├── fleetx_vehicle.py
+│   ├── fleetx_analytics.py
+│   └── res_config_settings.py
+├── controllers/
+│   ├── __init__.py
+│   └── fleetx_api.py
+├── views/
+│   ├── fleetx_config_views.xml
+│   ├── fleetx_vehicle_views.xml
+│   ├── fleetx_analytics_views.xml
+│   ├── res_config_settings_views.xml
+│   └── fleetx_menus.xml
+├── security/
+│   ├── ir.model.access.csv
+│   └── security.xml
+├── data/
+│   ├── fleetx_data.xml
+│   └── ir_cron_data.xml
+├── wizard/
+│   ├── __init__.py
+│   └── fleetx_sync_wizard.py
+├── static/
+│   ├── description/
+│   │   ├── icon.png
+│   │   └── index.html
+│   └── src/
+│       ├── css/
+│       │   └── fleetx_styles.css
+│       └── js/
+│           └── fleetx_dashboard.js
+└── README.md
+
+# FleetX Integration for Odoo 17
+
+A comprehensive FleetX API integration module for Odoo 17 that provides real-time vehicle tracking, analytics, and fleet management capabilities.
+
+## Features
+
+### 🚗 Vehicle Management
+- Real-time vehicle tracking and monitoring
+- Comprehensive vehicle information storage
+- Live status updates (Running, Idle, Parked, etc.)
+- GPS location tracking with Google Maps integration
+- Fuel level monitoring and consumption tracking
+- Odometer readings and trip tracking
+
+### 📊 Analytics & Reporting
+- Real-time fleet analytics dashboard
+- Vehicle utilization reports
+- Fuel sensor status monitoring
+- Historical data analysis with charts
+- Custom analytics views and pivot tables
+
+### 🔄 API Integration
+- Secure FleetX API connection
+- Automated data synchronization
+- Manual sync capabilities
+- Webhook support for real-time updates
+- Error handling and logging
+
+### ⚙️ Configuration & Management
+- Easy API setup and configuration
+- Multi-company support
+- User role-based access control
+- Customizable sync intervals
+- Health monitoring and alerts
+
+## Installation
+
+### Prerequisites
+- Odoo 17.0 or later
+- Python 3.8+
+- `requests` Python library
+
+### Installation Steps
+
+1. **Download the module**
+   ```bash
+   cd /path/to/odoo/addons
+   git clone <repository-url> fleetx_integration
+   ```
+
+2. **Install Python dependencies**
+   ```bash
+   pip install requests
+   ```
+
+3. **Update Odoo addons list**
+   - Go to Apps menu in Odoo
+   - Click "Update Apps List"
+   - Search for "FleetX Integration"
+   - Click Install
+
+4. **Configure FleetX API**
+   - Go to FleetX > Configuration > API Configuration
+   - Create a new configuration with your FleetX API credentials
+   - Test the connection
+   - Activate the configuration
+
+## Configuration
+
+### API Setup
+
+1. **Create FleetX Configuration**
+   ```
+   Name: Your FleetX Config
+   API Base URL: https://api.fleetx.io/api/v1
+   Access Token: Your FleetX API token
+   Sync Interval: 5 minutes
+   ```
+
+2. **Test Connection**
+   - Click "Test Connection" button
+   - Verify successful connection
+   - Check for any error messages
+
+3. **Initial Data Sync**
+   - Go to FleetX > Configuration > Data Synchronization
+   - Run the sync wizard
+   - Choose "Full Synchronization"
+   - Monitor the sync progress
+
+### Settings Configuration
+
+Access FleetX settings via:
+- Settings > FleetX Integration
+- Or FleetX > Configuration > Settings
+
+Available settings:
+- API Base URL and Access Token
+- Auto-sync interval and preferences
+- Dashboard refresh settings
+- Notification preferences
+- Map display options
+
+## Usage
+
+### Dashboard
+- Access via FleetX > Dashboard
+- Real-time vehicle statistics
+- Status distribution charts
+- Quick access to vehicle lists
+
+### Vehicle Management
+- FleetX > Vehicles > All Vehicles
+- Filter by status (Running, Idle, Parked)
+- View individual vehicle details
+- Track location and fuel levels
+
+### Analytics
+- FleetX > Analytics > Reports
+- FleetX > Analytics > Charts
+- Historical data analysis
+- Utilization reporting
+
+### Data Synchronization
+- Automatic sync every 5 minutes (configurable)
+- Manual sync via sync wizard
+- Real-time updates via webhooks
+
+## API Endpoints
+
+The module provides several API endpoints for integration:
+
+### Vehicle Data
+```
+GET /fleetx/api/vehicles
+POST /fleetx/api/sync
+GET /fleetx/api/vehicle/<id>
+```
+
+### Analytics
+```
+GET /fleetx/api/analytics
+GET /fleetx/api/dashboard
+```
+
+### Webhooks
+```
+POST /fleetx/webhook
+```
+
+## Security
+
+### User Groups
+- **FleetX User**: View vehicles and analytics
+- **FleetX Manager**: Configure settings and manage sync
+- **FleetX Administrator**: Full access to all features
+
+### Multi-Company Support
+- Data isolation between companies
+- Company-specific configurations
+- Role-based access control
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Connection Failed**
+   - Verify API URL and token
+   - Check network connectivity
+   - Review error logs
+
+2. **Sync Errors**
+   - Check API rate limits
+   - Verify data format
+   - Review sync logs
+
+3. **Missing Data**
+   - Run manual sync
+   - Check configuration status
+   - Verify API permissions
+
+### Logging
+- Enable debug logging in settings
+- Check Odoo server logs
+- Review FleetX API responses
+
+## Development
+
+### Module Structure
+```
+fleetx_integration/
+├── models/          # Data models
+├── views/           # UI views
+├── controllers/     # API controllers
+├── wizard/          # Sync wizard
+├── security/        # Access rights
+├── data/           # Default data
+└── static/         # CSS/JS assets
+```
+
+### Extending the Module
+- Add custom fields to vehicle model
+- Create additional analytics views
+- Implement custom sync logic
+- Add new API endpoints
+
+## Support
+
+### Documentation
+- Check module documentation
+- Review FleetX API documentation
+- Consult Odoo development guides
+
+### Getting Help
+- Create GitHub issues for bugs
+- Join community discussions
+- Contact support for enterprise features
+
+## License
+
+This module is licensed under LGPL-3. See LICENSE file for details.
+
+## Contributing
+
+1. Fork the repository
+2. Create feature branch
+3. Make changes with tests
+4. Submit pull request
+5. Follow code style guidelines
+
+## Changelog
+
+### Version 17.0.1.0.0
+- Initial release
+- FleetX API integration
+- Vehicle management
+- Analytics dashboard
+- Multi-company support
+- Webhook integration
+
+## Credits
+
+- Developed for Odoo 17
+- Based on FleetX API v1
+- Uses Chart.js for analytics
+- Google Maps integration

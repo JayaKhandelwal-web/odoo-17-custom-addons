@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Clients Section Template -->
+        <template id="clients_section" name="Our Valued Clients Section">
+            <section class="clients-section py-5">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto text-center mb-5">
+                            <h2 class="section-title display-5 fw-bold mb-3">Our Valued Clients</h2>
+                            <p class="section-subtitle text-muted">
+                                Trusted by leading organizations across India
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Marquee Container -->
+                    <div class="clients-marquee-wrapper">
+                        <t t-if="client_logos">
+                            <div class="clients-marquee">
+                                <!-- First set of logos -->
+                                <div class="marquee-content">
+                                    <t t-foreach="client_logos" t-as="client">
+                                        <div class="client-logo-item">
+                                            <div class="client-logo-card bg-white rounded-3 p-4 shadow-sm">
+                                                <a t-if="client.website_url"
+                                                   t-att-href="client.website_url"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   class="d-flex align-items-center justify-content-center">
+                                                    <img t-if="client.logo"
+                                                         t-att-src="'data:image/png;base64,' + client.logo.decode('utf-8')"
+                                                         t-att-alt="client.name"
+                                                         t-att-title="client.name"
+                                                         class="client-logo img-fluid"
+                                                         style="max-height: 80px; width: auto;"/>
+                                                </a>
+                                                <div t-else="" class="d-flex align-items-center justify-content-center">
+                                                    <img t-if="client.logo"
+                                                         t-att-src="'data:image/png;base64,' + client.logo.decode('utf-8')"
+                                                         t-att-alt="client.name"
+                                                         t-att-title="client.name"
+                                                         class="client-logo img-fluid"
+                                                         style="max-height: 80px; width: auto;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                                <!-- Duplicate set for seamless loop -->
+                                <div class="marquee-content" aria-hidden="true">
+                                    <t t-foreach="client_logos" t-as="client">
+                                        <div class="client-logo-item">
+                                            <div class="client-logo-card bg-white rounded-3 p-4 shadow-sm">
+                                                <a t-if="client.website_url"
+                                                   t-att-href="client.website_url"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer"
+                                                   class="d-flex align-items-center justify-content-center">
+                                                    <img t-if="client.logo"
+                                                         t-att-src="'data:image/png;base64,' + client.logo.decode('utf-8')"
+                                                         t-att-alt="client.name"
+                                                         t-att-title="client.name"
+                                                         class="client-logo img-fluid"
+                                                         style="max-height: 80px; width: auto;"/>
+                                                </a>
+                                                <div t-else="" class="d-flex align-items-center justify-content-center">
+                                                    <img t-if="client.logo"
+                                                         t-att-src="'data:image/png;base64,' + client.logo.decode('utf-8')"
+                                                         t-att-alt="client.name"
+                                                         t-att-title="client.name"
+                                                         class="client-logo img-fluid"
+                                                         style="max-height: 80px; width: auto;"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                        <!-- Fallback if no client logos -->
+                        <t t-else="">
+                            <div class="col-12 text-center py-5">
+                                <p class="text-muted">No client logos available at the moment.</p>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Trust Stats -->
+                    <div class="row mt-5 trust-stats" t-if="client_logos">
+                        <div class="col-md-4 text-center stat-item">
+                            <h3 class="display-4 fw-bold text-primary mb-2">1000+</h3>
+                            <p class="text-muted">Trusted Clients</p>
+                        </div>
+                        <div class="col-md-4 text-center stat-item">
+                            <h3 class="display-4 fw-bold text-primary mb-2">30+</h3>
+                            <p class="text-muted">Years of Service</p>
+                        </div>
+                        <div class="col-md-4 text-center stat-item">
+                            <h3 class="display-4 fw-bold text-primary mb-2">50,000+</h3>
+                            <p class="text-muted">Happy Journeys</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Custom CSS for Marquee -->
+            <style>
+                .clients-marquee-wrapper {
+                    overflow: hidden;
+                    position: relative;
+                    width: 100%;
+                    padding: 20px 0;
+                }
+
+                .clients-marquee {
+                    display: flex;
+                    width: max-content;
+                    animation: marquee 30s linear infinite;
+                }
+
+                /* Pause on hover */
+                .clients-marquee:hover {
+                    animation-play-state: paused;
+                }
+
+                .marquee-content {
+                    display: flex;
+                    gap: 30px;
+                    padding: 0 15px;
+                }
+
+                .client-logo-item {
+                    flex-shrink: 0;
+                    width: 180px;
+                }
+
+                .client-logo-card {
+                    height: 120px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: transform 0.3s ease, box-shadow 0.3s ease;
+                    background: #ffffff;
+                }
+
+                .client-logo-card:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+                }
+
+                .client-logo-card img {
+                    max-width: 100%;
+                    max-height: 80px;
+                    object-fit: contain;
+                    transition: filter 0.3s ease;
+                }
+
+
+                @keyframes marquee {
+                    0% {
+                        transform: translateX(0);
+                    }
+                    100% {
+                        transform: translateX(-50%);
+                    }
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 768px) {
+                    .client-logo-item {
+                        width: 140px;
+                    }
+
+                    .client-logo-card {
+                        height: 100px;
+                        padding: 15px !important;
+                    }
+
+                    .clients-marquee {
+                        animation: marquee 20s linear infinite;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .client-logo-item {
+                        width: 120px;
+                    }
+
+                    .marquee-content {
+                        gap: 20px;
+                    }
+                }
+            </style>
+        </template>
+
+        <!-- Standalone Clients Page -->
+        <template id="clients_page" name="Our Clients - Page">
+            <t t-call="website.layout">
+                <t t-set="title">Our Valued Clients</t>
+                <!-- Page Header -->
+                <section class="page-header bg-primary text-white py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <h1 class="display-4 fw-bold mb-3">Our Valued Clients</h1>
+                                <p class="lead">Proud to serve leading organizations across India</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- Clients Section -->
+                <t t-call="annapurna_travels.clients_section"/>
+                <!-- CTA Section -->
+                <section class="cta-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h3 class="h2 fw-bold mb-3">Join Our Growing Family of Satisfied Clients</h3>
+                                <p class="lead text-muted mb-0">
+                                    Experience the same quality service that these organizations trust.
+                                </p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                                <a href="/contact" class="btn btn-primary btn-lg rounded-pill px-5">
+                                    <i class="fas fa-phone me-2"></i>Contact Us
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="simply_fleet_performance.DriverPerformanceDashboard" owl="1">
+        <div class="performance_dashboard">
+            <!-- Statistics Cards -->
+            <div class="performance_stats">
+                <div class="performance_stat_card excellent">
+                    <div class="stat_icon">👥</div>
+                    <div class="stat_value" t-esc="state.statistics.totalDrivers"/>
+                    <div class="stat_label">Total Drivers</div>
+                </div>
+
+                <div class="performance_stat_card good">
+                    <div class="stat_icon">⭐</div>
+                    <div class="stat_value" t-esc="state.statistics.avgScore"/>
+                    <div class="stat_label">Average Score</div>
+                </div>
+
+                <div class="performance_stat_card average">
+                    <div class="stat_icon">🏆</div>
+                    <div class="stat_value" t-esc="state.statistics.excellentDrivers"/>
+                    <div class="stat_label">Excellent Drivers</div>
+                </div>
+
+                <div class="performance_stat_card rewards">
+                    <div class="stat_icon">💰</div>
+                    <div class="stat_value">₹<t t-esc="state.statistics.totalRewards"/></div>
+                    <div class="stat_label">Total Rewards</div>
+                </div>
+            </div>
+
+            <!-- Period Filter -->
+            <div class="performance_filters">
+                <div class="filter_buttons">
+                    <button
+                        class="filter_btn"
+                        t-att-class="state.periodType === 'weekly' ? 'active' : ''"
+                        t-on-click="() => this.onPeriodChange('weekly')">
+                        Weekly
+                    </button>
+                    <button
+                        class="filter_btn"
+                        t-att-class="state.periodType === 'monthly' ? 'active' : ''"
+                        t-on-click="() => this.onPeriodChange('monthly')">
+                        Monthly
+                    </button>
+                    <button
+                        class="filter_btn"
+                        t-on-click="() => this.openAllPerformances()">
+                        View All Records
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top Drivers Section -->
+            <div class="top_drivers_section">
+                <h3>Top Performers - <t t-esc="state.periodType === 'weekly' ? 'This Week' : 'This Month'"/></h3>
+
+                <t t-if="state.topDrivers.length > 0">
+                    <div t-foreach="state.topDrivers" t-as="driver" t-key="driver.id"
+                         class="driver_performance_card"
+                         t-on-click="() => this.openPerformanceRecord(driver.id)">
+
+                        <div class="rank_badge" t-att-class="'rank_' + (driver_index + 1 &lt;= 3 ? driver_index + 1 : 'other')">
+                            <t t-esc="driver_index + 1"/>
+                        </div>
+
+                        <div class="driver_info">
+                            <div class="driver_name" t-esc="driver.driver_id[1]"/>
+                            <div class="driver_metrics">
+                                <span>Score: <t t-esc="driver.performance_score"/></span>
+                                <span>Mileage: <t t-esc="driver.average_mileage"/> km/L</span>
+                                <span>Distance: <t t-esc="driver.total_distance"/> km</span>
+                            </div>
+                        </div>
+
+                        <div class="performance_score_badge" t-att-class="getGradeClass(driver.performance_grade)">
+                            <t t-esc="getGradeLabel(driver.performance_grade)"/>
+                        </div>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="no_data_message">
+                        <i class="fa fa-inbox"/>
+                        <p>No performance data available for this period</p>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+    Delete any existing action window view records for fuel logs to avoid conflicts
+    This ensures we can set the correct view order
+    -->
+    <delete model="ir.actions.act_window.view" search="[('act_window_id', '=', ref('simply_fleet.action_simply_fleet_fuel_log'))]"/>
+    
+    <!-- Now create the correct view order with Kanban first -->
+    
+    <!-- Define the kanban view as the default/first view -->
+    <record id="action_simply_fleet_fuel_log_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="simply_fleet.simply_fleet_fuel_log_kanban"/>
+        <field name="act_window_id" ref="simply_fleet.action_simply_fleet_fuel_log"/>
+    </record>
+
+    <!-- Tree view as second -->
+    <record id="action_simply_fleet_fuel_log_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="simply_fleet.action_simply_fleet_fuel_log"/>
+    </record>
+
+    <!-- Form view as third -->
+    <record id="action_simply_fleet_fuel_log_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="act_window_id" ref="simply_fleet.action_simply_fleet_fuel_log"/>
+    </record>
+
+    <!-- Graph view as fourth -->
+    <record id="action_simply_fleet_fuel_log_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="act_window_id" ref="simply_fleet.action_simply_fleet_fuel_log"/>
+    </record>
+
+    <!-- Pivot view as fifth -->
+    <record id="action_simply_fleet_fuel_log_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="5"/>
+        <field name="view_mode">pivot</field>
+        <field name="act_window_id" ref="simply_fleet.action_simply_fleet_fuel_log"/>
+    </record>
+
+</odoo>

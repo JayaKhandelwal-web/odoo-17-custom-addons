@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_fleetx_config_admin,fleetx.config.admin,model_fleetx_config,group_fleetx_admin,1,1,1,1
+access_fleetx_config_manager,fleetx.config.manager,model_fleetx_config,group_fleetx_manager,1,1,1,0
+access_fleetx_config_user,fleetx.config.user,model_fleetx_config,group_fleetx_user,1,0,0,0
+access_fleetx_vehicle_admin,fleetx.vehicle.admin,model_fleetx_vehicle,group_fleetx_admin,1,1,1,1
+access_fleetx_vehicle_manager,fleetx.vehicle.manager,model_fleetx_vehicle,group_fleetx_manager,1,1,1,0
+access_fleetx_vehicle_user,fleetx.vehicle.user,model_fleetx_vehicle,group_fleetx_user,1,0,0,0
+access_fleetx_analytics_admin,fleetx.analytics.admin,model_fleetx_analytics,group_fleetx_admin,1,1,1,1
+access_fleetx_analytics_manager,fleetx.analytics.manager,model_fleetx_analytics,group_fleetx_manager,1,1,1,0
+access_fleetx_analytics_user,fleetx.analytics.user,model_fleetx_analytics,group_fleetx_user,1,0,0,0
+access_fleetx_sync_wizard_admin,fleetx.sync.wizard.admin,model_fleetx_sync_wizard,group_fleetx_admin,1,1,1,1
+access_fleetx_sync_wizard_manager,fleetx.sync.wizard.manager,model_fleetx_sync_wizard,group_fleetx_manager,1,1,1,1
+access_fleetx_sync_wizard_user,fleetx.sync.wizard.user,model_fleetx_sync_wizard,group_fleetx_user,1,0,0,0

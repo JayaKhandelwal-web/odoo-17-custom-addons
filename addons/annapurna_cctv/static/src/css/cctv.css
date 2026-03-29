@@ -1,0 +1,390 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Annapurna CCTV Module — Stylesheet
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── Dashboard Layout ────────────────────────────────────────────── */
+.cctv_dashboard {
+    padding: 16px;
+    background: #0d1117;
+    min-height: 100vh;
+    color: #e6edf3;
+}
+
+.cctv_dash_header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #161b22;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    border: 1px solid #30363d;
+}
+
+.cctv_dash_title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #58a6ff;
+    flex: 0 0 auto;
+}
+
+.cctv_dash_title .fa {
+    color: #f85149;
+    margin-right: 8px;
+}
+
+.cctv_dash_stats {
+    display: flex;
+    gap: 16px;
+    flex: 1;
+}
+
+.cctv_stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.cctv_stat.online  { background: rgba(63,185,80,0.15); color: #3fb950; }
+.cctv_stat.offline { background: rgba(248,81,73,0.15); color: #f85149; }
+.cctv_stat.total   { background: rgba(88,166,255,0.15); color: #58a6ff; }
+
+.cctv_dash_controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+/* ─── Camera Grid ─────────────────────────────────────────────────── */
+.cctv_camera_grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.cctv_camera_tile {
+    background: #161b22;
+    border-radius: 12px;
+    border: 1px solid #30363d;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.cctv_camera_tile:hover {
+    border-color: #58a6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.cctv_tile_online  { border-color: #238636; }
+.cctv_tile_offline { border-color: #6e1f1f; opacity: 0.85; }
+
+/* ─── Tile Status Bar ─────────────────────────────────────────────── */
+.cctv_tile_status_bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.status_online  { background: #1a4a1a; color: #3fb950; }
+.status_offline { background: #4a1a1a; color: #f85149; }
+.status_unknown { background: #2a2a1a; color: #d29922; }
+
+.cctv_status_dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s infinite;
+}
+
+.status_online  .cctv_status_dot { animation: pulse_green 2s infinite; }
+.status_offline .cctv_status_dot { animation: none; }
+
+@keyframes pulse_green {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ─── Tile Preview ────────────────────────────────────────────────── */
+.cctv_tile_preview {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #0d1117;
+    overflow: hidden;
+    position: relative;
+}
+
+.cctv_tile_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cctv_tile_placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cam_online_ph  { color: #3fb950; }
+.cam_offline_ph { color: #6e7681; }
+
+.cctv_tile_placeholder p {
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+/* ─── Tile Info ───────────────────────────────────────────────────── */
+.cctv_tile_info {
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: #161b22;
+}
+
+.cctv_tile_name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.cctv_tile_actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-xs {
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+}
+
+/* ─── Loading / Empty ─────────────────────────────────────────────── */
+.cctv_dash_loading,
+.cctv_dash_empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #8b949e;
+}
+
+/* ─── Video Player (Popup) ────────────────────────────────────────── */
+.cctv_stream_container {
+    background: #0d1117;
+    border-radius: 12px;
+    overflow: hidden;
+    color: #e6edf3;
+}
+
+.cctv_stream_header {
+    padding: 12px 16px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+}
+
+.cctv_stream_header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cctv_video_wrapper {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    position: relative;
+}
+
+.cctv_video_player {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+}
+
+.cctv_stream_overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(13,17,23,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #8b949e;
+    z-index: 10;
+}
+
+.cctv_controls_bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: #161b22;
+    border-top: 1px solid #30363d;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.cctv_controls_left,
+.cctv_controls_right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* ─── PTZ Panel (Form Tab) ────────────────────────────────────────── */
+.cctv_ptz_panel {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 20px;
+    display: inline-block;
+    margin: 8px 0;
+}
+
+.cctv_ptz_table {
+    border-collapse: separate;
+    border-spacing: 8px;
+}
+
+.cctv_ptz_btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
+/* ─── PTZ Inline (Stream View) ────────────────────────────────────── */
+.cctv_ptz_inline {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #0d1117;
+    border-top: 1px solid #30363d;
+    flex-wrap: wrap;
+}
+
+.cctv_ptz_label {
+    font-size: 0.8rem;
+    color: #8b949e;
+    margin-right: 4px;
+}
+
+/* ─── Kanban (Cameras view) ───────────────────────────────────────── */
+.cctv_kanban_card {
+    background: #161b22 !important;
+    border: 1px solid #30363d !important;
+    border-radius: 10px;
+    overflow: hidden;
+    color: #e6edf3;
+}
+
+.cctv_card_header {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #0d1117;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.cctv_snapshot_thumb {
+    width: 100%;
+    height: 100%;
+}
+
+.cctv_thumb_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cctv_no_snapshot {
+    text-align: center;
+    color: #8b949e;
+    padding: 20px;
+}
+
+.cctv_card_body {
+    padding: 12px;
+}
+
+.cctv_card_title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.cctv_card_meta {
+    color: #8b949e;
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+
+.cctv_card_actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* ─── OWL Player ──────────────────────────────────────────────────── */
+.cctv_owl_player {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cctv_stream_error {
+    text-align: center;
+    color: #f85149;
+    padding: 20px;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .cctv_camera_grid {
+        grid-template-columns: 1fr !important;
+    }
+    .cctv_dash_header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .cctv_dash_controls {
+        margin-left: 0;
+    }
+}

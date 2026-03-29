@@ -1,0 +1,233 @@
+/* Fleet Booking Dashboard Styles */
+.o_fleet_booking_dashboard {
+    background: #f8f9fa;
+}
+
+/* Dashboard KPI Cards */
+.o_dashboard_kpis .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    min-height: 120px;
+}
+
+.o_dashboard_kpis .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.o_dashboard_kpis .card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.o_dashboard_kpis h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+}
+
+.o_dashboard_kpis .card-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 8px 0 0 0;
+    text-align: center;
+}
+
+/* Border colors for KPI cards */
+.border-primary {
+    border-left: 5px solid #007bff !important;
+}
+
+.border-success {
+    border-left: 5px solid #28a745 !important;
+}
+
+.border-warning {
+    border-left: 5px solid #ffc107 !important;
+}
+
+.border-danger {
+    border-left: 5px solid #dc3545 !important;
+}
+
+.border-info {
+    border-left: 5px solid #17a2b8 !important;
+}
+
+.border-purple {
+    border-left: 5px solid #6f42c1 !important;
+}
+
+/* Text colors for KPI values */
+.text-purple {
+    color: #6f42c1 !important;
+}
+
+/* Chart containers - FIXED */
+.o_chart_container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+    min-height: 300px;
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Ensure chart canvas is always visible */
+.o_chart_container canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block !important;
+    visibility: visible !important;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    border: none;
+    padding: 15px 20px;
+}
+
+.card-header h5 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .o_dashboard_kpis h2 {
+        font-size: 2rem;
+    }
+
+    .o_dashboard_kpis .card-body {
+        padding: 15px;
+    }
+
+    .o_chart_container {
+        height: 250px;
+        min-height: 250px;
+    }
+}
+
+@media (max-width: 576px) {
+    .o_dashboard_kpis h2 {
+        font-size: 1.8rem;
+    }
+
+    .o_dashboard_kpis .card-text {
+        font-size: 0.8rem;
+    }
+
+    .o_chart_container {
+        height: 200px;
+        min-height: 200px;
+        padding: 5px;
+    }
+}
+
+/* Filter section styling */
+.oe_title h1 {
+    color: #2c3e50;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* Form groups styling */
+.o_group .o_form_label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Loading states */
+.chart-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Animation for loading */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.chart-loading {
+    animation: pulse 2s infinite;
+}
+
+
+/* Header buttons styling */
+.o_form_sheet .oe_button_box {
+    margin-bottom: 20px;
+}
+
+
+/* Custom scrollbar for better appearance */
+.o_content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.o_content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.o_content::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.o_content::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Fix for style compilation errors */
+.o_form_view .o_form_sheet {
+    overflow-x: auto;
+}
+
+/* Ensure all content is visible */
+* {
+    box-sizing: border-box;
+}
+
+/* Fix for Odoo 17 compatibility */
+.o_fleet_booking_dashboard .o_form_sheet {
+    max-width: none;
+}
+
+/* Additional chart fixes */
+.o_chart_container {
+    overflow: visible !important;
+}
+
+.o_chart_container canvas {
+    position: relative !important;
+    z-index: 1;
+}

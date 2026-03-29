@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Inherit Employee Form View                                   -->
+    <!-- ============================================================ -->
+    <record id="hr_employee_view_form_approval" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.approval</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add status bar with approval state -->
+            <xpath expr="//header" position="inside">
+                <button name="action_approve"
+                        string="✅ Approve"
+                        type="object"
+                        class="btn-success"
+                        invisible="approval_state != 'pending'"
+                        groups="hr.group_hr_manager"/>
+                <button name="action_reject"
+                        string="❌ Reject"
+                        type="object"
+                        class="btn-danger"
+                        invisible="approval_state != 'pending'"
+                        groups="hr.group_hr_manager"/>
+                <field name="approval_state" widget="statusbar"
+                       statusbar_visible="pending,approved,rejected"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Pending Approvals List View                                  -->
+    <!-- ============================================================ -->
+    <record id="hr_employee_pending_approval_list" model="ir.ui.view">
+        <field name="name">hr.employee.pending.approval.list</field>
+        <field name="model">hr.employee</field>
+        <field name="arch" type="xml">
+            <tree string="Pending Employee Approvals"
+                  decoration-warning="approval_state == 'pending'"
+                  decoration-success="approval_state == 'approved'"
+                  decoration-danger="approval_state == 'rejected'">
+                <field name="name"/>
+                <field name="job_id"/>
+                <field name="department_id"/>
+                <field name="parent_id"/>
+                <field name="work_email"/>
+                <field name="approval_state" widget="badge"
+                       decoration-warning="approval_state == 'pending'"
+                       decoration-success="approval_state == 'approved'"
+                       decoration-danger="approval_state == 'rejected'"/>
+                <field name="approved_by" optional="show"/>
+                <field name="approved_date" optional="show"/>
+                <button name="action_approve" type="object"
+                        string="Approve" class="btn-sm btn-success"
+                        invisible="approval_state != 'pending'"
+                        groups="hr.group_hr_manager"/>
+                <button name="action_reject" type="object"
+                        string="Reject" class="btn-sm btn-danger"
+                        invisible="approval_state != 'pending'"
+                        groups="hr.group_hr_manager"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Action: Pending Approvals                                    -->
+    <!-- ============================================================ -->
+    <record id="action_hr_employee_pending_approvals" model="ir.actions.act_window">
+        <field name="name">Pending Employee Approvals</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="hr_employee_pending_approval_list"/>
+        <field name="domain">[('approval_state', '=', 'pending'), ('active', '=', False)]</field>
+        <field name="context">{'search_default_approval_state': 'pending'}</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menu Item under Employees                                    -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_hr_employee_pending_approvals"
+              name="Pending Approvals"
+              parent="hr.menu_hr_root"
+              action="action_hr_employee_pending_approvals"
+              sequence="5"
+              groups="hr.group_hr_manager"/>
+
+    <!-- ============================================================ -->
+    <!-- Reject Wizard View                                           -->
+    <!-- ============================================================ -->
+    <record id="hr_employee_reject_wizard_form" model="ir.ui.view">
+        <field name="name">hr.employee.reject.wizard.form</field>
+        <field name="model">hr.employee.reject.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reject Employee">
+                <div class="alert alert-danger">
+                    <strong>⚠️ You are about to reject this employee.</strong>
+                    Please provide a reason below.
+                </div>
+                <group>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="rejection_reason" placeholder="Enter reason for rejection..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_reject"
+                            string="Confirm Reject"
+                            type="object"
+                            class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Website Menu Items -->
+        <record id="menu_home" model="website.menu">
+            <field name="name">Home</field>
+            <field name="url">/</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="menu_services" model="website.menu">
+            <field name="name">Services</field>
+            <field name="url">/services</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="menu_fleet" model="website.menu">
+            <field name="name">Our Fleet</field>
+            <field name="url">/fleet</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="menu_tours" model="website.menu">
+            <field name="name">Tour Packages</field>
+            <field name="url">/tours</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">40</field>
+        </record>
+
+        <record id="menu_booking" model="website.menu">
+            <field name="name">Book Now</field>
+            <field name="url">/booking</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="menu_about" model="website.menu">
+            <field name="name">About Us</field>
+            <field name="url">/about</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">60</field>
+        </record>
+
+        <record id="menu_contact" model="website.menu">
+            <field name="name">Contact</field>
+            <field name="url">/contact</field>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence">70</field>
+        </record>
+
+        <!-- Default Testimonials -->
+        <record id="testimonial_1" model="customer.testimonial">
+            <field name="name">Linda and Paulo</field>
+            <field name="designation">From Italy</field>
+            <field name="testimonial">It's difficult to describe how awesome the trip was. I feel like my life has changed forever. It would take too long to describe day by day the sights, sounds, architecture, art, food, history, and people that we came across. India was fantastic.</field>
+            <field name="rating">5</field>
+            <field name="website_published">1</field>
+            <field name="approved">1</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="testimonial_2" model="customer.testimonial">
+            <field name="name">Rajesh Kumar</field>
+            <field name="designation">Business Executive, Bhopal</field>
+            <field name="testimonial">Excellent service for our corporate travel needs. The buses are always clean, drivers are professional, and the booking process is very smooth. Highly recommended for business travel.</field>
+            <field name="rating">5</field>
+            <field name="website_published">1</field>
+            <field name="approved">1</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="testimonial_3" model="customer.testimonial">
+            <field name="name">Priya Sharma</field>
+            <field name="designation">Wedding Planner, Indore</field>
+            <field name="testimonial">Amazing service for wedding transportation! The decorated bus looked beautiful and all guests were comfortable. The staff was very cooperative and helpful throughout the event.</field>
+            <field name="rating">5</field>
+            <field name="website_published">1</field>
+            <field name="approved">1</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <!-- Sequences for booking numbers -->
+        <record id="seq_bus_booking" model="ir.sequence">
+            <field name="name">Bus Booking</field>
+            <field name="code">bus.booking</field>
+            <field name="prefix">BK</field>
+            <field name="padding">6</field>
+            <field name="number_next">1001</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <record id="seq_tour_booking" model="ir.sequence">
+            <field name="name">Tour Booking</field>
+            <field name="code">tour.booking</field>
+            <field name="prefix">TB</field>
+            <field name="padding">6</field>
+            <field name="number_next">1001</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Sample tour destinations -->
+        <record id="destination_shimla" model="tour.destination">
+            <field name="name">Shimla</field>
+            <field name="code">SML</field>
+            <field name="state_id" ref="base.state_in_hp"/>
+            <field name="description">Beautiful hill station with colonial architecture and scenic views.</field>
+            <field name="best_time_to_visit">April to June, September to November</field>
+        </record>
+
+        <record id="destination_manali" model="tour.destination">
+            <field name="name">Manali</field>
+            <field name="code">MNL</field>
+            <field name="state_id" ref="base.state_in_hp"/>
+            <field name="description">Popular hill station known for adventure sports and beautiful landscapes.</field>
+            <field name="best_time_to_visit">March to June, September to November</field>
+        </record>
+
+        <record id="destination_goa" model="tour.destination">
+            <field name="name">Goa</field>
+            <field name="code">GOA</field>
+            <field name="state_id" ref="base.state_in_ga"/>
+            <field name="description">Famous for beautiful beaches, nightlife, and Portuguese heritage.</field>
+            <field name="best_time_to_visit">November to March</field>
+        </record>
+
+        <record id="destination_rajasthan" model="tour.destination">
+            <field name="name">Rajasthan (Jaipur-Udaipur-Jodhpur)</field>
+            <field name="code">RAJ</field>
+            <field name="state_id" ref="base.state_in_rj"/>
+            <field name="description">Royal heritage tour covering magnificent forts, palaces, and desert landscapes.</field>
+            <field name="best_time_to_visit">October to March</field>
+        </record>
+
+    </data>
+</odoo>

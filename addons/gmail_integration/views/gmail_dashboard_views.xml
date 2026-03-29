@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enhanced Gmail Dashboard Form View with Account Switcher -->
+    <record id="view_gmail_dashboard_form_enhanced" model="ir.ui.view">
+        <field name="name">gmail.dashboard.form.enhanced</field>
+        <field name="model">gmail.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Gmail" create="false" edit="false" delete="false">
+                <sheet style="padding: 0;">
+                    
+                    <!-- TOP HEADER BAR with Gmail Logo and Account Switcher -->
+                    <div class="gmail-header-bar" style="background: #fff; border-bottom: 1px solid #dadce0; padding: 8px 16px; display: flex; align-items: center; justify-content: space-between; height: 60px;">
+                        
+                        <!-- LEFT: Gmail Logo -->
+                        <div class="gmail-logo-section" style="display: flex; align-items: center;">
+                            <div style="font-size: 24px; margin-right: 12px; color: #ea4335;">📧</div>
+                            <h2 style="margin: 0; font-family: 'Google Sans', sans-serif; font-weight: 400; color: #5f6368; font-size: 22px;">
+                                Gmail
+                            </h2>
+                        </div>
+                        
+                        <!-- RIGHT: Account Switcher -->
+                        <div class="gmail-account-switcher" style="display: flex; align-items: center;">
+                            
+                            <!-- Account Info Display -->
+                            <div class="active-account-info" style="margin-right: 16px;">
+                                <div invisible="not active_account_id" style="text-align: right;">
+                                    <div style="font-weight: 500; color: #202124; font-size: 14px;">
+                                        <field name="active_account_name" readonly="1" nolabel="1"/>
+                                    </div>
+                                    <div style="color: #5f6368; font-size: 13px;">
+                                        <field name="active_account_email" readonly="1" nolabel="1"/>
+                                    </div>
+                                </div>
+                                <div invisible="active_account_id" style="color: #d93025; font-size: 14px;">
+                                    No account selected
+                                </div>
+                            </div>
+                            
+                            <!-- Account Switcher Button -->
+                            <div class="account-switcher-dropdown" style="position: relative;">
+                                <button name="action_switch_account" type="object" 
+                                        string="Switch Account" 
+                                        class="btn btn-outline-primary"
+                                        title="Switch Gmail Account"
+                                        style="border-radius: 20px; padding: 6px 16px; font-size: 13px; border: 1px solid #dadce0; background: #fff; color: #1a73e8;">
+                                    <i class="fa fa-user-circle" style="margin-right: 6px;"></i>
+                                    Switch Account
+                                </button>
+                            </div>
+                            
+                            <!-- Sync Button -->
+                            <button name="action_sync_active_account" type="object" 
+                                    invisible="not active_account_id"
+                                    string="Sync" 
+                                    class="btn btn-outline-secondary ml-2"
+                                    title="Sync emails for active account"
+                                    style="border-radius: 20px; padding: 6px 12px; font-size: 13px; border: 1px solid #dadce0;">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- MAIN DASHBOARD CONTENT -->
+                    <div class="row" style="margin: 0; min-height: calc(100vh - 60px);">
+                        
+                        <!-- Left Sidebar (Gmail-style) -->
+                        <div class="col-2" style="background-color: #f8f9fa; padding: 20px; border-right: 1px solid #dadce0; min-height: calc(100vh - 60px);">
+                            
+                            <!-- Compose Button -->
+                            <div style="margin-bottom: 25px;">
+                                <button name="action_send_new_mail" type="object" 
+                                        string="✏️ Compose" 
+                                        class="btn-primary"
+                                        invisible="not active_account_id"
+                                        style="width: 100%; padding: 12px 24px; border-radius: 24px; font-weight: 600; font-size: 14px; background: #1a73e8; border: none; box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);"/>
+                                
+                                <!-- No Account Selected Message -->
+                                <div invisible="active_account_id" style="width: 100%; padding: 12px 24px; border-radius: 24px; background: #f1f3f4; color: #5f6368; text-align: center; font-size: 13px;">
+                                    Select an account to compose
+                                </div>
+                            </div>
+                            
+                            <!-- Navigation Menu -->
+                            <div class="gmail-nav" invisible="not active_account_id">
+                                <!-- Inbox -->
+                                <div class="gmail-nav-item" style="padding: 10px 16px; margin-bottom: 2px; border-radius: 0 20px 20px 0; cursor: pointer; font-weight: 500; font-size: 14px; color: #202124;">
+                                    <button name="action_view_inbox" type="object" 
+                                            string="📥 Inbox" 
+                                            class="btn-link"
+                                            style="border: none; background: none; color: #202124; text-align: left; width: 80%; padding: 0; font-weight: 500; font-size: 14px;"/>
+                                    <span style="float: right; color: #d93025; font-weight: bold; font-size: 13px;">
+                                        <field name="unread_messages" readonly="1" nolabel="1"/>
+                                    </span>
+                                </div>
+                                
+                                <!-- Sent -->
+                                <div class="gmail-nav-item" style="padding: 10px 16px; margin-bottom: 2px; border-radius: 0 20px 20px 0; cursor: pointer; font-weight: 500; font-size: 14px; color: #202124;">
+                                    <button name="action_view_sent" type="object" 
+                                            string="📤 Sent" 
+                                            class="btn-link"
+                                            style="border: none; background: none; color: #202124; text-align: left; width: 100%; padding: 0; font-weight: 500; font-size: 14px;"/>
+                                </div>
+                                
+                                <!-- Drafts -->
+                                <div class="gmail-nav-item" style="padding: 10px 16px; margin-bottom: 2px; border-radius: 0 20px 20px 0; cursor: pointer; font-weight: 500; font-size: 14px; color: #202124;">
+                                    <button name="action_view_drafts" type="object" 
+                                            string="📄 Drafts" 
+                                            class="btn-link"
+                                            style="border: none; background: none; color: #202124; text-align: left; width: 100%; padding: 0; font-weight: 500; font-size: 14px;"/>
+                                </div>
+                                
+                                <!-- All Messages -->
+                                <div class="gmail-nav-item" style="padding: 10px 16px; margin-bottom: 2px; border-radius: 0 20px 20px 0; cursor: pointer; font-weight: 500; font-size: 14px; color: #202124;">
+                                    <button name="action_view_all_messages" type="object" 
+                                            string="📧 All Messages" 
+                                            class="btn-link"
+                                            style="border: none; background: none; color: #202124; text-align: left; width: 100%; padding: 0; font-weight: 500; font-size: 14px;"/>
+                                </div>
+                                
+                                <!-- Accounts -->
+                                <div class="gmail-nav-item" style="padding: 10px 16px; margin-bottom: 2px; border-radius: 0 20px 20px 0; cursor: pointer; font-weight: 500; font-size: 14px; color: #202124;">
+                                    <button name="action_view_accounts" type="object" 
+                                            string="⚙️ Gmail Accounts" 
+                                            class="btn-link"
+                                            style="border: none; background: none; color: #202124; text-align: left; width: 75%; padding: 0; font-weight: 500; font-size: 14px;"/>
+                                    <span style="float: right; color: #5f6368; font-size: 13px;">
+                                        <field name="total_accounts" readonly="1" nolabel="1"/>
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <!-- No Account Selected Navigation -->
+                            <div class="gmail-nav-disabled" invisible="active_account_id" style="color: #9aa0a6; text-align: center; padding: 20px 0;">
+                                <div style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;">📬</div>
+                                <p style="font-size: 14px; margin-bottom: 16px;">Select an account to view messages</p>
+                                <button name="action_view_accounts" type="object" 
+                                        string="View Accounts" 
+                                        class="btn btn-outline-primary"
+                                        style="border-radius: 16px; padding: 8px 16px; font-size: 13px;"/>
+                            </div>
+                            
+                            <!-- Stats Section -->
+                            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #dadce0;" invisible="not active_account_id">
+                                <div style="margin-bottom: 10px; color: #5f6368; font-size: 13px; font-weight: 500;">
+                                    <strong>📊 Total:</strong> <field name="total_messages" readonly="1" nolabel="1"/>
+                                </div>
+                                <div style="margin-bottom: 10px; color: #5f6368; font-size: 13px; font-weight: 500;">
+                                    <strong>📤 Today:</strong> <field name="sent_today" readonly="1" nolabel="1"/>
+                                </div>
+                                <div style="margin-bottom: 10px; color: #5f6368; font-size: 13px; font-weight: 500;">
+                                    <strong>🔗 Accounts:</strong> <field name="total_accounts" readonly="1" nolabel="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Main Content Area (Message List) -->
+                        <div class="col-10" style="padding: 0;">
+                            
+                            <!-- Gmail Header -->
+                            <div style="padding: 15px 20px; border-bottom: 1px solid #e0e0e0; background-color: #fff;">
+                                <div invisible="not active_account_id">
+                                    <h3 style="margin: 0; color: #202124;">📥 Inbox</h3>
+                                    <p style="margin: 5px 0 0 0; color: #5f6368; font-size: 14px;">
+                                        Latest messages from <strong><field name="active_account_email" readonly="1" nolabel="1"/></strong>
+                                    </p>
+                                </div>
+                                <div invisible="active_account_id">
+                                    <h3 style="margin: 0; color: #5f6368;">Select Gmail Account</h3>
+                                    <p style="margin: 5px 0 0 0; color: #9aa0a6; font-size: 14px;">Choose an account to view messages</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Message List -->
+                            <div style="background-color: #fff; height: 600px; overflow: hidden; position: relative;">
+                                
+                                <!-- When messages exist and account is selected -->
+                                <div invisible="not active_account_id or not latest_messages" style="height: 100%; overflow-y: auto;">
+                                    <field name="latest_messages" readonly="1" nolabel="1">
+                                        <tree decoration-bf="not is_read" 
+                                              decoration-muted="is_read"
+                                              create="false" 
+                                              edit="false" 
+                                              delete="false"
+                                              multi_edit="false"
+                                              limit="0"
+                                              class="gmail_no_headers">
+                                            
+                                            <!-- Hidden fields for decoration -->
+                                            <field name="is_read" invisible="1" nolabel="1"/>
+                                            <field name="has_attachments" invisible="1" nolabel="1"/>
+                                            <field name="is_important" invisible="1" nolabel="1"/>
+                                            
+                                            <!-- Gmail-style clean columns - NO HEADERS -->
+                                            <field name="is_starred" widget="boolean_toggle" width="30px" nolabel="1"/>
+                                            <field name="from_name" width="180px" nolabel="1"/>
+                                            <field name="subject" width="450px" nolabel="1"/>
+                                            <field name="date" width="100px" nolabel="1"/>
+                                            
+                                        </tree>
+                                    </field>
+                                </div>
+                                
+                                <!-- When account is selected but no messages -->
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #5f6368;" 
+                                     invisible="not active_account_id or latest_messages">
+                                    <div style="font-size: 64px; margin-bottom: 24px; opacity: 0.6;">📬</div>
+                                    <h3 style="color: #202124; font-weight: 400; margin-bottom: 12px;">No messages yet</h3>
+                                    <p style="color: #5f6368; margin-bottom: 24px; font-size: 14px;">
+                                        Inbox messages for <strong><field name="active_account_email" readonly="1" nolabel="1"/></strong> will appear here once synced.
+                                    </p>
+                                    <button name="action_sync_active_account" type="object" 
+                                            string="Sync Now" 
+                                            class="btn-primary"
+                                            style="background: #1a73e8; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; margin-right: 8px;"/>
+                                    <button name="action_view_accounts" type="object" 
+                                            string="Account Settings" 
+                                            class="btn btn-outline-secondary"
+                                            style="padding: 8px 16px; border-radius: 4px; font-size: 14px;"/>
+                                </div>
+                                
+                                <!-- When no account is selected -->
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #5f6368;" 
+                                     invisible="active_account_id">
+                                    <div style="font-size: 64px; margin-bottom: 24px; opacity: 0.6;">👤</div>
+                                    <h3 style="color: #202124; font-weight: 400; margin-bottom: 12px;">Select Gmail Account</h3>
+                                    <p style="color: #5f6368; margin-bottom: 24px; font-size: 14px;">
+                                        Choose a Gmail account from the account switcher above to view messages.
+                                    </p>
+                                    <button name="action_switch_account" type="object" 
+                                            string="Switch Account" 
+                                            class="btn-primary"
+                                            style="background: #1a73e8; border: none; padding: 8px 16px; border-radius: 4px; font-size: 14px; margin-right: 8px;"/>
+                                    <button name="action_view_accounts" type="object" 
+                                            string="Manage Accounts" 
+                                            class="btn btn-outline-secondary"
+                                            style="padding: 8px 16px; border-radius: 4px; font-size: 14px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hidden fields for functionality -->
+                    <field name="active_account_id" invisible="1"/>
+                    <field name="available_account_ids" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record> 
+</odoo>

@@ -1,0 +1,368 @@
+/* Gmail Dashboard Styles - Scoped to gmail.dashboard model only */
+
+/* ==================================================
+   DASHBOARD HEADER REMOVAL - SCOPED TO DASHBOARD ONLY
+   ================================================== */
+
+/* Hide ALL headers in dashboard message lists - Multiple targeting approaches */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view thead,
+.o_form_view[data-model="gmail.dashboard"] .o_list_view thead th,
+.o_form_view[data-model="gmail.dashboard"] .o_list_view thead tr,
+.o_form_view[data-model="gmail.dashboard"] .o_list_table thead,
+.o_form_view[data-model="gmail.dashboard"] .o_list_table thead th,
+.o_form_view[data-model="gmail.dashboard"] .o_list_table thead tr {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    line-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Additional targeting for nested list views in dashboard */
+.o_action[data-menu-xmlid*="gmail"] .o_form_view[data-model="gmail.dashboard"] thead,
+.o_action[data-menu-xmlid*="gmail"] .o_form_view[data-model="gmail.dashboard"] thead th {
+    display: none !important;
+}
+
+/* Specific class targeting for dashboard tree views */
+.gmail_no_headers thead,
+.gmail_no_headers thead th,
+.gmail_no_headers thead tr {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+}
+
+/* ==================================================
+   DASHBOARD MESSAGE LIST STYLING - SCOPED
+   ================================================== */
+
+/* Dashboard message list container */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view {
+    max-height: 600px !important;
+    overflow-y: auto !important;
+    border: none !important;
+    background-color: white !important;
+    font-family: 'Roboto', 'Google Sans', sans-serif !important;
+}
+
+/* Dashboard message rows */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view .o_data_row {
+    border-bottom: 1px solid #f0f0f0 !important;
+    padding: 12px 8px !important;
+    cursor: pointer !important;
+    font-family: 'Roboto', sans-serif !important;
+    transition: all 0.2s ease !important;
+    background-color: white !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .o_list_view .o_data_row:hover {
+    background-color: #f5f5f5 !important;
+    box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0 !important;
+    transform: translateX(2px) !important;
+}
+
+/* Dashboard message cells */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view .o_data_cell {
+    padding: 8px 12px !important;
+    vertical-align: middle !important;
+    border: none !important;
+    font-size: 14px !important;
+    color: #202124 !important;
+    font-family: 'Roboto', sans-serif !important;
+    line-height: 1.4 !important;
+}
+
+/* Dashboard unread messages styling */
+.o_form_view[data-model="gmail.dashboard"] .o_data_row.text-decoration-bf .o_data_cell {
+    font-weight: 600 !important;
+    color: #202124 !important;
+}
+
+/* Dashboard read messages styling */
+.o_form_view[data-model="gmail.dashboard"] .o_data_row:not(.text-decoration-bf) .o_data_cell {
+    color: #5f6368 !important;
+    font-weight: 400 !important;
+}
+
+/* Dashboard star column styling */
+.o_form_view[data-model="gmail.dashboard"] .o_boolean_toggle {
+    color: #dadce0 !important;
+    font-size: 18px !important;
+    transition: color 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .o_boolean_toggle.o_boolean_toggle_true {
+    color: #fbbc04 !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .o_boolean_toggle:hover {
+    color: #f9ab00 !important;
+}
+
+/* Dashboard date column styling */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view .o_data_cell:last-child {
+    text-align: right !important;
+    font-size: 12px !important;
+    color: #5f6368 !important;
+    font-weight: 400 !important;
+    white-space: nowrap !important;
+}
+
+/* Dashboard subject column styling */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view .o_data_cell:nth-child(3) {
+    font-weight: inherit !important;
+    color: inherit !important;
+    max-width: 400px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* Dashboard sender column styling */
+.o_form_view[data-model="gmail.dashboard"] .o_list_view .o_data_cell:nth-child(2) {
+    font-weight: 500 !important;
+    color: #202124 !important;
+    max-width: 180px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* ==================================================
+   DASHBOARD NAVIGATION STYLING - SCOPED
+   ================================================== */
+
+/* Dashboard navigation items */
+.o_form_view[data-model="gmail.dashboard"] .gmail-nav-item {
+    transition: all 0.2s ease !important;
+    border-radius: 0 20px 20px 0 !important;
+    margin: 2px 0 !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .gmail-nav-item:hover {
+    background-color: #f1f3f4 !important;
+    transform: translateX(2px) !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .gmail-nav-item.active {
+    background-color: #fce8e6 !important;
+    font-weight: 600 !important;
+    border-left: 3px solid #d93025 !important;
+}
+
+/* Dashboard navigation buttons */
+.o_form_view[data-model="gmail.dashboard"] .gmail-nav-item button {
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+    font-weight: 500 !important;
+    color: #202124 !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .gmail-nav-item:hover button {
+    color: #1a73e8 !important;
+}
+
+/* ==================================================
+   DASHBOARD COMPOSE BUTTON - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.dashboard"] .btn-primary {
+    background: linear-gradient(135deg, #1a73e8 0%, #1557b0 100%) !important;
+    border: none !important;
+    border-radius: 24px !important;
+    color: white !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 4px 0 rgba(26,115,232,.3), 0 1px 6px 0 rgba(26,115,232,.15) !important;
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+    text-transform: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .btn-primary:hover {
+    background: linear-gradient(135deg, #1557b0 0%, #0d47a1 100%) !important;
+    box-shadow: 0 4px 8px 0 rgba(26,115,232,.4), 0 2px 12px 0 rgba(26,115,232,.25) !important;
+    transform: translateY(-2px) scale(1.02) !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .btn-primary:active {
+    transform: translateY(0) scale(0.98) !important;
+    box-shadow: 0 1px 2px 0 rgba(26,115,232,.4) !important;
+}
+
+/* ==================================================
+   DASHBOARD STATS SECTION - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.dashboard"] .gmail-stats {
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+    font-weight: 500 !important;
+    color: #5f6368 !important;
+    transition: color 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .gmail-stats:hover {
+    color: #202124 !important;
+}
+
+/* Dashboard stats numbers */
+.o_form_view[data-model="gmail.dashboard"] .o_field_widget[name*="total"],
+.o_form_view[data-model="gmail.dashboard"] .o_field_widget[name*="unread"],
+.o_form_view[data-model="gmail.dashboard"] .o_field_widget[name*="sent"] {
+    font-weight: 600 !important;
+    color: #1a73e8 !important;
+    font-size: 14px !important;
+}
+
+/* ==================================================
+   DASHBOARD HEADER STYLING - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.dashboard"] h3 {
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+    font-weight: 400 !important;
+    color: #202124 !important;
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+    margin: 0 !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] p {
+    font-family: 'Roboto', sans-serif !important;
+    color: #5f6368 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+    margin: 5px 0 0 0 !important;
+}
+
+/* ==================================================
+   DASHBOARD SIDEBAR STYLING - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.dashboard"] .col-2 {
+    background: linear-gradient(180deg, #f8f9fa 0%, #f1f3f4 100%) !important;
+    border-right: 1px solid #dadce0 !important;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.05) !important;
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+}
+
+/* ==================================================
+   DASHBOARD RESPONSIVE DESIGN - SCOPED
+   ================================================== */
+
+@media (max-width: 1200px) {
+    .o_form_view[data-model="gmail.dashboard"] .col-2 {
+        min-width: 200px !important;
+    }
+    
+    .o_form_view[data-model="gmail.dashboard"] .col-10 {
+        flex: 1 !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .o_form_view[data-model="gmail.dashboard"] .row {
+        flex-direction: column !important;
+    }
+    
+    .o_form_view[data-model="gmail.dashboard"] .col-2,
+    .o_form_view[data-model="gmail.dashboard"] .col-10 {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ==================================================
+   DASHBOARD SCROLLBAR STYLING - SCOPED
+   ================================================== */
+
+.o_form_view[data-model="gmail.dashboard"] .o_list_view::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .o_list_view::-webkit-scrollbar-track {
+    background: #f1f1f1 !important;
+    border-radius: 4px !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .o_list_view::-webkit-scrollbar-thumb {
+    background: #c1c1c1 !important;
+    border-radius: 4px !important;
+    transition: background 0.2s ease !important;
+}
+
+.o_form_view[data-model="gmail.dashboard"] .o_list_view::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8 !important;
+}
+
+/* ==================================================
+   DASHBOARD UTILITIES - SCOPED
+   ================================================== */
+
+/* Hide pagination in dashboard */
+.o_form_view[data-model="gmail.dashboard"] .o_cp_pager,
+.o_form_view[data-model="gmail.dashboard"] .o_cp_switch_buttons,
+.o_form_view[data-model="gmail.dashboard"] .o_cp_left,
+.o_form_view[data-model="gmail.dashboard"] .o_cp_right {
+    display: none !important;
+}
+
+/* Hide search bar in dashboard message list */
+.o_form_view[data-model="gmail.dashboard"] .o_cp_searchview {
+    display: none !important;
+}
+
+/* Dashboard focus states */
+.o_form_view[data-model="gmail.dashboard"] .o_data_row:focus,
+.o_form_view[data-model="gmail.dashboard"] .o_data_row:focus-within {
+    outline: 2px solid #1a73e8 !important;
+    outline-offset: -2px !important;
+    border-radius: 4px !important;
+}
+
+/* Dashboard no-messages styling */
+.o_form_view[data-model="gmail.dashboard"] .o_view_nocontent {
+    padding: 40px !important;
+    text-align: center !important;
+    color: #5f6368 !important;
+    font-family: 'Google Sans', 'Roboto', sans-serif !important;
+}
+
+/* Dashboard loading states */
+.o_form_view[data-model="gmail.dashboard"] .o_loading {
+    color: #1a73e8 !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+/* ==================================================
+   DASHBOARD ACCESSIBILITY - SCOPED
+   ================================================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .o_form_view[data-model="gmail.dashboard"] .o_data_row {
+        border-bottom: 2px solid #000 !important;
+    }
+    
+    .o_form_view[data-model="gmail.dashboard"] .o_data_row:hover {
+        background-color: #000 !important;
+        color: #fff !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    .o_form_view[data-model="gmail.dashboard"] * {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_myoperator_root" name="MyOperator" sequence="100"/>
+    
+    <!-- Configuration Submenu -->
+    <menuitem id="menu_myoperator_configuration" name="Configuration" 
+              parent="menu_myoperator_root" sequence="10"/>
+    
+    <!-- Telephony Section -->
+    <menuitem id="menu_myoperator_telephony" name="Telephony" 
+              parent="menu_myoperator_root" sequence="20"/>
+    
+    <!-- WhatsApp Chat Section -->
+    <menuitem id="menu_myoperator_chat" name="WhatsApp Chat" 
+              parent="menu_myoperator_root" sequence="50"/>
+    
+    <!-- Quick Actions Menu -->
+    <menuitem id="menu_myoperator_quick_actions" name="Quick Actions" 
+              parent="menu_myoperator_root" sequence="60"/>
+</odoo>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Gmail Configuration Form View -->
+        <record id="view_gmail_configuration_form" model="ir.ui.view">
+            <field name="name">gmail.configuration.form</field>
+            <field name="model">gmail.configuration</field>
+            <field name="arch" type="xml">
+                <form string="Gmail Configuration" class="gmail_oauth_config gmail-integration">
+                    <header>
+                        <button name="action_test_oauth_config"
+                                string="Test Configuration"
+                                type="object"
+                                class="btn-primary"
+                                invisible="oauth_enabled != True or client_id == False or client_secret == False"/>
+                                
+                        <button name="action_save_and_apply"
+                                string="Save &amp; Apply"
+                                type="object"
+                                class="btn-success"/>
+                                
+                        <button name="action_open_google_console"
+                                string="Open Google Console"
+                                type="object"
+                                class="btn-secondary"/>
+                                
+                        <button name="action_setup_guide"
+                                string="Setup Guide"
+                                type="object"
+                                class="btn-info"/>
+                                
+                        <button name="action_reset_oauth_config"
+                                string="Reset Configuration"
+                                type="object"
+                                class="btn-warning"
+                                confirm="Are you sure you want to reset the Gmail configuration? This will disconnect all accounts."/>
+                                
+                        <field name="config_status" widget="statusbar" 
+                               statusbar_visible="not_configured,configured,error"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Configuration Name..."/>
+                            </h1>
+                        </div>
+                        
+                        <!-- Configuration Status Alert -->
+                        <div class="alert alert-success" role="alert" 
+                             invisible="config_status != 'configured'">
+                            <strong><i class="fa fa-check-circle"></i> Gmail Integration Ready!</strong><br/>
+                            Your Gmail OAuth configuration is properly set up. Users can now connect their Gmail accounts.
+                        </div>
+                        
+                        <div class="alert alert-warning" role="alert" 
+                             invisible="config_status != 'not_configured'">
+                            <strong><i class="fa fa-exclamation-triangle"></i> Configuration Required</strong><br/>
+                            Please configure Gmail OAuth credentials below to enable Gmail integration.
+                        </div>
+                        
+                        <div class="alert alert-danger" role="alert" 
+                             invisible="config_status != 'error'">
+                            <strong><i class="fa fa-times-circle"></i> Configuration Error</strong><br/>
+                            There's an issue with your Gmail OAuth configuration. Please check the details below.
+                        </div>
+                        
+                        <group>
+                            <group name="oauth_settings" string="OAuth Configuration">
+                                <field name="oauth_enabled"/>
+                                <field name="client_id" 
+                                       placeholder="123456789-abc123def456.apps.googleusercontent.com"
+                                       invisible="oauth_enabled != True"
+                                       required="oauth_enabled == True"/>
+                                <field name="client_secret" 
+                                       placeholder="GOCSPX-abc123def456..."
+                                       password="True"
+                                       invisible="oauth_enabled != True"
+                                       required="oauth_enabled == True"/>
+                                <field name="redirect_uri" readonly="1" 
+                                       invisible="oauth_enabled != True"/>
+                            </group>
+                            
+                            <group name="status_info" string="Status Information">
+                                <field name="is_active" readonly="1"/>
+                                <field name="last_test_date" readonly="1"/>
+                                <field name="last_test_result" readonly="1"/>
+                                <field name="created_by" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="OAuth Setup" name="oauth_setup">
+                                <group string="Required Scopes" invisible="oauth_enabled != True">
+                                    <field name="required_scopes" widget="text" readonly="1" nolabel="1"/>
+                                </group>
+                                
+                                <group string="Setup Instructions" invisible="oauth_enabled != True">
+                                    <div class="alert alert-info">
+                                        <strong>Google Cloud Console Setup:</strong><br/>
+                                        1. Go to <a href="https://console.cloud.google.com/apis/credentials" target="_blank">Google Cloud Console</a><br/>
+                                        2. Create or select a project<br/>
+                                        3. Enable Gmail API<br/>
+                                        4. Create OAuth 2.0 credentials<br/>
+                                        5. Add the redirect URI shown above<br/>
+                                        6. Copy Client ID and Secret to the fields above<br/>
+                                        7. Click "Test Configuration" to verify
+                                    </div>
+                                </group>
+                                
+                                <group string="Configuration Details" invisible="config_message == False">
+                                    <field name="config_message" widget="text" readonly="1" nolabel="1"/>
+                                </group>
+                            </page>
+                            
+                            <page string="Default Settings" name="default_settings">
+                                <group>
+                                    <group name="sync_defaults" string="Default Sync Settings">
+                                        <field name="default_sync_frequency"/>
+                                        <field name="default_sync_folders"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="alert alert-info">
+                                    <strong>Default Settings:</strong><br/>
+                                    These settings will be applied to new Gmail accounts when users connect them.
+                                    Users can modify these settings individually for their accounts.
+                                </div>
+                            </page>
+                            
+                            <page string="Statistics" name="statistics">
+                                <group>
+                                    <group name="account_stats" string="Account Statistics">
+                                        <field name="total_accounts" readonly="1"/>
+                                        <field name="active_users" readonly="1"/>
+                                        <field name="total_messages" readonly="1"/>
+                                        <field name="last_sync_date" readonly="1"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="mt-3">
+                                    <!-- Button removed to avoid loading order issues -->
+                                    <!-- Gmail accounts can be accessed from the Configuration menu -->
+                                    <div class="alert alert-info">
+                                        <i class="fa fa-info-circle"></i> 
+                                        <strong>Note:</strong> Gmail accounts can be viewed from the 
+                                        <strong>Gmail → Configuration → All Gmail Accounts</strong> menu.
+                                    </div>
+                                </div>
+                            </page>
+                            
+                            <page string="Migration &amp; Backup" name="migration">
+                                <group>
+                                    <group name="migration_tools" string="Migration Tools">
+                                        <button name="migrate_from_res_config_settings"
+                                                string="Migrate from Old Settings"
+                                                type="object"
+                                                class="btn-info"
+                                                help="Import configuration from res.config.settings"/>
+                                    </group>
+                                </group>
+                                
+                                <div class="alert alert-info">
+                                    <strong>Migration:</strong><br/>
+                                    If you had Gmail configuration in the old system settings, use the migration button
+                                    to import those settings into this dedicated configuration.
+                                </div>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Gmail Configuration Tree View -->
+        <record id="view_gmail_configuration_tree" model="ir.ui.view">
+            <field name="name">gmail.configuration.tree</field>
+            <field name="model">gmail.configuration</field>
+            <field name="arch" type="xml">
+                <tree string="Gmail Configurations"
+                      decoration-success="config_status == 'configured'"
+                      decoration-warning="config_status == 'not_configured'"
+                      decoration-danger="config_status == 'error'">
+                    
+                    <field name="name"/>
+                    <field name="oauth_enabled"/>
+                    <field name="config_status" widget="badge"/>
+                    <field name="is_active"/>
+                    <field name="total_accounts"/>
+                    <field name="active_users"/>
+                    <field name="last_test_date"/>
+                    <field name="created_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Gmail Configuration Search View -->
+        <record id="view_gmail_configuration_search" model="ir.ui.view">
+            <field name="name">gmail.configuration.search</field>
+            <field name="model">gmail.configuration</field>
+            <field name="arch" type="xml">
+                <search string="Gmail Configurations">
+                    <field name="name"/>
+                    <field name="created_by"/>
+                    
+                    <filter name="active_config" string="Active Configuration" 
+                            domain="[('is_active', '=', True)]"/>
+                    <filter name="oauth_enabled" string="OAuth Enabled" 
+                            domain="[('oauth_enabled', '=', True)]"/>
+                    <filter name="configured" string="Configured" 
+                            domain="[('config_status', '=', 'configured')]"/>
+                    <filter name="not_configured" string="Not Configured" 
+                            domain="[('config_status', '=', 'not_configured')]"/>
+                    <filter name="error" string="Configuration Error" 
+                            domain="[('config_status', '=', 'error')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_by_status" context="{'group_by': 'config_status'}"/>
+                        <filter string="Created By" name="group_by_creator" context="{'group_by': 'created_by'}"/>
+                        <filter string="OAuth Enabled" name="group_by_oauth" context="{'group_by': 'oauth_enabled'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Gmail Configuration Action -->
+        <record id="action_gmail_configuration" model="ir.actions.act_window">
+            <field name="name">Gmail Settings</field>
+            <field name="res_model">gmail.configuration</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_gmail_configuration_form"/>
+            <field name="target">current</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Configure Gmail Integration!
+                </p>
+                <p>
+                    Set up OAuth credentials to enable Gmail integration for all users.
+                    This configuration allows users to connect their personal Gmail accounts securely.
+                </p>
+            </field>
+        </record>
+
+        <!-- FIXED: Quick Settings Action (opens active config directly) -->
+        <record id="action_gmail_quick_settings" model="ir.actions.server">
+            <field name="name">Gmail Settings</field>
+            <field name="model_id" ref="model_gmail_configuration"/>
+            <field name="state">code</field>
+            <field name="code">
+# Get or create active configuration
+config = env['gmail.configuration'].get_active_config()
+
+# Return form view for active configuration
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Gmail Settings',
+    'res_model': 'gmail.configuration',
+    'view_mode': 'form',
+    'res_id': config.id,
+    'target': 'current',
+    'context': env.context,
+}
+
+# FIXED: Return the action properly
+action_result = action
+            </field>
+        </record>
+
+        <!-- Add Gmail Settings to Configuration Menu -->
+        <menuitem id="menu_gmail_settings" 
+                  name="Gmail Settings" 
+                  parent="menu_gmail_config" 
+                  action="action_gmail_quick_settings" 
+                  sequence="1"/>
+
+    </data>
+</odoo>

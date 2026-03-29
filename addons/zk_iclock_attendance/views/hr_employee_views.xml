@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_form_zk" model="ir.ui.view">
+        <field name="name">hr.employee.form.zk</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_push_to_device" string="Push to Device" type="object" class="btn-primary" invisible="not device_user_id or not zk_device_id"/>
+                <button name="action_delete_from_device" string="Delete from Device" type="object" class="btn-warning" invisible="not synced_to_device"/>
+            </xpath>
+            <xpath expr="//field[@name='work_phone']" position="after">
+                <field name="device_user_id" string="Biometric ID"/>
+                <field name="zk_device_id" string="Biometric Device"/>
+                <field name="synced_to_device" invisible="1"/>
+                <field name="last_sync_date" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_employee_tree_zk" model="ir.ui.view">
+        <field name="name">hr.employee.tree.zk</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="device_user_id" optional="show"/>
+                <field name="zk_device_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_employee_bulk_push" model="ir.actions.server">
+        <field name="name">Push to Device (Bulk)</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_bulk_push_to_device()</field>
+    </record>
+    <record id="view_employee_form_hide_last_attendance" model="ir.ui.view">
+        <field name="name">hr.employee.form.hide.last.attendance</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr_attendance.view_employee_form_inherit_hr_attendance"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='last_attendance_id']" position="attributes">
+                <attribute name="groups">hr_attendance.group_hr_attendance_officer</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── LIST VIEW ────────────────────────────────────────────────────── -->
+    <record id="view_cctv_camera_list" model="ir.ui.view">
+        <field name="name">cctv.camera.list</field>
+        <field name="model">cctv.camera</field>
+        <field name="arch" type="xml">
+            <tree string="CCTV Cameras" decoration-success="status == 'online'"
+                  decoration-danger="status == 'offline'"
+                  decoration-muted="status == 'unknown'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="location"/>
+                <field name="ip_address"/>
+                <field name="stream_type"/>
+                <field name="ptz_enabled"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'online'"
+                       decoration-danger="status == 'offline'"
+                       decoration-warning="status == 'unknown'"/>
+                <field name="last_checked"/>
+                <field name="recording_count" string="Recordings"/>
+                <button name="action_check_status" type="object"
+                        string="Check" icon="fa-refresh" title="Ping Camera"/>
+                <button name="action_take_snapshot" type="object"
+                        string="Snap" icon="fa-camera" title="Take Snapshot"/>
+                <button name="action_open_stream" type="object"
+                        string="View" icon="fa-video-camera" title="Live Stream"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ─── KANBAN VIEW ──────────────────────────────────────────────────── -->
+    <record id="view_cctv_camera_kanban" model="ir.ui.view">
+        <field name="name">cctv.camera.kanban</field>
+        <field name="model">cctv.camera</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="status">
+                <field name="name"/>
+                <field name="location"/>
+                <field name="ip_address"/>
+                <field name="status"/>
+                <field name="last_snapshot"/>
+                <field name="last_snapshot_time"/>
+                <field name="ptz_enabled"/>
+                <field name="stream_type"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click cctv_kanban_card">
+                            <div class="cctv_card_header">
+                                <div t-if="record.last_snapshot.raw_value" class="cctv_snapshot_thumb">
+                                    <img t-att-src="'data:image/jpeg;base64,' + record.last_snapshot.raw_value"
+                                         class="cctv_thumb_img"/>
+                                </div>
+                                <div t-else="" class="cctv_no_snapshot">
+                                    <i class="fa fa-video-camera fa-3x"/>
+                                    <p>No Snapshot</p>
+                                </div>
+                            </div>
+                            <div class="cctv_card_body">
+                                <div class="cctv_card_title">
+                                    <strong><t t-esc="record.name.value"/></strong>
+                                    <span t-att-class="'badge ' + (record.status.value == 'online' ? 'bg-success' : record.status.value == 'offline' ? 'bg-danger' : 'bg-secondary')">
+                                        <t t-esc="record.status.value"/>
+                                    </span>
+                                </div>
+                                <div class="cctv_card_meta">
+                                    <small><i class="fa fa-map-marker"/> <t t-esc="record.location.value || 'No location'"/></small><br/>
+                                    <small><i class="fa fa-wifi"/> <t t-esc="record.ip_address.value"/></small>
+                                </div>
+                                <div class="cctv_card_actions mt-2">
+                                    <button class="btn btn-sm btn-primary" name="action_open_stream"
+                                            type="object" title="Live Stream">
+                                        <i class="fa fa-play"/> Stream
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" name="action_take_snapshot"
+                                            type="object" title="Snapshot">
+                                        <i class="fa fa-camera"/> Snap
+                                    </button>
+                                    <button class="btn btn-sm btn-info" name="action_check_status"
+                                            type="object" title="Check Status">
+                                        <i class="fa fa-refresh"/> Ping
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ─── MAIN FORM VIEW ───────────────────────────────────────────────── -->
+    <record id="view_cctv_camera_form" model="ir.ui.view">
+        <field name="name">cctv.camera.form</field>
+        <field name="model">cctv.camera</field>
+        <field name="arch" type="xml">
+            <form string="CCTV Camera">
+                <header>
+                    <button name="action_open_stream" type="object"
+                            string="▶ Live Stream" class="btn-primary"/>
+                    <button name="action_take_snapshot" type="object"
+                            string="📷 Snapshot" class="btn-secondary"/>
+                    <button name="action_check_status" type="object"
+                            string="🔄 Ping Camera" class="btn-secondary"/>
+                    <button name="action_get_device_info" type="object"
+                            string="ℹ️ ONVIF Info" class="btn-secondary"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="unknown,offline,online"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_recordings" type="object"
+                                class="oe_stat_button" icon="fa-film">
+                            <field name="recording_count" string="Recordings" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Offline" bg_color="bg-danger"
+                            invisible="status != 'offline'"/>
+                    <field name="image" widget="image" class="oe_avatar"
+                           options="{'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Main Gate Camera"/></h1>
+                        <field name="location" placeholder="Physical location e.g. Main Entrance"/>
+                    </div>
+
+                    <notebook>
+                        <!-- Network Tab -->
+                        <page string="📡 Network &amp; Stream" name="network">
+                            <group col="2">
+                                <group string="Camera Network">
+                                    <field name="ip_address"/>
+                                    <field name="username"/>
+                                    <field name="password" password="True"/>
+                                    <field name="onvif_port"/>
+                                    <field name="rtsp_port"/>
+                                    <field name="http_port"/>
+                                </group>
+                                <group string="Stream Settings">
+                                    <field name="stream_type"/>
+                                    <field name="rtsp_path"/>
+                                    <field name="rtsp_sub_path"/>
+                                    <field name="mjpeg_path"
+                                           invisible="stream_type != 'http_mjpeg'"/>
+                                </group>
+                            </group>
+                            <group string="MediaMTX (HLS Transcoder)"
+                                   invisible="stream_type != 'mediamtx_hls'">
+                                <field name="mediamtx_host"/>
+                                <field name="mediamtx_port"/>
+                                <field name="mediamtx_path"/>
+                            </group>
+                            <separator string="Generated URLs"/>
+                            <group col="1">
+                                <field name="rtsp_url" readonly="1"/>
+                                <field name="hls_url" readonly="1"
+                                       invisible="stream_type != 'mediamtx_hls'"/>
+                                <field name="onvif_url" readonly="1"/>
+                                <field name="snapshot_url" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <!-- PTZ Tab -->
+                        <page string="🕹️ PTZ Control" name="ptz">
+                            <group>
+                                <field name="ptz_enabled"/>
+                                <field name="ptz_step"/>
+                            </group>
+                            <div invisible="not ptz_enabled">
+                                <separator string="PTZ Controls"/>
+                                <div class="cctv_ptz_panel">
+                                    <table class="cctv_ptz_table">
+                                        <tr>
+                                            <td/>
+                                            <td>
+                                                <button name="action_ptz_up" type="object"
+                                                        class="btn btn-primary cctv_ptz_btn">
+                                                    <i class="fa fa-arrow-up fa-2x"/>
+                                                </button>
+                                            </td>
+                                            <td/>
+                                            <td>
+                                                <button name="action_ptz_zoom_in" type="object"
+                                                        class="btn btn-info cctv_ptz_btn">
+                                                    <i class="fa fa-search-plus fa-2x"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button name="action_ptz_left" type="object"
+                                                        class="btn btn-primary cctv_ptz_btn">
+                                                    <i class="fa fa-arrow-left fa-2x"/>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button name="action_ptz_home" type="object"
+                                                        class="btn btn-success cctv_ptz_btn">
+                                                    <i class="fa fa-home fa-2x"/>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button name="action_ptz_right" type="object"
+                                                        class="btn btn-primary cctv_ptz_btn">
+                                                    <i class="fa fa-arrow-right fa-2x"/>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button name="action_ptz_stop" type="object"
+                                                        class="btn btn-warning cctv_ptz_btn">
+                                                    <i class="fa fa-stop fa-2x"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td/>
+                                            <td>
+                                                <button name="action_ptz_down" type="object"
+                                                        class="btn btn-primary cctv_ptz_btn">
+                                                    <i class="fa fa-arrow-down fa-2x"/>
+                                                </button>
+                                            </td>
+                                            <td/>
+                                            <td>
+                                                <button name="action_ptz_zoom_out" type="object"
+                                                        class="btn btn-info cctv_ptz_btn">
+                                                    <i class="fa fa-search-minus fa-2x"/>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <p class="text-muted mt-2">
+                                        <i class="fa fa-info-circle"/>
+                                        PTZ requires camera to support ONVIF PTZ service.
+                                        Each click sends a move command and auto-stops after 0.5s.
+                                    </p>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- Snapshot Tab -->
+                        <page string="📸 Last Snapshot" name="snapshot">
+                            <group>
+                                <field name="last_snapshot_time" readonly="1"/>
+                            </group>
+                            <div class="text-center">
+                                <field name="last_snapshot" widget="image"
+                                       options="{'size': [800, 600]}"
+                                       style="max-width:100%;border:2px solid #dee2e6;border-radius:8px;"/>
+                            </div>
+                        </page>
+
+                        <!-- Info Tab -->
+                        <page string="ℹ️ Info" name="info">
+                            <group>
+                                <field name="sequence"/>
+                                <field name="active"/>
+                                <field name="last_checked" readonly="1"/>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── LIVE STREAM POPUP FORM ───────────────────────────────────────── -->
+        <record id="view_cctv_camera_stream_form" model="ir.ui.view">
+        <field name="name">cctv.camera.stream.form</field>
+        <field name="model">cctv.camera</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Live Stream">
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="status" widget="badge"
+                               decoration-success="status == 'online'"
+                               decoration-danger="status == 'offline'"/>
+                        <field name="location" readonly="1"/>
+                        <field name="ip_address" readonly="1"/>
+                        <field name="hls_url" readonly="1"/>
+                        <field name="stream_type" readonly="1" invisible="1"/>
+                        <field name="ptz_enabled" invisible="1"/>
+                    </group>
+                    <div style="width:100%;background:#000;">
+                        <iframe src="https://annapurnatravels.co.in/stream/camera1_h264/"
+                                style="width:100%;height:500px;border:none;"
+                                allowfullscreen="allowfullscreen"
+                                allow="autoplay; fullscreen">
+                        </iframe>
+                    </div>
+                    <div class="mt-2">
+                        <button name="action_take_snapshot" type="object" class="btn btn-warning">
+                            <i class="fa fa-camera"/> Snapshot
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── ACTION ───────────────────────────────────────────────────────── -->
+    <record id="action_cctv_camera" model="ir.actions.act_window">
+        <field name="name">Cameras</field>
+        <field name="res_model">cctv.camera</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first CCTV Camera!
+            </p>
+            <p>
+                Configure ONVIF cameras connected via VPN tunnel through your MikroTik router.
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,261 @@
+/* MyOperator Dashboard Styles */
+
+.o_myoperator_dashboard {
+    background-color: #f8f9fa;
+}
+
+.o_myoperator_dashboard .o_form_sheet {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+/* KPI Cards Styling */
+.o_dashboard_kpis .card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    min-height: 120px;
+}
+
+.o_dashboard_kpis .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.o_dashboard_kpis .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.o_dashboard_kpis h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1;
+}
+
+.o_dashboard_kpis .card-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0.5rem 0 0 0;
+    text-align: center;
+}
+
+/* Chart Container Styling */
+.o_chart_container {
+    position: relative;
+    height: 350px;
+    padding: 10px;
+}
+
+.o_chart_container canvas {
+    max-height: 100% !important;
+}
+
+/* Card Styling for Charts */
+.card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 1rem;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px 8px 0 0;
+}
+
+.card-header h5 {
+    margin: 0;
+    color: #495057;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 1.25rem;
+}
+
+/* Notebook/Tab Styling */
+.o_myoperator_dashboard .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 1.5rem;
+}
+
+.o_myoperator_dashboard .nav-tabs .nav-link {
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: #6c757d;
+    font-weight: 500;
+    padding: 0.75rem 1.5rem;
+}
+
+.o_myoperator_dashboard .nav-tabs .nav-link.active {
+    background-color: transparent;
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.o_myoperator_dashboard .nav-tabs .nav-link:hover {
+    border-bottom-color: #007bff;
+    color: #007bff;
+}
+
+/* Performance Metrics Table Styling */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+}
+
+.table td:first-child {
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .o_dashboard_kpis .col-lg-3 {
+        margin-bottom: 1rem;
+    }
+
+    .o_chart_container {
+        height: 300px;
+    }
+
+    .o_dashboard_kpis h2 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .o_myoperator_dashboard .o_form_sheet {
+        padding: 10px;
+    }
+
+    .o_chart_container {
+        height: 250px;
+    }
+
+    .o_dashboard_kpis h2 {
+        font-size: 1.8rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Loading States */
+.chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.chart-loading:before {
+    content: "Loading chart...";
+}
+
+/* Date Filter Styling */
+.o_form_sheet_bg .o_group {
+    margin-bottom: 1.5rem;
+}
+
+.o_group .o_form_label {
+    font-weight: 500;
+    color: #495057;
+}
+
+/* Button Styling */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+    border-color: #4e555b;
+}
+
+/* Header Styling */
+.o_myoperator_dashboard .oe_title h1 {
+    color: #212529;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* Custom Border Colors for KPI Cards */
+.border-primary {
+    border-left: 4px solid #007bff !important;
+}
+
+.border-success {
+    border-left: 4px solid #28a745 !important;
+}
+
+.border-danger {
+    border-left: 4px solid #dc3545 !important;
+}
+
+.border-warning {
+    border-left: 4px solid #ffc107 !important;
+}
+
+.border-info {
+    border-left: 4px solid #17a2b8 !important;
+}
+
+/* Animation for KPI numbers */
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.o_dashboard_kpis h2 {
+    animation: countUp 0.6s ease-out;
+}
+
+/* Chart fade-in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.o_chart_container canvas {
+    animation: fadeIn 0.5s ease-in;
+}

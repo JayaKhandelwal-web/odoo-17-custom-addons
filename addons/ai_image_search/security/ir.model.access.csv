@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_product_image_user,AI Product Image User,model_ai_product_image,base.group_user,1,1,1,1
+access_ai_product_image_stock_user,AI Product Image Stock User,model_ai_product_image,stock.group_stock_user,1,1,1,1
+access_ai_product_image_stock_manager,AI Product Image Stock Manager,model_ai_product_image,stock.group_stock_manager,1,1,1,1
+access_image_search_wizard_user,Image Search Wizard User,model_image_search_wizard,base.group_user,1,1,1,1
+access_image_search_wizard_stock_user,Image Search Wizard Stock User,model_image_search_wizard,stock.group_stock_user,1,1,1,1

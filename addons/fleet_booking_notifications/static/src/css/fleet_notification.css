@@ -1,0 +1,449 @@
+/* =============================================================
+   Fleet Booking - Journey Notification Popup Styles
+   fleet_booking_notifications/static/src/css/fleet_notification.css
+   ============================================================= */
+
+/* ─────────────────────────────────────────────────────────────
+   SUMMARY STATS BAR
+   ───────────────────────────────────────────────────────────── */
+
+.fn-summary-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 55%, #1565c0 100%);
+    border-radius: 14px;
+    padding: 22px 32px;
+    margin-bottom: 20px;
+    color: white;
+    box-shadow: 0 4px 20px rgba(21, 101, 192, 0.3);
+}
+
+.fn-stat-item {
+    flex: 1;
+    text-align: center;
+    padding: 0 24px;
+}
+
+.fn-stat-number {
+    font-size: 2.4rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -1.5px;
+}
+
+.fn-stat-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.78;
+    margin-top: 5px;
+    font-weight: 600;
+}
+
+.fn-stat-divider {
+    width: 1px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.22);
+    flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   TAB NAVIGATION
+   ───────────────────────────────────────────────────────────── */
+
+.fn-tab-nav {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid #e9ecef;
+}
+
+.fn-tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border: 1.5px solid #dee2e6;
+    background: #ffffff;
+    border-radius: 22px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6c757d;
+    transition: all 0.2s ease;
+    outline: none;
+    white-space: nowrap;
+}
+
+.fn-tab-btn:hover {
+    border-color: #0d6efd;
+    color: #0d6efd;
+    background: #f0f5ff;
+}
+
+.fn-tab-btn.fn-tab-active {
+    background: #0d6efd;
+    border-color: #0d6efd;
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(13, 110, 253, 0.35);
+}
+
+.fn-tab-btn i {
+    font-size: 0.8rem;
+}
+
+.fn-tab-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.28);
+}
+
+.fn-tab-btn:not(.fn-tab-active) .fn-tab-badge {
+    background: #e9ecef;
+    color: #495057;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   CARDS GRID
+   ───────────────────────────────────────────────────────────── */
+
+.fn-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 14px;
+    max-height: 440px;
+    overflow-y: auto;
+    padding: 4px 3px 6px;
+    /* thin custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #dee2e6 #f8f9fa;
+}
+
+.fn-cards-grid::-webkit-scrollbar        { width: 5px; }
+.fn-cards-grid::-webkit-scrollbar-track  { background: #f8f9fa; border-radius: 3px; }
+.fn-cards-grid::-webkit-scrollbar-thumb  { background: #dee2e6; border-radius: 3px; }
+.fn-cards-grid::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
+
+/* ─────────────────────────────────────────────────────────────
+   JOURNEY CARD
+   ───────────────────────────────────────────────────────────── */
+
+.fn-journey-card {
+    border: 1.5px solid #e9ecef;
+    border-left: 4px solid #dee2e6;   /* accent stripe */
+    border-radius: 12px;
+    padding: 16px;
+    background: #ffffff;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.fn-journey-card:hover {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+.fn-journey-card:hover .fn-open-icon {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* Confirmed – gold/green top accent */
+.fn-card-confirmed {
+    border-top: 2px solid #198754;
+}
+
+/* Today – green accent */
+.fn-card-today {
+    border-left-color: #198754 !important;
+    background: linear-gradient(to right, #f0fff4 0%, #ffffff 50%);
+}
+
+/* Tomorrow – blue accent */
+.fn-card-tomorrow {
+    border-left-color: #0d6efd !important;
+    background: linear-gradient(to right, #f0f5ff 0%, #ffffff 50%);
+}
+
+/* ─── Card Header ─────────────────────────────────────────── */
+
+.fn-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.fn-card-ref {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.fn-card-ref strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #212529;
+}
+
+.fn-card-ref i {
+    font-size: 0.85rem;
+}
+
+.fn-card-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.fn-open-icon {
+    font-size: 0.72rem;
+    color: #adb5bd;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* TODAY / TOMORROW chip inside card */
+.fn-date-chip {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    background: #d1e7dd;
+    color: #0a3622;
+    padding: 2px 8px;
+    border-radius: 8px;
+}
+
+.fn-card-tomorrow .fn-date-chip {
+    background: #cfe2ff;
+    color: #084298;
+}
+
+/* ─── Status Badges ───────────────────────────────────────── */
+
+.fn-badge {
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.fn-badge-confirmed  { background: #d1e7dd; color: #0a3622; }
+.fn-badge-enquiry    { background: #e2e3e5; color: #41464b; }
+.fn-badge-quotation  { background: #cfe2ff; color: #084298; }
+.fn-badge-followup   { background: #fff3cd; color: #664d03; }
+.fn-badge-completed  { background: #d3d3d3; color: #3d3d3d; }
+.fn-badge-cancelled  { background: #f8d7da; color: #842029; }
+
+/* ─── Route Visualization ─────────────────────────────────── */
+
+.fn-route-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin: 10px 0;
+}
+
+.fn-route-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 3px 0;
+}
+
+/* Dashed vertical connector between FROM and TO dots */
+.fn-route-connector {
+    width: 2px;
+    height: 16px;
+    margin-left: 9px;          /* align with dot centre */
+    margin-top: -3px;
+    margin-bottom: -3px;
+    background: repeating-linear-gradient(
+        to bottom,
+        #adb5bd 0px,
+        #adb5bd 4px,
+        transparent 4px,
+        transparent 8px
+    );
+}
+
+.fn-route-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.fn-dot-start {
+    background: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.18);
+}
+
+.fn-dot-end {
+    background: #198754;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.18);
+}
+
+.fn-route-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.fn-route-label {
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #adb5bd;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.fn-route-location {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #212529;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+/* ─── Detail Chips ────────────────────────────────────────── */
+
+.fn-card-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f1f3f5;
+}
+
+.fn-detail-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.78rem;
+    color: #6c757d;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 3px 8px;
+}
+
+.fn-detail-chip i {
+    font-size: 0.72rem;
+    color: #adb5bd;
+    width: 12px;
+    text-align: center;
+}
+
+/* Red for "Not Assigned" driver */
+.fn-chip-warning {
+    color: #dc3545 !important;
+    background: #fff5f5 !important;
+    border-color: #f5c2c7 !important;
+}
+
+.fn-chip-warning i {
+    color: #dc3545 !important;
+}
+
+/* Subtle green for amount */
+.fn-chip-amount {
+    color: #198754 !important;
+    background: #f0fff4 !important;
+    border-color: #d1e7dd !important;
+    font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   EMPTY STATE
+   ───────────────────────────────────────────────────────────── */
+
+.fn-empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 64px 24px;
+    color: #adb5bd;
+}
+
+.fn-empty-icon {
+    font-size: 3.8rem;
+    display: block;
+    margin-bottom: 16px;
+    opacity: 0.35;
+}
+
+.fn-empty-state h5 {
+    color: #6c757d;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   DIALOG FOOTER
+   ───────────────────────────────────────────────────────────── */
+
+.fn-dialog-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 16px;
+}
+
+.fn-footer-note {
+    font-size: 0.78rem;
+    font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   RESPONSIVE
+   ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .fn-cards-grid {
+        grid-template-columns: 1fr;
+        max-height: 360px;
+    }
+
+    .fn-summary-bar {
+        padding: 16px 20px;
+    }
+
+    .fn-stat-number {
+        font-size: 1.8rem;
+    }
+
+    .fn-dialog-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .fn-tab-nav {
+        overflow-x: auto;
+        padding-bottom: 10px;
+    }
+}

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Company Form View -->
+    <record id="view_transport_company_form" model="ir.ui.view">
+        <field name="name">transport.company.form</field>
+        <field name="model">transport.company</field>
+        <field name="arch" type="xml">
+            <form string="Company">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="address"/>
+                    </group>
+                    <notebook>
+                        <page string="Logbook Entries">
+                            <field name="logbook_entry_ids" readonly="1">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="vehicle_id"/>
+                                    <field name="vehicle_type"/>
+                                    <field name="pickup_location"/>
+                                    <field name="drop_location"/>
+                                    <field name="distance"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_trips" widget="statinfo"/>
+                                <field name="total_distance" widget="statinfo"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Company Tree View -->
+    <record id="view_transport_company_tree" model="ir.ui.view">
+        <field name="name">transport.company.tree</field>
+        <field name="model">transport.company</field>
+        <field name="arch" type="xml">
+            <tree string="Companies">
+                <field name="name"/>
+                <field name="total_trips"/>
+                <field name="total_distance"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Company Search View -->
+    <record id="view_transport_company_search" model="ir.ui.view">
+        <field name="name">transport.company.search</field>
+        <field name="model">transport.company</field>
+        <field name="arch" type="xml">
+            <search string="Search Companies">
+                <field name="name"/>
+                <field name="address"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Company Action -->
+    <record id="action_transport_company" model="ir.actions.act_window">
+        <field name="name">Companies</field>
+        <field name="res_model">transport.company</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first company
+            </p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enhanced Wizard Form View (No Back Card Button) -->
+    <record id="view_print_employee_idcard_form" model="ir.ui.view">
+        <field name="name">print.employee.idcard.form</field>
+        <field name="model">print.employee.idcard</field>
+        <field name="arch" type="xml">
+            <form string="ID Card Generator">
+                <header>
+                    <button name="action_save_changes" 
+                            type="object" 
+                            string="💾 Save Changes" 
+                            class="btn-success"/>
+                    <button name="action_print_idcard" 
+                            type="object" 
+                            string="🖨️ Print ID Card" 
+                            class="btn-primary"/>
+                    <button name="action_print_all" 
+                            type="object" 
+                            string="🖨️ Print All Selected" 
+                            class="btn-secondary"
+                            invisible="total_employees == 1"/>
+                    <!-- REMOVED: Print Back button - back card functionality completely removed -->
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>🆔 ID Card Generator</h1>
+                        <div class="oe_subtitle">
+                            <span>Employee <field name="employee_index" readonly="1"/> of <field name="total_employees" readonly="1"/></span>
+                        </div>
+                    </div>
+                    
+                    <!-- Multi-employee navigation -->
+                    <div style="text-align: center; margin: 20px 0; background: #f8f9fa; padding: 15px; border-radius: 8px;" 
+                         invisible="total_employees == 1">
+                        <button name="action_previous_employee" 
+                                type="object" 
+                                string="◄ Previous" 
+                                class="btn btn-secondary"
+                                invisible="employee_index == 0"/>
+                        <span style="margin: 0 20px; font-weight: bold; font-size: 16px;">
+                            <field name="current_employee_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                        </span>
+                        <button name="action_next_employee" 
+                                type="object" 
+                                string="Next ►" 
+                                class="btn btn-secondary"
+                                invisible="employee_index >= total_employees - 1"/>
+                    </div>
+                    
+                    <!-- Form Layout -->
+                    <group>
+                        <group string="📋 Basic Information">
+                            <field name="employee_image" 
+                                   widget="image" 
+                                   class="oe_avatar" 
+                                   options="{'size': [150, 150]}"
+                                   placeholder="Click to upload photo"/>
+                            <field name="employee_name" 
+                                   required="1" 
+                                   placeholder="Enter employee name"/>
+                            <field name="employee_job" 
+                                   placeholder="Enter job position"/>
+                            <field name="company_name" 
+                                   placeholder="Enter company name"/>
+                            <field name="employee_phone" 
+                                   placeholder="Enter phone number"/>
+                            <field name="employee_barcode" 
+                                   placeholder="Enter employee ID"/>
+                        </group>
+                        
+                        <group string="🎨 Template Settings">
+                            <field name="template_type" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <!-- Hidden fields for data persistence -->
+                    <group invisible="1">
+                        <field name="employee_ids"/>
+                        <field name="wizard_data"/>
+                    </group>
+                    
+                    <!-- Enhanced Instructions -->
+                    <div class="alert alert-info" style="margin: 20px 0;">
+                        <h5>📋 How to Use:</h5>
+                        <ul style="margin-bottom: 0;">
+                            <li>✏️ <strong>Edit Details:</strong> Update employee information - changes will be saved to employee record</li>
+                            <li>📷 <strong>Upload Photo:</strong> Click on the photo field to upload an image</li>
+                            <li>🆔 <strong>Square Theme:</strong> Uses the professional Square ID card design</li>
+                            <li>📅 <strong>Date of Birth:</strong> Automatically taken from employee's private information</li>
+                            <li>🔄 <strong>Multi-Employee:</strong> Use Previous/Next to navigate between selected employees</li>
+                            <li>💾 <strong>Auto-Save:</strong> Changes are automatically saved as you edit</li>
+                            <li>🖨️ <strong>Print:</strong> Use "Print ID Card" for single employee or "Print All Selected" for multiple</li>
+                        </ul>
+                    </div>
+                </sheet>
+                
+                <footer>
+                    <button string="❌ Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Enhanced Wizard Action -->
+    <record id="action_print_employee_idcard" model="ir.actions.act_window">
+        <field name="name">Print ID Card</field>
+        <field name="res_model">print.employee.idcard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_view_types">form,list</field>
+    </record>
+    
+    <!-- Server Action for Bulk Employee Selection -->
+    <record id="action_print_idcard_server" model="ir.actions.server">
+        <field name="name">Generate ID Cards</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="binding_type">action</field>
+        <field name="state">code</field>
+        <field name="code">
+action = {
+    'name': 'Print ID Cards',
+    'type': 'ir.actions.act_window',
+    'res_model': 'print.employee.idcard',
+    'view_mode': 'form',
+    'target': 'new',
+    'context': {
+        'active_ids': context.get('active_ids', []),
+        'active_model': 'hr.employee',
+    }
+}
+        </field>
+    </record>
+</odoo>

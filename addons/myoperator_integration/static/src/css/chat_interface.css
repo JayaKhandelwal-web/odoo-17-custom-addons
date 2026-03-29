@@ -1,0 +1,376 @@
+/* WhatsApp-like Chat Interface Styles - QWeb Version */
+
+.o_myoperator_chat_form {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.o_chat_header {
+    background: #128C7E;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.o_chat_customer_info h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.o_chat_customer_info span {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.o_chat_actions {
+    display: flex;
+    gap: 10px;
+}
+
+.o_chat_actions button {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+}
+
+.o_chat_actions button:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.o_chat_sheet {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.o_chat_container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 100px);
+}
+
+.o_chat_messages_widget {
+    padding: 15px;
+}
+
+.o_chat_messages_container {
+    background: #e5ddd5;
+    background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Cpath d='m0 40l40-40h-40v40z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.o_chat_compose {
+    background: #f0f0f0;
+    padding: 15px 20px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.o_chat_compose button {
+    border-radius: 25px;
+    padding: 10px 20px;
+}
+
+/* Message Bubbles */
+.o_message_bubble {
+    max-width: 70%;
+    margin: 8px 0;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.o_message_bubble.o_message_incoming {
+    margin-right: auto;
+}
+
+.o_message_bubble.o_message_outgoing {
+    margin-left: auto;
+}
+
+.o_message_bubble .o_message_content {
+    border-radius: 18px;
+    position: relative;
+}
+
+.o_message_bubble.o_message_incoming .o_message_content {
+    background: white;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.o_message_bubble.o_message_outgoing .o_message_content {
+    background: #dcf8c6;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.o_message_timestamp {
+    font-size: 11px;
+    color: #999;
+    margin-top: 5px;
+    text-align: right;
+}
+
+.o_message_bubble.o_message_incoming .o_message_timestamp {
+    text-align: left;
+}
+
+/* Status indicators */
+.o_message_status {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.o_message_status .fa-check {
+    color: #999;
+}
+
+.o_message_status .fa-check-double {
+    color: #4fc3f7;
+}
+
+/* Date Separator */
+.o_chat_date_separator {
+    margin: 15px 0;
+}
+
+.o_chat_date_separator .badge {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #666;
+    font-weight: normal;
+    padding: 5px 10px;
+}
+
+/* Quick Replies */
+.o_chat_quick_replies {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 10px;
+}
+
+.o_quick_reply_btn {
+    margin: 2px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+.o_quick_reply_btn:hover {
+    background-color: #128C7E;
+    color: white;
+    border-color: #128C7E;
+}
+
+/* Loading States */
+.o_chat_loading {
+    color: #999;
+}
+
+.o_chat_loading .fa-spinner {
+    margin-right: 5px;
+}
+
+.o_chat_no_messages {
+    color: #999;
+}
+
+/* Enhanced Phone Widget */
+.o_enhanced_phone_widget {
+    min-width: 200px;
+}
+
+.o_phone_number {
+    font-family: monospace;
+    font-size: 14px;
+}
+
+.o_phone_actions button {
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_phone_call_btn:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.o_phone_whatsapp_btn:hover {
+    background-color: #25d366;
+    border-color: #25d366;
+    color: white;
+}
+
+/* Conversation List Styles */
+.o_conversation_item {
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.o_conversation_item:hover {
+    background: #f5f5f5;
+}
+
+.o_conversation_unread {
+    background: #fff3cd;
+    border-left: 4px solid #128C7E;
+}
+
+.o_conversation_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.o_conversation_name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #333;
+}
+
+.o_conversation_time {
+    font-size: 12px;
+    color: #999;
+}
+
+.o_conversation_preview {
+    color: #666;
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o_unread_badge {
+    background: #128C7E;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Media message styles */
+.o_message_media {
+    border-radius: 8px;
+    max-width: 250px;
+    margin: 5px 0;
+}
+
+.o_message_document {
+    background: rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.o_document_icon {
+    font-size: 24px;
+    color: #666;
+}
+
+.o_document_info {
+    flex: 1;
+}
+
+.o_document_name {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.o_document_size {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .o_chat_header {
+        padding: 10px 15px;
+    }
+
+    .o_chat_customer_info h4 {
+        font-size: 16px;
+    }
+
+    .o_message_bubble {
+        max-width: 85%;
+    }
+
+    .o_chat_compose {
+        padding: 10px 15px;
+    }
+
+    .o_chat_quick_replies .d-flex {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .o_quick_reply_btn {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+/* Form overrides for chat interface */
+.o_myoperator_chat_form .o_form_view {
+    height: 100vh;
+}
+
+.o_myoperator_chat_form .o_form_sheet_bg {
+    padding: 0;
+}
+
+.o_myoperator_chat_form .o_form_statusbar {
+    display: none;
+}
+
+/* Scroll improvements */
+.o_chat_messages_container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.o_chat_messages_container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+}
+
+.o_chat_messages_container::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+.o_chat_messages_container::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* Button animations */
+.o_chat_refresh_btn, .o_chat_send_btn {
+    transition: all 0.2s ease;
+}
+
+.o_chat_refresh_btn:hover {
+    transform: rotate(180deg);
+}
+
+.o_chat_send_btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

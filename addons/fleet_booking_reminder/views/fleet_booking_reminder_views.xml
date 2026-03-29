@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+=============================================================================
+  fleet_booking_reminder — Form View Inheritance
+  File   : views/fleet_booking_reminder_views.xml
+  Module : fleet_booking_reminder
+  Odoo   : 17.0
+=============================================================================
+
+  Inherits the fleet.booking form view and adds:
+  1.  Hidden tracking fields  (reminder_2day_sent / reminder_1day_sent + dates)
+  2.  Reminder status banner  (shown above sheet once any reminder is sent)
+  3.  4 Re-send buttons in the form header (confirmed bookings only)
+  4.  "Email Reminders" notebook tab  (status + documentation)
+
+=============================================================================
+-->
+<odoo>
+
+<record id="view_fleet_booking_reminder_form_inherit" model="ir.ui.view">
+    <field name="name">fleet.booking.reminder.form.inherit</field>
+    <field name="model">fleet.booking</field>
+    <field name="inherit_id" ref="fleet_booking.view_fleet_booking_form"/>
+    <field name="arch" type="xml">
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!--  1.  HIDDEN TRACKING FIELDS                                   -->
+        <!--      Injected so they are available to the banner &amp; buttons     -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <xpath expr="//sheet" position="inside">
+            <field name="reminder_2day_sent"      invisible="1"/>
+            <field name="reminder_2day_sent_date" invisible="1"/>
+            <field name="reminder_1day_sent"      invisible="1"/>
+            <field name="reminder_1day_sent_date" invisible="1"/>
+        </xpath>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!--  2.  REMINDER STATUS BANNER                                   -->
+        <!--      Appears above the form sheet once any email is sent      -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!--  3.  FORM HEADER — RE-SEND BUTTONS                           -->
+        <!--      Visible only on confirmed bookings                       -->
+        <!--      Manager buttons gated by fleet_booking_manager group     -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!--  4.  NOTEBOOK TAB — EMAIL REMINDERS                          -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <xpath expr="//notebook" position="inside">
+            <page string="Email Reminders" name="email_reminders">
+
+                <group string="Customer Reminder Status">
+                    <group>
+                        <field name="reminder_2day_sent" readonly="1"/>
+                        <field name="reminder_2day_sent_date"
+                               readonly="1"
+                               invisible="not reminder_2day_sent"/>
+                    </group>
+                    <group>
+                        <field name="reminder_1day_sent" readonly="1"/>
+                        <field name="reminder_1day_sent_date"
+                               readonly="1"
+                               invisible="not reminder_1day_sent"/>
+                    </group>
+                </group>
+
+                <group string="How It Works" class="text-muted">
+                    <div colspan="2">
+                        <p>
+                            <strong>Automatic Daily Cron (08:00 AM IST):</strong>
+                            Every morning the system checks all confirmed bookings
+                            and sends up to 4 emails:
+                        </p>
+                        <ul>
+                            <li>
+                                <strong>2 days before journey:</strong>
+                                Customer gets a friendly preparation reminder with booking details
+                                and checklist. Fleet Manager gets a full ops brief with vehicle,
+                                driver, and payment checklist (✅ / ⚠️ / ❌ per item).
+                            </li>
+                            <li>
+                                <strong>1 day before journey:</strong>
+                                Customer gets a final urgent reminder.
+                                Fleet Manager gets a critical alert — any missing vehicle, driver,
+                                or outstanding payment is highlighted in red.
+                            </li>
+                        </ul>
+                        <p>
+                            <strong>Manual Re-send:</strong>
+                            Use the buttons in the form header to re-send any email at any time.
+                            Customer reminder buttons are visible to all users on confirmed bookings.
+                            Manager brief buttons are visible to Fleet Managers only.
+                        </p>
+                        <p>
+                            <strong>Manager Email Recipient:</strong>
+                            Emails are sent to the <em>Assigned To</em> user's email address.
+                            Falls back to the company email if no user email is set.
+                        </p>
+                    </div>
+                </group>
+
+            </page>
+        </xpath>
+
+    </field>
+</record>
+
+</odoo>

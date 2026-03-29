@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Gmail Template List View -->
+    <record id="view_gmail_template_tree" model="ir.ui.view">
+        <field name="name">gmail.template.tree</field>
+        <field name="model">gmail.template</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="not active" decoration-info="is_system">
+                <field name="name"/>
+                <field name="subject"/>
+                <field name="template_type"/>
+                <field name="category_id"/>
+                <field name="usage_count"/>
+                <field name="last_used_date"/>
+                <field name="variable_count"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="is_system" invisible="1"/>
+                <button name="action_use_template" type="object" 
+                        string="Use Template" icon="fa-paper-plane"
+                        class="btn-sm btn-primary"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Gmail Template Form View -->
+    <record id="view_gmail_template_form" model="ir.ui.view">
+        <field name="name">gmail.template.form</field>
+        <field name="model">gmail.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_use_template" type="object" 
+                            string="Use Template" class="btn-primary"/>
+                    <button name="action_preview_template" type="object" 
+                            string="Preview" class="btn-secondary"/>
+                    <button name="action_duplicate_template" type="object" 
+                            string="Duplicate" class="btn-secondary"/>
+                    <button name="action_auto_create_variables" type="object" 
+                            string="Auto-create Variables" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="System Template" 
+                            bg_color="bg-info" invisible="not is_system"/>
+                    
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="Template Name"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info">
+                            <field name="template_type"/>
+                            <field name="category_id"/>
+                            <field name="active"/>
+                            <field name="is_system" readonly="1"/>
+                        </group>
+                        <group name="usage_info">
+                            <field name="usage_count" readonly="1"/>
+                            <field name="last_used_date" readonly="1"/>
+                            <field name="tags"/>
+                        </group>
+                    </group>
+                    
+                    <field name="description" placeholder="Template description and usage notes"/>
+                    
+                    <notebook>
+                        <page string="Email Content" name="content">
+                            <group>
+                                <field name="subject" placeholder="Email subject (supports variables like {{contact_name}})"/>
+                            </group>
+                            
+                            <separator string="Email Body"/>
+                            <field name="body_html" widget="html" 
+                                   placeholder="HTML email body (supports variables like {{contact_name}})"/>
+                            
+                            <separator string="Plain Text Body (Optional)"/>
+                            <field name="body_plain" widget="text" 
+                                   placeholder="Plain text version of email body"/>
+                        </page>
+                        
+                        <page string="Recipients" name="recipients">
+                            <group>
+                                <group name="default_recipients">
+                                    <field name="to_emails" placeholder="Default To emails (comma separated)"/>
+                                    <field name="cc_emails" placeholder="Default CC emails (comma separated)"/>
+                                    <field name="bcc_emails" placeholder="Default BCC emails (comma separated)"/>
+                                    <field name="reply_to" placeholder="Reply-to email address"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Variables" name="variables">
+                            <field name="variable_ids">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="variable_type"/>
+                                    <field name="default_value"/>
+                                    <field name="is_required"/>
+                                </tree>
+                            </field>
+                            
+                            <div class="mt16">
+                                <p class="text-muted">
+                                    <strong>Available Variables:</strong><br/>
+                                    Use variables in your template with double curly braces: {{variable_name}}<br/>
+                                    <em>System variables:</em> user_name, company_name, current_date, current_time
+                                </p>
+                            </div>
+                        </page>
+                        
+                        <page string="Access Control" name="access">
+                            <group>
+                                <group name="account_access">
+                                    <field name="account_ids" widget="many2many_tags" 
+                                           placeholder="Gmail accounts that can use this template (empty = all)"/>
+                                </group>
+                                <group name="user_access">
+                                    <field name="user_ids" widget="many2many_tags" 
+                                           placeholder="Users who can use this template (empty = all)"/>
+                                    <field name="group_ids" widget="many2many_tags" 
+                                           placeholder="Groups who can use this template"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Template Search View - UPDATED with system_test filter -->
+    <record id="view_gmail_template_search" model="ir.ui.view">
+        <field name="name">gmail.template.search</field>
+        <field name="model">gmail.template</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Template Name"/>
+                <field name="subject" string="Subject"/>
+                <field name="tags" string="Tags"/>
+                <field name="category_id" string="Category"/>
+                <separator/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="System Templates" name="system" domain="[('is_system', '=', True)]"/>
+                <filter string="User Templates" name="user" domain="[('is_system', '=', False)]"/>
+                <separator/>
+                <filter string="Email Templates" name="email" domain="[('template_type', '=', 'email')]"/>
+                <filter string="Reply Templates" name="reply" domain="[('template_type', '=', 'reply')]"/>
+                <filter string="Auto Reply" name="auto_reply" domain="[('template_type', '=', 'auto_reply')]"/>
+                <filter string="System Test" name="system_test" domain="[('template_type', '=', 'system_test')]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                    <filter string="Type" name="group_type" context="{'group_by': 'template_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Gmail Template Category Form View -->
+    <record id="view_gmail_template_category_form" model="ir.ui.view">
+        <field name="name">gmail.template.category.form</field>
+        <field name="model">gmail.template.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="color" widget="color"/>
+                        </group>
+                        <group>
+                            <field name="template_count" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <field name="description" placeholder="Category description"/>
+                    
+                    <separator string="Templates"/>
+                    <field name="template_ids" readonly="1">
+                        <tree>
+                            <field name="name"/>
+                            <field name="subject"/>
+                            <field name="template_type"/>
+                            <field name="usage_count"/>
+                            <field name="active"/>
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Template Category Tree View -->
+    <record id="view_gmail_template_category_tree" model="ir.ui.view">
+        <field name="name">gmail.template.category.tree</field>
+        <field name="model">gmail.template.category</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="template_count"/>
+                <field name="active" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_gmail_template" model="ir.actions.act_window">
+        <field name="name">Email Templates</field>
+        <field name="res_model">gmail.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_template_tree"/>
+        <field name="search_view_id" ref="view_gmail_template_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first email template
+            </p>
+            <p>
+                Email templates help you send consistent, professional emails.
+                Use variables to personalize your messages automatically.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_gmail_template_category" model="ir.actions.act_window">
+        <field name="name">Template Categories</field>
+        <field name="res_model">gmail.template.category</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_gmail_template_category_tree"/>
+    </record>
+
+</odoo>

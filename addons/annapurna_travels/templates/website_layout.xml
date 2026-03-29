@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Custom Website Layout with Universal Hero Navigation -->
+        <template id="layout" inherit_id="website.layout" name="Annapurna Travels Layout">
+
+            <!-- Add Favicon and Meta Tags to Head Section -->
+            <xpath expr="//head" position="inside">
+                <link rel="icon" type="image/jpeg" href="/annapurna_travels/static/src/img/annapurna_titlelogo.jpeg"/>
+                <link rel="shortcut icon" type="image/jpeg" href="/annapurna_travels/static/src/img/annapurna_titlelogo.jpeg"/>
+                <link rel="apple-touch-icon" href="/annapurna_travels/static/src/img/annapurna_titlelogo.jpeg"/>
+                <meta name="msapplication-TileImage" content="/annapurna_travels/static/src/img/annapurna_titlelogo.jpeg"/>
+
+                <!-- Responsive Meta Tags -->
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes"/>
+                <meta name="mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-capable" content="yes"/>
+                <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+            </xpath>
+
+            <!-- Custom Header with Universal Hero Navigation -->
+            <xpath expr="//header" position="replace">
+                <header class="annapurna-header">
+
+                    <!-- Universal Hero Navigation for Desktop (visible on large screens) -->
+                    <div class="universal-hero-navigation d-none d-lg-block">
+                        <div class="container-fluid">
+                            <div class="hero-nav-wrapper">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-2">
+                                        <a class="hero-brand d-flex align-items-center" href="/">
+                                            <img src="/annapurna_travels/static/src/img/annapurna_logo.png"
+                                                 alt="Annapurna Travels"
+                                                 class="hero-logo"/>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <ul class="hero-nav-menu">
+                                            <li class="hero-nav-item">
+                                                <a class="hero-nav-link" href="/" t-attf-class="hero-nav-link #{request.httprequest.path == '/' and 'active' or ''}">Home</a>
+                                            </li>
+                                            <li class="hero-nav-item">
+                                                <a class="hero-nav-link" href="/fleet" t-attf-class="hero-nav-link #{'/fleet' in request.httprequest.path and 'active' or ''}">Our Fleets</a>
+                                            </li>
+                                            <li class="hero-nav-item">
+                                                <a class="hero-nav-link" href="/about" t-attf-class="hero-nav-link #{'/about' in request.httprequest.path and 'active' or ''}">About Us</a>
+                                            </li>
+                                            <li class="hero-nav-item">
+                                                <a class="hero-nav-link" href="/contact" t-attf-class="hero-nav-link #{'/contact' in request.httprequest.path and 'active' or ''}">Contact</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-lg-3 text-end">
+                                        <div class="d-flex align-items-center justify-content-end gap-2">
+                                            <t t-if="not request.env.user._is_public()">
+                                                <div class="dropdown">
+                                                    <a class="hero-user-menu dropdown-toggle d-flex align-items-center text-decoration-none"
+                                                       href="#"
+                                                       id="userMenuDropdown"
+                                                       role="button"
+                                                       data-bs-toggle="dropdown"
+                                                       aria-expanded="false">
+                                                        <i class="fas fa-user-circle me-2"></i>
+                                                        <span t-esc="request.env.user.name"/>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+                                                        <li><a class="dropdown-item" href="/my/home"><i class="fas fa-tachometer-alt me-2"></i>My Account</a></li>
+                                                        <li><a class="dropdown-item" href="/my/bookings"><i class="fas fa-calendar-check me-2"></i>My Bookings</a></li>
+                                                        <li><hr class="dropdown-divider"/></li>
+                                                        <li><a class="dropdown-item" href="/web/session/logout?redirect=/"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                                                    </ul>
+                                                </div>
+                                            </t>
+                                            <t t-else="">
+                                                <a class="hero-login-btn" href="/web/login">
+                                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                                </a>
+                                            </t>
+                                            <a class="hero-book-btn" href="/booking">Book Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Navigation (visible on tablets and mobile) -->
+                    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm d-lg-none">
+                        <div class="container">
+                            <a class="navbar-brand d-flex align-items-center" href="/">
+                                <img src="/annapurna_travels/static/src/img/annapurna_logo.png"
+                                     alt="Annapurna Travels - Luxurious Journey with Care"
+                                     class="brand-logo"
+                                     style="height: 45px; width: auto;"/>
+                            </a>
+
+                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav mx-auto">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/">Home</a>
+                                    </li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="/services" id="mobileServicesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Services</a>
+                                        <ul class="dropdown-menu" aria-labelledby="mobileServicesDropdown">
+                                            <li><a class="dropdown-item" href="/services">All Services</a></li>
+                                            <li><a class="dropdown-item" href="/services#corporate">Corporate Travel</a></li>
+                                            <li><a class="dropdown-item" href="/services#marriage">Marriage and Events</a></li>
+                                            <li><a class="dropdown-item" href="/services#school">School Bus</a></li>
+                                            <li><a class="dropdown-item" href="/services#tour">Tour Packages</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/fleet">Our Fleets</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/about">About Us</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="/contact">Contact</a>
+                                    </li>
+                                </ul>
+                                <div class="navbar-nav d-flex flex-column flex-lg-row gap-2 mt-3 mt-lg-0">
+                                    <t t-if="not request.env.user._is_public()">
+                                        <div class="dropdown">
+                                            <a class="nav-link dropdown-toggle btn btn-outline-primary rounded-pill px-3" href="#" id="mobileUserDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i class="fas fa-user-circle me-1"></i><t t-esc="request.env.user.name"/>
+                                            </a>
+                                            <ul class="dropdown-menu" aria-labelledby="mobileUserDropdown">
+                                                <li><a class="dropdown-item" href="/my/home"><i class="fas fa-tachometer-alt me-2"></i>My Account</a></li>
+                                                <li><a class="dropdown-item" href="/my/bookings"><i class="fas fa-calendar-check me-2"></i>My Bookings</a></li>
+                                                <li><hr class="dropdown-divider"/></li>
+                                                <li><a class="dropdown-item" href="/web/session/logout?redirect=/"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                                            </ul>
+                                        </div>
+                                    </t>
+                                    <t t-else="">
+                                        <a class="nav-link btn btn-outline-primary rounded-pill px-4" href="/web/login">
+                                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                                        </a>
+                                    </t>
+                                    <a class="nav-link btn btn-primary text-white rounded-pill px-4" href="/booking">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                </header>
+            </xpath>
+
+            <!-- Custom Footer -->
+            <xpath expr="//footer" position="replace">
+                <footer class="annapurna-footer bg-dark text-light py-5 mt-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="mb-3">Annapurna Travels</h5>
+                                <p>Your trusted partner for luxurious and comfortable travel experiences across India. We prioritize safety, comfort, and customer satisfaction in every journey.</p>
+                                <div class="social-links mt-3">
+                                    <a href="#" class="text-light me-3" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                                    <a href="#" class="text-light me-3" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="text-light me-3" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                                    <a href="#" class="text-light" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-6 mb-4">
+                                <h6 class="mb-3">Quick Links</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><a href="/" class="text-light-50">Home</a></li>
+                                    <li class="mb-2"><a href="/about" class="text-light-50">About Us</a></li>
+                                    <li class="mb-2"><a href="/fleet" class="text-light-50">Our Fleets</a></li>
+                                    <li class="mb-2"><a href="/contact" class="text-light-50">Contact</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h6 class="mb-3">Our Services</h6>
+                                <ul class="list-unstyled">
+                                    <li class="mb-2"><a href="/services#corporate" class="text-light-50">Corporate Travel</a></li>
+                                    <li class="mb-2"><a href="/services#marriage" class="text-light-50">Marriage and Events</a></li>
+                                    <li class="mb-2"><a href="/services#school" class="text-light-50">School Bus Service</a></li>
+                                    <li class="mb-2"><a href="/services#airport" class="text-light-50">Airport Transfer</a></li>
+                                </ul>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h6 class="mb-3">Contact Info</h6>
+                                <div class="contact-info">
+                                    <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i> Bhopal, Madhya Pradesh, India</p>
+                                    <p class="mb-2"><i class="fas fa-phone me-2"></i> +91 9827054100</p>
+                                    <p class="mb-2"><i class="fas fa-envelope me-2"></i> info@annapurnatravels.co.in</p>
+                                    <p class="mb-2"><i class="fas fa-globe me-2"></i> www.annapurnatravels.co.in</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4 bg-light"/>
+                        <div class="row align-items-center">
+                            <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                                <p class="mb-0">© 2025 Annapurna Travels. All rights reserved.</p>
+                            </div>
+                            <div class="col-md-6 text-center text-md-end">
+                                <a href="#" class="text-light-50 me-3">Terms of Service</a>
+                                <a href="#" class="text-light-50">Privacy Policy</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </xpath>
+
+        </template>
+
+        <!-- Custom CSS and JS Assets -->
+        <template id="annapurna_assets" name="Annapurna Travels Assets">
+            <link rel="stylesheet" type="text/css" href="/annapurna_travels/static/src/css/annapurna_style.css"/>
+            <script type="text/javascript" src="/annapurna_travels/static/src/js/annapurna_main.js"></script>
+        </template>
+
+    </data>
+</odoo>

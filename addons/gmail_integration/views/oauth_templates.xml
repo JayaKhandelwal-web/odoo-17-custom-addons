@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- Gmail Auth Success Template - FIXED -->
+    <template id="auth_success" name="Gmail Authentication Success">
+        <t t-call="web.frontend_layout">
+            <t t-set="title">Gmail Connected Successfully</t>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-check-circle text-success" style="font-size: 4rem;"></i>
+                                </div>
+                                <h3 class="card-title text-success">Gmail Connected Successfully!</h3>
+                                <p class="card-text">
+                                    Your Gmail account <strong t-esc="account.email_address"/> has been connected successfully using shared OAuth configuration.
+                                </p>
+                                <p class="card-text">
+                                    Account Name: <strong t-esc="account.name"/>
+                                </p>
+                                <p class="card-text" t-if="account.user_id">
+                                    Owner: <strong t-esc="account.user_id.name"/>
+                                </p>
+                                <div class="alert alert-info" t-if="user_info and user_info.get('email')">
+                                    <strong>Authorized Email:</strong> <span t-esc="user_info.get('email')"/>
+                                </div>
+                                <div class="alert alert-success">
+                                    <p t-esc="message"/>
+                                </div>
+                                <div class="mt-4">
+                                    <a href="#" onclick="window.close();" class="btn btn-primary">
+                                        Close Window
+                                    </a>
+                                    <!-- FIXED: Use correct action name -->
+                                    <a href="/web#action=gmail_integration.action_gmail_account_user" class="btn btn-secondary ml-2">
+                                        Return to My Gmail Accounts
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Gmail Auth Error Template - FIXED -->
+    <template id="auth_error" name="Gmail Authentication Error">
+        <t t-call="web.frontend_layout">
+            <t t-set="title">Gmail Connection Error</t>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <div class="mb-4">
+                                    <i class="fa fa-exclamation-triangle text-danger" style="font-size: 4rem;"></i>
+                                </div>
+                                <h3 class="card-title text-danger">Connection Failed</h3>
+                                <p class="card-text">
+                                    There was an error connecting your Gmail account.
+                                </p>
+                                <div class="alert alert-danger">
+                                    <strong>Error:</strong> <span t-esc="error_message"/>
+                                </div>
+                                <div class="mt-4">
+                                    <h6>Common Solutions:</h6>
+                                    <ul class="text-left">
+                                        <li><strong>System Configuration:</strong> Ask your administrator to configure Gmail OAuth in Gmail Settings</li>
+                                        <li><strong>Authorization Code:</strong> Make sure you copied the complete authorization code</li>
+                                        <li><strong>Session Expired:</strong> Try the authorization process again</li>
+                                        <li><strong>OAuth Credentials:</strong> Verify system OAuth configuration is correct</li>
+                                        <li><strong>Redirect URI:</strong> Ensure redirect URI matches in Google Cloud Console</li>
+                                        <li><strong>Gmail API:</strong> Confirm Gmail API is enabled in Google Cloud Console</li>
+                                    </ul>
+                                </div>
+                                <div class="alert alert-info">
+                                    <strong>Note:</strong> This system uses shared OAuth configuration. 
+                                    Contact your administrator if the problem persists.
+                                </div>
+                                <div class="mt-4">
+                                    <a href="#" onclick="window.close();" class="btn btn-danger">
+                                        Close Window
+                                    </a>
+                                    <!-- FIXED: Use correct action name -->
+                                    <a href="/web#action=gmail_integration.action_gmail_account_user" class="btn btn-secondary ml-2">
+                                        Return to My Gmail Accounts
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Gmail Setup Guide Template - ENHANCED -->
+    <template id="setup_guide" name="Gmail OAuth Setup Guide">
+        <t t-call="web.frontend_layout">
+            <t t-set="title">Gmail OAuth Setup Guide</t>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-10">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Gmail OAuth 2.0 Setup Guide (Shared Configuration)</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <strong>Note:</strong> This system uses shared OAuth configuration. 
+                                    One OAuth app supports multiple users and Gmail accounts.
+                                </div>
+
+                                <h5>Step 1: Create Google Cloud Project</h5>
+                                <ol>
+                                    <li>Go to <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></li>
+                                    <li>Create a new project or select existing project</li>
+                                    <li>Enable the Gmail API in APIs &amp; Services</li>
+                                </ol>
+
+                                <h5>Step 2: Configure OAuth Consent Screen</h5>
+                                <ol>
+                                    <li>Go to APIs &amp; Services → OAuth consent screen</li>
+                                    <li>Choose "Internal" for company use or "External" for broader access</li>
+                                    <li>Fill in required application information</li>
+                                    <li>Add authorized domains if using "External"</li>
+                                </ol>
+
+                                <h5>Step 3: Create OAuth 2.0 Credentials</h5>
+                                <ol>
+                                    <li>Go to APIs &amp; Services → Credentials</li>
+                                    <li>Click "Create Credentials" → "OAuth client ID"</li>
+                                    <li>Application type: Web application</li>
+                                    <li>Add this redirect URI:</li>
+                                </ol>
+                                
+                                <div class="alert alert-warning">
+                                    <strong>Important: Add this exact Redirect URI to your OAuth client:</strong><br/>
+                                    <code t-esc="redirect_uri"/>
+                                </div>
+
+                                <h5>Step 4: Required Scopes</h5>
+                                <p>Your application will request these Gmail scopes:</p>
+                                <div class="alert alert-info">
+                                    <ul class="mb-0">
+                                        <li>gmail.readonly - Read Gmail messages</li>
+                                        <li>gmail.send - Send emails via Gmail</li>
+                                        <li>gmail.modify - Modify Gmail messages</li>
+                                        <li>gmail.compose - Compose emails</li>
+                                        <li>userinfo.email - Access user email address</li>
+                                        <li>userinfo.profile - Access basic profile info</li>
+                                    </ul>
+                                </div>
+
+                                <h5>Step 5: Configure System OAuth (Administrator Only)</h5>
+                                <ol>
+                                    <li>Copy Client ID and Client Secret from Google Cloud Console</li>
+                                    <li>Go to Gmail Settings in Odoo</li>
+                                    <li>Enable OAuth and paste credentials</li>
+                                    <li>Save and test configuration</li>
+                                </ol>
+
+                                <h5>Step 6: Users Connect Gmail Accounts</h5>
+                                <ol>
+                                    <li>Users go to "My Gmail" in Odoo</li>
+                                    <li>Create new Gmail account record</li>
+                                    <li>Click "Connect Gmail" (uses shared OAuth)</li>
+                                    <li>Complete Google authorization</li>
+                                </ol>
+
+                                <div class="row mt-4">
+                                    <div class="col-md-6 text-center">
+                                        <a href="/web#action=gmail_integration.action_gmail_quick_settings" class="btn btn-warning btn-block">
+                                            Configure System OAuth
+                                        </a>
+                                        <small class="text-muted">Administrators only</small>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <a href="/web#action=gmail_integration.action_gmail_account_user" class="btn btn-primary btn-block">
+                                            My Gmail Accounts
+                                        </a>
+                                        <small class="text-muted">All users</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Privacy Policy Template - ENHANCED -->
+    <template id="privacy_policy" name="Gmail Integration Privacy Policy">
+        <t t-call="web.frontend_layout">
+            <t t-set="title">Gmail Integration Privacy Policy</t>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Privacy Policy - Gmail Integration</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-info">
+                                    <strong>Shared OAuth System:</strong> This application uses a shared OAuth configuration 
+                                    that allows multiple users to securely connect their Gmail accounts.
+                                </div>
+
+                                <h5>Data Access and Usage</h5>
+                                <p>
+                                    <span t-esc="company_name"/> Gmail Integration accesses your Gmail data to provide 
+                                    email management functionality within our platform. Each user's Gmail data remains 
+                                    private and is only accessible according to the sharing settings they configure.
+                                </p>
+
+                                <h5>Permissions Requested</h5>
+                                <p>Our shared OAuth application requests the following permissions:</p>
+                                <ul>
+                                    <li t-foreach="scopes_used" t-as="scope">
+                                        <code t-esc="scope"/>
+                                    </li>
+                                </ul>
+
+                                <h5>Data Storage and Security</h5>
+                                <ul>
+                                    <li>Email data is stored securely on our servers with user-level access controls</li>
+                                    <li>OAuth tokens are encrypted and stored securely per user</li>
+                                    <li>Users control their own data sharing settings</li>
+                                    <li>We do not share your data with third parties</li>
+                                    <li>You can revoke access at any time by disconnecting your Gmail account</li>
+                                </ul>
+
+                                <h5>Shared OAuth Security</h5>
+                                <ul>
+                                    <li>The OAuth application is shared, but your data remains private</li>
+                                    <li>Each user authenticates with their own Google account</li>
+                                    <li>Access tokens are unique per user and Gmail account</li>
+                                    <li>User isolation is maintained at all levels</li>
+                                </ul>
+
+                                <h5>Data Retention</h5>
+                                <p>
+                                    Email data is retained according to your account settings and company policies. 
+                                    You can delete your data at any time by disconnecting your Gmail account.
+                                </p>
+
+                                <h5>User Rights</h5>
+                                <ul>
+                                    <li>Right to access your connected Gmail data</li>
+                                    <li>Right to disconnect and revoke access</li>
+                                    <li>Right to control sharing settings</li>
+                                    <li>Right to delete synchronized data</li>
+                                </ul>
+
+                                <h5>Contact</h5>
+                                <p>
+                                    For questions about this privacy policy or data handling, 
+                                    please contact your system administrator.
+                                </p>
+
+                                <div class="mt-4 text-center">
+                                    <button onclick="window.close();" class="btn btn-secondary">
+                                        Close
+                                    </button>
+                                    <a href="/web#action=gmail_integration.action_gmail_account_user" class="btn btn-primary ml-2">
+                                        My Gmail Accounts
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

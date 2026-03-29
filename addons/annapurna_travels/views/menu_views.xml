@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Main Menu -->
+        <menuitem id="menu_annapurna_travels_main"
+                  name="Annapurna Travels"
+                  sequence="10"
+                  web_icon="annapurna_travels,static/description/icon.png"/>
+
+        <!-- Fleet Management Menu -->
+        <menuitem id="menu_fleet_management"
+                  name="Fleet Management"
+                  parent="menu_annapurna_travels_main"
+                  sequence="10"/>
+
+        <menuitem id="menu_bus_fleet"
+                  name="Bus Fleet"
+                  parent="menu_fleet_management"
+                  action="action_bus_fleet"
+                  sequence="10"/>
+
+        <menuitem id="menu_bus_categories"
+                  name="Bus Categories"
+                  parent="menu_fleet_management"
+                  action="action_bus_category"
+                  sequence="20"/>
+
+        <!-- Booking Management Menu -->
+        <menuitem id="menu_booking_management"
+                  name="Booking Management"
+                  parent="menu_annapurna_travels_main"
+                  sequence="20"/>
+
+        <menuitem id="menu_bus_bookings"
+                  name="Bus Bookings"
+                  parent="menu_booking_management"
+                  action="action_bus_booking"
+                  sequence="10"/>
+
+        <menuitem id="menu_tour_bookings"
+                  name="Tour Bookings"
+                  parent="menu_booking_management"
+                  action="action_tour_booking"
+                  sequence="20"/>
+
+        <!-- Services Menu -->
+        <menuitem id="menu_backend_services"
+                  name="Services"
+                  parent="menu_annapurna_travels_main"
+                  sequence="30"/>
+
+        <menuitem id="menu_service_types"
+                  name="Service Types"
+                  parent="menu_backend_services"
+                  action="action_service_type"
+                  sequence="10"/>
+
+        <menuitem id="menu_tour_packages"
+                  name="Tour Packages"
+                  parent="menu_backend_services"
+                  action="action_tour_destination"
+                  sequence="20"/>
+
+        <menuitem id="menu_tour_destinations"
+                  name="Tour Destinations"
+                  parent="menu_backend_services"
+                  action="action_tour_destination"
+                  sequence="30"/>
+
+        <!-- Customer Management Menu -->
+        <menuitem id="menu_customer_management"
+                  name="Customer Management"
+                  parent="menu_annapurna_travels_main"
+                  sequence="40"/>
+
+        <menuitem id="menu_customer_testimonials"
+                  name="Customer Testimonials"
+                  parent="menu_customer_management"
+                  action="action_customer_testimonial"
+                  sequence="10"/>
+
+        <!-- Reports Menu -->
+        <menuitem id="menu_reports"
+                  name="Reports"
+                  parent="menu_annapurna_travels_main"
+                  sequence="50"/>
+
+        <!-- Configuration Menu -->
+        <menuitem id="menu_configuration"
+                  name="Configuration"
+                  parent="menu_annapurna_travels_main"
+                  sequence="60"/>
+        <!-- Add this inside your existing menu_views.xml file -->
+        <menuitem id="menu_client_logo"
+                  name="Client Logos"
+                  parent="menu_customer_management"
+                  action="action_client_logo"
+                  sequence="60"/>
+    </data>
+</odoo>

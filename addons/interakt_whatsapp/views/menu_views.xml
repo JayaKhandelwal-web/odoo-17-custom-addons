@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_interakt_root"
+              name="WhatsApp (Interakt)"
+              sequence="100"
+              web_icon="interakt_whatsapp,static/description/icon.png"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_interakt_config"
+              name="Configuration"
+              parent="menu_interakt_root"
+              action="action_interakt_config"
+              sequence="10"
+              groups="base.group_system"/>
+
+    <!-- Templates Menu -->
+    <menuitem id="menu_interakt_template"
+              name="Templates"
+              parent="menu_interakt_root"
+              action="action_interakt_template"
+              sequence="20"/>
+
+    <!-- Message Logs Menu -->
+    <menuitem id="menu_interakt_message_log"
+              name="Message Logs"
+              parent="menu_interakt_root"
+              action="action_interakt_message_log"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Gmail Account Switcher Form View - Redesigned to match target -->
+    <record id="view_gmail_account_switcher_form" model="ir.ui.view">
+        <field name="name">gmail.account.switcher.form</field>
+        <field name="model">gmail.account.switcher</field>
+        <field name="arch" type="xml">
+            <form string="Switch Gmail Account" class="gmail-account-switcher-modal" create="false" edit="false">
+                
+                <!-- Company Header -->
+                <div class="gmail-company-header">
+                    <h3>Annapurna Tours And Travels</h3>
+                </div>
+
+                <!-- Current Account Section -->
+                <div class="gmail-current-section" invisible="not current_account_id">
+                    <div class="gmail-account-item gmail-current-item">
+                        <div class="gmail-item-header">
+                            <div class="gmail-check-mark">
+                                <i class="fa fa-check"></i>
+                            </div>
+                            <button name="action_sign_out_current" type="object" 
+                                    class="gmail-signout-btn">
+                                Sign out
+                            </button>
+                        </div>
+                        <div class="gmail-item-content">
+                            <div class="gmail-avatar">
+                                <field name="current_account_initial" readonly="1" nolabel="1"/>
+                            </div>
+                            <div class="gmail-account-info">
+                                <div class="gmail-name">
+                                    <field name="current_account_name" readonly="1" nolabel="1"/>
+                                </div>
+                                <div class="gmail-email">
+                                    <field name="current_account_email" readonly="1" nolabel="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Debug: Current account ID -->
+                        <span style="display: none;" class="current-account-debug">
+                            <field name="current_account_id" readonly="1" nolabel="1"/>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Other Accounts Section -->
+                <div class="gmail-other-section" invisible="not other_accounts">
+                    <field name="other_accounts" nolabel="1" mode="kanban">
+                        <kanban create="false" delete="false" class="gmail-other-kanban">
+                            <field name="account_id"/>
+                            <field name="account_name"/>
+                            <field name="account_email"/>
+                            <field name="avatar_initial"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="gmail-account-item gmail-other-item" 
+                                         t-attf-data-account-id="#{record.account_id.raw_value}">
+                                        <div class="gmail-item-header">
+                                            <div class="gmail-check-mark gmail-hidden">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                            <button name="signout_account" type="object" 
+                                                    class="gmail-signout-btn"
+                                                    onclick="event.stopPropagation();">
+                                                Sign out
+                                            </button>
+                                        </div>
+                                        <div class="gmail-item-content">
+                                            <div class="gmail-avatar gmail-other-avatar">
+                                                <t t-esc="record.avatar_initial.raw_value"/>
+                                            </div>
+                                            <div class="gmail-account-info">
+                                                <div class="gmail-name">
+                                                    <field name="account_name"/>
+                                                </div>
+                                                <div class="gmail-email">
+                                                    <field name="account_email"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </div>
+
+                <!-- No Other Accounts Message -->
+                <div class="gmail-no-accounts" invisible="other_accounts">
+                    <p>No other Gmail accounts available</p>
+                    <small>Add a new Gmail account to switch between accounts</small>
+                </div>
+
+                <!-- Add Account Button -->
+                <div class="gmail-add-section">
+                    <button name="action_add_account" type="object" 
+                            class="gmail-add-account-btn">
+                        <i class="fa fa-plus"></i> Add account
+                    </button>
+                </div>
+
+                <!-- Hidden Fields -->
+                <field name="current_account_id" invisible="1" readonly="1"/>
+                <field name="selected_account_id" invisible="1" readonly="1"/>
+                <field name="available_account_ids" invisible="1" readonly="1"/>
+                <field name="current_account_initial" invisible="1" readonly="1"/>
+                
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Account Switcher Action -->
+    <record id="action_gmail_account_switcher" model="ir.actions.act_window">
+        <field name="name">Switch Gmail Account</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gmail.account.switcher</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_gmail_account_switcher_form"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

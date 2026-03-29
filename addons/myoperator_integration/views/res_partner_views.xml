@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Partner Form View Extension -->
+    <record id="view_partner_form_myoperator" model="ir.ui.view">
+        <field name="name">res.partner.form.myoperator</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <!-- Total Communications Button -->
+                <button type="object" name="action_communication_center"
+                        class="oe_stat_button" icon="fa-comments-o"
+                        invisible="total_communications == 0">
+                    <field name="total_communications" widget="statinfo" string="Communications"/>
+                </button>
+                
+                <!-- Call Logs Button -->
+                <button type="object" name="action_view_call_logs"
+                        class="oe_stat_button" icon="fa-phone"
+                        invisible="myoperator_call_count == 0">
+                    <field name="myoperator_call_count" widget="statinfo" string="Calls"/>
+                </button>
+                
+                <!-- WhatsApp Conversations Button -->
+                <button type="object" name="action_view_conversations"
+                        class="oe_stat_button" icon="fa-whatsapp"
+                        invisible="myoperator_conversation_count == 0">
+                    <field name="myoperator_conversation_count" widget="statinfo" string="WhatsApp"/>
+                </button>
+                
+                <!-- Quick Actions -->
+                <button type="object" name="action_make_call"
+                        class="oe_stat_button" icon="fa-phone-square"
+                        style="color: #007bff;"
+                        invisible="phone == False and mobile == False">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Make Call</span>
+                    </div>
+                </button>
+                
+                <button type="object" name="action_send_whatsapp_message"
+                        class="oe_stat_button" icon="fa-whatsapp"
+                        style="color: #25d366;"
+                        invisible="phone == False and mobile == False">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">WhatsApp</span>
+                    </div>
+                </button>
+            </xpath>
+            
+            <xpath expr="//page[@name='contact_addresses']" position="after">
+                <page name="myoperator_communications" string="Communications"
+                      invisible="total_communications == 0">
+                    <group>
+                        <group name="call_stats" string="Call Statistics">
+                            <field name="myoperator_call_count"/>
+                            <field name="last_call_date"/>
+                        </group>
+                        <group name="chat_stats" string="Chat Statistics">
+                            <field name="myoperator_conversation_count"/>
+                            <field name="last_chat_date"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group name="quick_actions" string="Quick Actions">
+                            <button name="action_make_call" type="object" 
+                                    string="Make Call" class="btn-primary"
+                                    icon="fa-phone"
+                                    invisible="phone == False and mobile == False"/>
+                            <button name="action_send_whatsapp_message" type="object" 
+                                    string="Send WhatsApp" class="btn-success"
+                                    icon="fa-whatsapp"
+                                    invisible="phone == False and mobile == False"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Communication Center Form View -->
+    <record id="view_partner_communication_center" model="ir.ui.view">
+        <field name="name">res.partner.communication.center</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <form string="Communication Center" class="o_communication_center">
+                <header>
+                    <button name="action_make_call" type="object" string="Make Call"
+                            class="btn-primary" icon="fa-phone"
+                            invisible="phone == False and mobile == False"/>
+                    <button name="action_send_whatsapp_message" type="object" string="Send WhatsApp"
+                            class="btn-success" icon="fa-whatsapp"
+                            invisible="phone == False and mobile == False"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <div class="o_row">
+                            <field name="phone" readonly="1" widget="phone"/>
+                            <field name="mobile" readonly="1" widget="phone"/>
+                            <field name="email" readonly="1" widget="email"/>
+                        </div>
+                    </div>
+                    
+                    <!-- Communication Stats -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="o_communication_stat">
+                                <div class="o_stat_number">
+                                    <field name="myoperator_call_count" readonly="1"/>
+                                </div>
+                                <div class="o_stat_label">Total Calls</div>
+                                <div class="o_stat_date">
+                                    <field name="last_call_date" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="o_communication_stat">
+                                <div class="o_stat_number">
+                                    <field name="myoperator_conversation_count" readonly="1"/>
+                                </div>
+                                <div class="o_stat_label">WhatsApp Chats</div>
+                                <div class="o_stat_date">
+                                    <field name="last_chat_date" readonly="1"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="o_communication_stat">
+                                <div class="o_stat_number">
+                                    <field name="total_communications" readonly="1"/>
+                                </div>
+                                <div class="o_stat_label">Total Communications</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <notebook>
+                        <page name="recent_calls" string="Recent Calls">
+                            <field name="myoperator_call_count" invisible="1"/>
+                            <div invisible="myoperator_call_count == 0">
+                                <button name="action_view_call_logs" type="object" 
+                                        string="View All Call Logs" class="btn-link"/>
+                            </div>
+                            <div invisible="myoperator_call_count > 0" class="text-center text-muted">
+                                <p>No call history found</p>
+                            </div>
+                        </page>
+                        
+                        <page name="recent_chats" string="WhatsApp Conversations">
+                            <field name="myoperator_conversation_count" invisible="1"/>
+                            <div invisible="myoperator_conversation_count == 0">
+                                <button name="action_view_conversations" type="object" 
+                                        string="View All Conversations" class="btn-link"/>
+                            </div>
+                            <div invisible="myoperator_conversation_count > 0" class="text-center text-muted">
+                                <p>No WhatsApp conversations found</p>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Common base template for all reports - REMOVED DRIVER REFERENCES -->
+    <template id="report_logbook_document_clean">
+        <t t-call="web.basic_layout">
+            <!-- Set a default report type if not provided -->
+            <t t-set="report_type" t-value="env.context.get('report_type', 'selected')"/>
+            
+            <!-- Debug info to see what's happening (hidden in production) -->
+            <div style="position: fixed; top: 5px; right: 5px; background: #fff; border: 1px solid #ccc; padding: 5px; font-size: 10px; z-index: 1000; opacity: 0.8; display: none;">
+                <p>Report Debug:</p>
+                <ul>
+                    <li>Records: <t t-esc="len(docs) if docs else 'None'"/></li>
+                    <li>Report Type: <t t-esc="report_type"/></li>
+                    <li>Context: <t t-esc="env.context"/></li>
+                </ul>
+            </div>
+            
+            <!-- Sort documents by date in ascending order -->
+            <t t-set="sorted_docs" t-value="docs.sorted(key=lambda r: r.date)"/>
+            
+            <!-- Watermark as background image -->
+            <style>
+                body::before {
+                    content: "";
+                    background-image: url('data:image/png;base64,<t t-esc="image_data_uri(env.company.logo).split(',')[1]"/>');
+                    background-repeat: no-repeat;
+                    background-position: center center;
+                    background-size: 500px auto;
+                    opacity: 0.015;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: -1;
+                    pointer-events: none;
+                }
+            </style>
+            
+            <div class="header" style="border-bottom: 1px solid #ddd; margin-bottom: 10px;">
+                <div class="row">
+                    <div class="col-4">
+                        <img t-if="env.company.logo" t-att-src="image_data_uri(env.company.logo)" style="max-height: 70px;" alt="Logo"/>
+                    </div>
+                    <div class="col-8 text-right" style="color: #E25822;">
+                        <h3>Annapurna Tour &amp; Travels</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page content wrapper with increased font size but slightly compressed -->
+            <div style="font-size: 1.15em;">
+                <div class="page" style="padding-top: 5px; padding-bottom: 10px;">
+                    <!-- Info Table with reduced margin -->
+                    <table class="table table-sm table-borderless" style="margin-bottom: 15px;">
+                        <tr>
+                            <td width="20%"><strong>Name of Company:</strong></td>
+                            <td width="30%" t-esc="env.context.get('company_name') or 'All Companies'"/>
+                            <td width="20%"><strong>Vehicle No:</strong></td>
+                            <td width="30%" t-esc="env.context.get('vehicle_no') or 'All Vehicles'"/>
+                        </tr>
+                        <tr>
+                            <td><strong>Route:</strong></td>
+                            <td t-esc="env.context.get('route') or 'All Routes'"/>
+                            <td><strong>For the period:</strong></td>
+                            <td t-esc="env.context.get('date_range') or 'All Time'"/>
+                        </tr>
+                        <tr>
+                            <td><strong>Month:</strong></td>
+                            <td t-esc="env.context.get('month') or (sorted_docs and len(sorted_docs) > 0 and sorted_docs[0].month) or ''"/>
+                            <td><strong>Generated on:</strong></td>
+                            <td t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                        </tr>
+                    </table>
+                    
+                    <!-- Always show base table with data regardless of report type -->
+                    <t t-if="not sorted_docs or len(sorted_docs) == 0">
+                        <div class="alert alert-warning text-center">
+                            <strong>No records found for this report.</strong>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <!-- Main Data Table - BUS LOGBOOK - with compact styling -->
+                        <t t-if="report_type == 'bus'">
+                            <table class="table table-sm table-bordered" style="font-size: 0.9em; margin-bottom: 15px;">
+                                <thead style="background-color: #f5f5f5;">
+                                    <tr>
+                                        <th style="width: 12%; text-align: center; padding: 4px;">Date</th>
+                                        <th style="width: 12%; text-align: center; padding: 4px;">Day</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Vehicle No</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Running KM</th>
+                                        <th style="width: 8%; text-align: center; padding: 4px;">Trip</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Extra KM Run</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Distance (km)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_distance" t-value="0.0"/>
+                                    <t t-set="total_trips" t-value="0"/>
+                                    <t t-foreach="sorted_docs" t-as="entry">
+                                        <tr>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.date.strftime('%d/%m/%Y')"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.day"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.vehicle_id.name"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.running_km"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.trip_number"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.extra_distance"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="'%.2f' % entry.distance"/></td>
+                                        </tr>
+                                        <t t-set="total_distance" t-value="total_distance + entry.distance"/>
+                                        <t t-set="total_trips" t-value="total_trips + entry.trip_number"/>
+                                    </t>
+                                </tbody>
+                                <tfoot style="font-weight: bold;">
+                                    <tr>
+                                        <td colspan="4" class="text-right" style="padding: 3px;">Total Trips:</td>
+                                        <td style="text-align: center; padding: 3px;"><t t-esc="total_trips"/></td>
+                                        <td colspan="2" style="text-align: center; border-left: 1px solid #ddd; padding: 3px;"></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-right" style="padding: 3px;">Total Distance:</td>
+                                        <td style="text-align: center; padding: 3px;"><t t-esc="'%.2f' % total_distance"/> km</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                        
+                        <!-- Main Data Table - CAB LOGBOOK -->
+                        <t t-elif="report_type == 'cab'">
+                            <table class="table table-sm table-bordered" style="font-size: 0.9em; margin-bottom: 15px;">
+                                <thead style="background-color: #f5f5f5;">
+                                    <tr>
+                                        <th style="width: 12%; text-align: center; padding: 4px;">Date</th>
+                                        <th style="width: 12%; text-align: center; padding: 4px;">Day</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Vehicle No</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Start Odometer</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">End Odometer</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Distance (km)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_distance" t-value="0.0"/>
+                                    <t t-foreach="sorted_docs" t-as="entry">
+                                        <tr>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.date.strftime('%d/%m/%Y')"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.day"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.vehicle_id.name"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.start_odometer"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.end_odometer"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="'%.2f' % entry.distance"/></td>
+                                        </tr>
+                                        <t t-set="total_distance" t-value="total_distance + entry.distance"/>
+                                    </t>
+                                </tbody>
+                                <tfoot style="font-weight: bold;">
+                                    <tr>
+                                        <td colspan="5" class="text-right" style="padding: 3px;">Total Distance:</td>
+                                        <td style="text-align: center; padding: 3px;"><t t-esc="'%.2f' % total_distance"/> km</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                        
+                        <!-- Main Data Table - SELECTED RECORDS (mixed types) -->
+                        <t t-else="">
+                            <!-- Check if there are bus type records -->
+                            <t t-set="has_bus" t-value="any(entry.vehicle_type == 'bus' for entry in sorted_docs)"/>
+                            <!-- Check if there are cab type records -->
+                            <t t-set="has_cab" t-value="any(entry.vehicle_type == 'cab' for entry in sorted_docs)"/>
+                            
+                            <!-- If mixed types, show vehicle type column -->
+                            <table class="table table-sm table-bordered" style="font-size: 0.9em; margin-bottom: 15px;">
+                                <thead style="background-color: #f5f5f5;">
+                                    <tr>
+                                        <th style="width: 10%; text-align: center; padding: 4px;">Date</th>
+                                        <th style="width: 10%; text-align: center; padding: 4px;">Day</th>
+                                        <th style="width: 10%; text-align: center; padding: 4px;">Vehicle No</th>
+                                        <th style="width: 10%; text-align: center; padding: 4px;">Vehicle Type</th>
+                                        <th style="width: 12%; text-align: center; padding: 4px;">Running KM</th>
+                                        <th style="width: 8%; text-align: center; padding: 4px;">Trip</th>
+                                        <th style="width: 15%; text-align: center; padding: 4px;">Distance (km)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_distance" t-value="0.0"/>
+                                    <t t-set="total_trips" t-value="0"/>
+                                    <t t-foreach="sorted_docs" t-as="entry">
+                                        <tr>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.date.strftime('%d/%m/%Y')"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.day"/></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.vehicle_id.name"/></td>
+                                            <td style="text-align: center; padding: 3px;">
+                                                <t t-esc="'Bus' if entry.vehicle_type == 'bus' else 'Cab'"/>
+                                            </td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.running_km if entry.vehicle_type == 'bus' else ''" /></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="entry.trip_number if entry.vehicle_type == 'bus' else ''" /></td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="'%.2f' % entry.distance"/></td>
+                                        </tr>
+                                        <t t-set="total_distance" t-value="total_distance + entry.distance"/>
+                                        <t t-if="entry.vehicle_type == 'bus'">
+                                            <t t-set="total_trips" t-value="total_trips + entry.trip_number"/>
+                                        </t>
+                                    </t>
+                                </tbody>
+                                <tfoot style="font-weight: bold;">
+                                    <!-- Total trips -->
+                                    <t t-if="has_bus">
+                                        <tr>
+                                            <td colspan="5" class="text-right" style="padding: 3px;">Total Trips:</td>
+                                            <td style="text-align: center; padding: 3px;"><t t-esc="total_trips"/></td>
+                                            <td></td>
+                                        </tr>
+                                    </t>
+                                    <!-- Total distance -->
+                                    <tr>
+                                        <td colspan="6" class="text-right" style="padding: 3px;">Total Distance:</td>
+                                        <td style="text-align: center; padding: 3px;"><t t-esc="'%.2f' % total_distance"/> km</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                    </t>
+                    
+                    <!-- Signature section - only on last page with optimal top margin -->
+                    <div class="row" t-if="env.context.get('last_page', True)" style="margin-top: 20px !important;">
+                        <div class="col-4 text-center">
+                            <div style="border-top: 1px solid #000; display: inline-block; width: 80%; margin-top: 15px;"></div>
+                            <p style="margin-top: 5px; margin-bottom: 0;">Prepared By</p>
+                        </div>
+                        <div class="col-4 text-center">
+                            <div style="border-top: 1px solid #000; display: inline-block; width: 80%; margin-top: 15px;"></div>
+                            <p style="margin-top: 5px; margin-bottom: 0;">Checked By</p>
+                        </div>
+                        <div class="col-4 text-center">
+                            <div style="border-top: 1px solid #000; display: inline-block; width: 80%; margin-top: 15px;"></div>
+                            <p style="margin-top: 5px; margin-bottom: 0;">Approved By</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer text-center" style="border-top: 1px solid #ddd; padding-top: 5px; font-size: 9pt;">
+                <div>
+                    <span>Page: <span class="page"/> / <span class="topage"/></span>
+                </div>
+                <div>
+                    <span>info@annapurnatravels.co.in</span>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

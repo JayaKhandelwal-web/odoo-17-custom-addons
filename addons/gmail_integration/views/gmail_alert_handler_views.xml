@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Alert Handler Views for Monitoring -->
+        <record id="view_gmail_alert_handler_tree" model="ir.ui.view">
+            <field name="name">gmail.alert.handler.tree</field>
+            <field name="model">gmail.alert.handler</field>
+            <field name="arch" type="xml">
+                <tree string="Alert Logs"
+                      decoration-success="status == 'sent'"
+                      decoration-danger="status == 'failed'"
+                      decoration-warning="status == 'pending'"
+                      decoration-muted="status == 'ignored'">
+                    
+                    <field name="name"/>
+                    <field name="alert_type"/>
+                    <field name="alert_level"/>
+                    <field name="source_module"/>
+                    <field name="status" widget="badge"/>
+                    <field name="sent_from_account"/>
+                    <field name="recipients"/>
+                    <field name="alert_date"/>
+                    <field name="sent_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_gmail_alert_handler_form" model="ir.ui.view">
+            <field name="name">gmail.alert.handler.form</field>
+            <field name="model">gmail.alert.handler</field>
+            <field name="arch" type="xml">
+                <form string="Alert Log" create="false" edit="false">
+                    <header>
+                        <button name="action_resend_alert"
+                                string="🔄 Resend Alert"
+                                type="object"
+                                class="btn-warning"
+                                invisible="status not in ['failed', 'pending']"/>
+                                
+                        <field name="status" widget="statusbar" 
+                               statusbar_visible="pending,sent,failed,ignored"/>
+                    </header>
+                    
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        
+                        <group>
+                            <group name="alert_info" string="Alert Information">
+                                <field name="alert_type" readonly="1"/>
+                                <field name="alert_level" readonly="1"/>
+                                <field name="source_module" readonly="1"/>
+                                <field name="alert_date" readonly="1"/>
+                            </group>
+                            
+                            <group name="email_info" string="Email Information">
+                                <field name="sent_from_account" readonly="1"/>
+                                <field name="template_used" readonly="1"/>
+                                <field name="email_subject" readonly="1"/>
+                                <field name="sent_date" readonly="1"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Recipients" name="recipients">
+                                <field name="recipients" readonly="1" widget="text"/>
+                            </page>
+                            
+                            <page string="Alert Data" name="alert_data">
+                                <field name="alert_data" readonly="1" widget="text"/>
+                            </page>
+                            
+                            <page string="Error Details" name="error" invisible="status != 'failed'">
+                                <field name="error_message" readonly="1" widget="text"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_gmail_alert_handler_search" model="ir.ui.view">
+            <field name="name">gmail.alert.handler.search</field>
+            <field name="model">gmail.alert.handler</field>
+            <field name="arch" type="xml">
+                <search string="Search Alert Logs">
+                    <field name="name"/>
+                    <field name="alert_type"/>
+                    <field name="alert_level"/>
+                    <field name="source_module"/>
+                    <field name="sent_from_account"/>
+                    
+                    <filter name="recent" string="Recent (7 days)" 
+                            domain="[('alert_date', '>=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                    <filter name="today" string="Today" 
+                            domain="[('alert_date', '>=', context_today().strftime('%Y-%m-%d'))]"/>
+                    
+                    <separator/>
+                    <filter name="sent" string="Sent" 
+                            domain="[('status', '=', 'sent')]"/>
+                    <filter name="failed" string="Failed" 
+                            domain="[('status', '=', 'failed')]"/>
+                    <filter name="pending" string="Pending" 
+                            domain="[('status', '=', 'pending')]"/>
+                    <filter name="ignored" string="Ignored" 
+                            domain="[('status', '=', 'ignored')]"/>
+                    
+                    <separator/>
+                    <filter name="fleet_alerts" string="Fleet Alerts" 
+                            domain="[('alert_type', 'like', 'fleet')]"/>
+                    <filter name="system_tests" string="System Tests" 
+                            domain="[('alert_type', '=', 'system_test')]"/>
+                    
+                    <group expand="0" string="Group By">
+                        <filter string="Alert Type" name="group_by_type" 
+                                context="{'group_by': 'alert_type'}"/>
+                        <filter string="Status" name="group_by_status" 
+                                context="{'group_by': 'status'}"/>
+                        <filter string="Source Module" name="group_by_module" 
+                                context="{'group_by': 'source_module'}"/>
+                        <filter string="Alert Date" name="group_by_date" 
+                                context="{'group_by': 'alert_date:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

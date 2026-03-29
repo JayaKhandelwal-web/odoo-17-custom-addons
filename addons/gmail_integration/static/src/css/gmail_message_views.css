@@ -1,0 +1,227 @@
+/* Gmail Message Views CSS - Hide Headers, Show Data */
+
+/* ==================================================
+   GMAIL MESSAGE VIEWS HEADER REMOVAL - SCOPED
+   ================================================== */
+
+/* Hide headers in ALL Gmail message views - Multiple targeting */
+.o_list_view[data-model="gmail.message"] thead,
+.o_list_view[data-model="gmail.message"] thead th,
+.o_list_view[data-model="gmail.message"] thead tr,
+.o_list_view[data-model="gmail.message"] .o_list_table thead,
+.o_list_view[data-model="gmail.message"] .o_list_table thead th,
+.o_list_view[data-model="gmail.message"] .o_list_table thead tr,
+[data-model="gmail.message"] thead,
+[data-model="gmail.message"] thead th,
+[data-model="gmail.message"] thead tr {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    line-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
+}
+
+/* Additional targeting for specific Gmail actions */
+.o_action[data-menu-xmlid*="gmail"] .o_list_view thead,
+.o_action[data-menu-xmlid*="gmail"] .o_list_view thead th,
+body[data-menu="gmail"] .o_list_view thead,
+body[data-menu="gmail"] .o_list_view thead th {
+    display: none !important;
+}
+
+/* Target by view context */
+.o_list_view[data-view-ref*="gmail"] thead,
+.o_list_view[data-view-ref*="gmail"] thead th {
+    display: none !important;
+}
+
+/* ==================================================
+   ENSURE DATA ROWS ARE VISIBLE - SCOPED
+   ================================================== */
+
+/* Make sure message data is visible */
+.o_list_view[data-model="gmail.message"] tbody,
+.o_list_view[data-model="gmail.message"] tbody tr,
+.o_list_view[data-model="gmail.message"] tbody td,
+.o_list_view[data-model="gmail.message"] .o_data_row,
+.o_list_view[data-model="gmail.message"] .o_data_cell {
+    display: table-row !important;
+    visibility: visible !important;
+    height: auto !important;
+    opacity: 1 !important;
+    position: static !important;
+}
+
+/* Specific cell visibility */
+.o_list_view[data-model="gmail.message"] .o_data_cell {
+    display: table-cell !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* ==================================================
+   GMAIL MESSAGE LIST STYLING - SCOPED
+   ================================================== */
+
+/* Gmail message rows styling */
+.o_list_view[data-model="gmail.message"] .o_data_row {
+    border-bottom: 1px solid #e0e0e0 !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease !important;
+    padding: 8px 0 !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.o_list_view[data-model="gmail.message"] .o_data_row:hover {
+    background-color: #f5f5f5 !important;
+    box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0 !important;
+}
+
+/* Unread messages styling */
+.o_list_view[data-model="gmail.message"] .o_data_row.text-decoration-bf {
+    font-weight: 600 !important;
+    background-color: #f8f9fa !important;
+}
+
+/* Read messages styling */
+.o_list_view[data-model="gmail.message"] .o_data_row:not(.text-decoration-bf) {
+    color: #5f6368 !important;
+    font-weight: 400 !important;
+}
+
+/* Gmail message cells */
+.o_list_view[data-model="gmail.message"] .o_data_cell {
+    padding: 8px 12px !important;
+    vertical-align: middle !important;
+    border: none !important;
+    font-size: 14px !important;
+    color: #202124 !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+/* Star column styling */
+.o_list_view[data-model="gmail.message"] .o_boolean_toggle {
+    color: #dadce0 !important;
+    font-size: 18px !important;
+    transition: color 0.2s ease !important;
+}
+
+.o_list_view[data-model="gmail.message"] .o_boolean_toggle.o_boolean_toggle_true {
+    color: #fbbc04 !important;
+}
+
+.o_list_view[data-model="gmail.message"] .o_boolean_toggle:hover {
+    color: #f9ab00 !important;
+}
+
+/* Date column styling */
+.o_list_view[data-model="gmail.message"] .o_data_cell:last-child {
+    text-align: right !important;
+    font-size: 12px !important;
+    color: #5f6368 !important;
+    white-space: nowrap !important;
+}
+
+/* Subject column styling */
+.o_list_view[data-model="gmail.message"] .o_data_cell:nth-child(3) {
+    max-width: 500px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* Sender/Recipient column styling */
+.o_list_view[data-model="gmail.message"] .o_data_cell:nth-child(2) {
+    font-weight: 500 !important;
+    max-width: 200px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+/* ==================================================
+   GMAIL LIST VIEW CONTAINER - SCOPED
+   ================================================== */
+
+.o_list_view[data-model="gmail.message"] {
+    border: none !important;
+    background-color: white !important;
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.o_list_view[data-model="gmail.message"] .o_list_table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+}
+
+/* ==================================================
+   GMAIL SPECIFIC ACTION STYLING
+   ================================================== */
+
+/* Target specific Gmail action windows */
+.o_action[data-menu-xmlid*="gmail_integration.menu_gmail_inbox"] .o_list_view,
+.o_action[data-menu-xmlid*="gmail_integration.menu_gmail_sent"] .o_list_view,
+.o_action[data-menu-xmlid*="gmail_integration.menu_gmail_drafts"] .o_list_view,
+.o_action[data-menu-xmlid*="gmail_integration.menu_gmail_all_messages"] .o_list_view {
+    background-color: white !important;
+    border: none !important;
+}
+
+/* ==================================================
+   RESPONSIVE DESIGN - SCOPED
+   ================================================== */
+
+@media (max-width: 768px) {
+    .o_list_view[data-model="gmail.message"] .o_data_cell:nth-child(2),
+    .o_list_view[data-model="gmail.message"] .o_data_cell:nth-child(3) {
+        max-width: 150px !important;
+    }
+    
+    .o_list_view[data-model="gmail.message"] .o_data_cell:last-child {
+        font-size: 11px !important;
+    }
+}
+
+/* ==================================================
+   FALLBACK STYLES FOR STUBBORN HEADERS
+   ================================================== */
+
+/* Nuclear option for headers that won't hide */
+body .o_list_view[data-model="gmail.message"] thead * {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+}
+
+/* Ensure table structure remains intact */
+body .o_list_view[data-model="gmail.message"] table {
+    display: table !important;
+}
+
+body .o_list_view[data-model="gmail.message"] tbody {
+    display: table-row-group !important;
+}
+
+body .o_list_view[data-model="gmail.message"] tbody tr {
+    display: table-row !important;
+}
+
+body .o_list_view[data-model="gmail.message"] tbody td {
+    display: table-cell !important;
+}

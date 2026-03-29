@@ -1,0 +1,526 @@
+/* Vehicle Mobile Kanban Styling */
+.o_kanban_mobile .vehicle-mobile-icon {
+    text-align: center;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_kanban_mobile .vehicle-mobile-info {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.o_kanban_mobile .vehicle-mobile-info .row {
+    margin-bottom: 2px;
+}
+
+.o_kanban_mobile .vehicle-mobile-info strong {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.o_kanban_mobile .badge {
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 8px;
+}
+
+.o_kanban_mobile .badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.o_kanban_mobile .badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.o_kanban_mobile .badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Enhanced mobile card styling */
+.o_kanban_mobile .oe_kanban_global_click {
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+}
+
+.o_kanban_mobile .oe_kanban_global_click:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-1px);
+}
+
+/* Mobile icon colors based on state */
+.o_kanban_mobile .vehicle-mobile-icon .fa-truck[style*="color: #28a745"] {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.o_kanban_mobile .vehicle-mobile-icon .fa-wrench[style*="color: #ffc107"] {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.o_kanban_mobile .vehicle-mobile-icon .fa-truck[style*="color: #dc3545"] {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Document Mobile Kanban Styling */
+.o_kanban_mobile .document-mobile-icon {
+    text-align: center;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_kanban_mobile .document-mobile-info {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.o_kanban_mobile .document-mobile-info .row {
+    margin-bottom: 2px;
+}
+
+.o_kanban_mobile .document-mobile-info strong {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Document state-based icon backgrounds */
+.o_kanban_mobile .document-mobile-icon .fa-file-text[style*="color: #28a745"] {
+    background-color: rgba(40, 167, 69, 0.1);
+}
+
+.o_kanban_mobile .document-mobile-icon .fa-clock-o[style*="color: #ffc107"] {
+    background-color: rgba(255, 193, 7, 0.1);
+}
+
+.o_kanban_mobile .document-mobile-icon .fa-exclamation-triangle[style*="color: #dc3545"] {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+.o_kanban_mobile .document-mobile-icon .fa-file-o[style*="color: #6c757d"] {
+    background-color: rgba(108, 117, 125, 0.1);
+}
+
+/* ENHANCED MOBILE FORCE DETECTION - KEY ADDITION */
+/* Force mobile view for documents on tablets and mobile devices */
+@media (max-width: 991px) {
+    /* Hide list view on mobile/tablet for both vehicles and documents */
+    .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+    .o_action[data-model="simply.fleet.document"] .o_list_view {
+        display: none !important;
+    }
+    
+    /* Show kanban view on mobile/tablet for both vehicles and documents */
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
+    .o_action[data-model="simply.fleet.document"] .o_kanban_view {
+        display: block !important;
+    }
+    
+    /* Hide view switcher buttons on mobile */
+    .o_action[data-model="simply.fleet.vehicle"] .o_cp_switch_buttons,
+    .o_action[data-model="simply.fleet.document"] .o_cp_switch_buttons {
+        display: none !important;
+    }
+    
+    /* Force mobile kanban styling */
+    .o_action[data-model="simply.fleet.document"] .o_kanban_view,
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view {
+        padding: 8px;
+    }
+    
+    /* Enhanced mobile document cards */
+    .o_kanban_mobile .document-mobile-card,
+    .o_action[data-model="simply.fleet.document"] .oe_kanban_global_click,
+    .o_action[data-model="simply.fleet.vehicle"] .oe_kanban_global_click {
+        background-color: #ffffff !important;
+        border: 1px solid #dee2e6 !important;
+        border-radius: 10px !important;
+        margin-bottom: 10px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+        transition: all 0.2s ease !important;
+        min-height: 85px !important;
+        cursor: pointer !important;
+    }
+}
+
+/* Enhanced desktop tree view */
+@media (min-width: 992px) {
+    /* Show list view as default on desktop */
+    .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+    .o_action[data-model="simply.fleet.document"] .o_list_view {
+        display: block !important;
+    }
+    
+    /* Hide mobile kanban on desktop */
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_mobile,
+    .o_action[data-model="simply.fleet.document"] .o_kanban_mobile {
+        display: none !important;
+    }
+    
+    .o_list_view .o_list_table {
+        font-size: 13px;
+    }
+    
+    .o_list_view .btn-link {
+        padding: 2px 4px;
+        font-size: 12px;
+        border-radius: 4px;
+    }
+    
+    .o_list_view .btn-link:hover {
+        background-color: rgba(0,123,255,0.1);
+    }
+    
+    .o_list_view .o_list_table thead th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+    }
+    
+    .o_list_view .o_data_row:hover {
+        background-color: #f8f9fa;
+    }
+    
+    /* Enhanced desktop document styling */
+    .o_simply_fleet_document_kanban .oe_kanban_global_click {
+        margin-bottom: 8px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background-color: #ffffff;
+        padding: 12px;
+        transition: box-shadow 0.2s ease;
+    }
+    
+    .o_simply_fleet_document_kanban .oe_kanban_global_click:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .o_simply_fleet_document_kanban .document-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #e3f2fd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 767px) {
+    /* Force mobile view for all screen sizes below 768px */
+    .o_action[data-model="simply.fleet.document"],
+    .o_action[data-model="simply.fleet.vehicle"] {
+        --force-mobile: true;
+    }
+    
+    /* Mobile kanban card improvements */
+    .o_kanban_mobile .oe_kanban_card {
+        margin-bottom: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    /* Better text hierarchy on mobile */
+    .o_kanban_mobile .text-dark {
+        color: #2c3e50 !important;
+        font-weight: 600;
+    }
+    
+    .o_kanban_mobile .text-muted {
+        color: #6c757d !important;
+        font-size: 12px;
+    }
+    
+    .o_kanban_mobile .text-info {
+        color: #17a2b8 !important;
+        font-size: 11px;
+    }
+    
+    .o_kanban_mobile .text-secondary {
+        color: #6c757d !important;
+        font-size: 11px;
+    }
+    
+    .o_kanban_mobile .text-primary {
+        color: #007bff !important;
+        font-size: 10px;
+    }
+    
+    .o_kanban_mobile .text-warning {
+        color: #ffc107 !important;
+        font-size: 11px;
+    }
+    
+    .o_kanban_mobile .text-danger {
+        color: #dc3545 !important;
+        font-size: 11px;
+    }
+    
+    .o_kanban_mobile .text-success {
+        color: #28a745 !important;
+        font-size: 11px;
+    }
+    
+    /* Better spacing for mobile info sections */
+    .o_kanban_mobile .vehicle-mobile-info .col-12,
+    .o_kanban_mobile .document-mobile-info .col-12 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    
+    /* Stats column styling */
+    .o_kanban_mobile .d-flex.flex-column {
+        gap: 2px;
+    }
+}
+
+/* Font weight utilities */
+.font-weight-bold {
+    font-weight: bold !important;
+}
+
+.font-weight-600 {
+    font-weight: 600 !important;
+}
+
+/* Status badge improvements */
+.badge-success {
+    background-color: #28a745 !important;
+    color: white !important;
+}
+
+.badge-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge-danger {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.badge-info {
+    background-color: #17a2b8 !important;
+    color: white !important;
+}
+
+.badge-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+/* Touch improvements for mobile */
+@media (max-width: 767px) {
+    .o_kanban_mobile .oe_kanban_global_click {
+        min-height: 80px;
+        padding: 12px;
+    }
+    
+    .o_kanban_mobile .vehicle-mobile-icon,
+    .o_kanban_mobile .document-mobile-icon {
+        min-width: 50px;
+        min-height: 50px;
+    }
+}
+
+/* Responsive column adjustments */
+@media (max-width: 480px) {
+    .o_kanban_mobile .col-3 {
+        flex: 0 0 25%;
+        max-width: 25%;
+    }
+    
+    .o_kanban_mobile .col-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+/* Animation improvements */
+.o_kanban_mobile .oe_kanban_global_click {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.o_kanban_mobile .oe_kanban_global_click:active {
+    transform: scale(0.98);
+}
+
+/* Icon spacing improvements */
+.o_kanban_mobile .fa {
+    margin-right: 4px;
+}
+
+/* Better visual hierarchy */
+.o_kanban_mobile .vehicle-mobile-info strong,
+.o_kanban_mobile .document-mobile-info strong {
+    font-size: 14px;
+}
+
+.o_kanban_mobile .vehicle-mobile-info span:not(.badge),
+.o_kanban_mobile .document-mobile-info span:not(.badge) {
+    font-size: 12px;
+}
+
+.o_kanban_mobile .vehicle-mobile-info small,
+.o_kanban_mobile .document-mobile-info small {
+    font-size: 11px;
+}
+
+/* Special mobile styles for document urgency indicators */
+.o_kanban_mobile .document-mobile-info .text-warning strong {
+    color: #ffc107 !important;
+    font-weight: 700;
+}
+
+.o_kanban_mobile .document-mobile-info .text-danger strong {
+    color: #dc3545 !important;
+    font-weight: 700;
+}
+
+/* Fuel log mobile styles (if needed) */
+.o_kanban_mobile .fuel-log-card {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s ease;
+}
+
+.o_kanban_mobile .fuel-log-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* General mobile improvements */
+@media (max-width: 767px) {
+    /* Improve touch targets */
+    .o_kanban_mobile .oe_kanban_global_click {
+        min-height: 85px;
+        cursor: pointer;
+    }
+    
+    /* Better readability */
+    .o_kanban_mobile {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    /* Improve spacing */
+    .o_kanban_mobile .row {
+        margin: 0;
+    }
+    
+    .o_kanban_mobile .col-3,
+    .o_kanban_mobile .col-6 {
+        padding: 0 8px;
+    }
+}
+
+/* FORCE MOBILE DETECTION CLASSES - CRITICAL FOR MOBILE FUNCTIONALITY */
+/* For JavaScript-detected mobile devices */
+body.mobile-detected .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+body.mobile-detected .o_action[data-model="simply.fleet.document"] .o_list_view {
+    display: none !important;
+}
+
+body.mobile-detected .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
+body.mobile-detected .o_action[data-model="simply.fleet.document"] .o_kanban_view {
+    display: block !important;
+}
+
+/* For force mobile class */
+.o_kanban_mobile_force {
+    display: block !important;
+}
+
+@media (min-width: 992px) {
+    .o_kanban_mobile_force {
+        display: none !important;
+    }
+}
+
+/* Special handling for iPads and tablets */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+    .o_action[data-model="simply.fleet.document"] .o_list_view {
+        display: none !important;
+    }
+    
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
+    .o_action[data-model="simply.fleet.document"] .o_kanban_view {
+        display: block !important;
+    }
+}
+
+/* Additional mobile detection for touch devices */
+@media (pointer: coarse) {
+    .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+    .o_action[data-model="simply.fleet.document"] .o_list_view {
+        display: none !important;
+    }
+    
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
+    .o_action[data-model="simply.fleet.document"] .o_kanban_view {
+        display: block !important;
+    }
+}
+
+/* Mobile orientation handling */
+@media (orientation: portrait) and (max-width: 991px) {
+    .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+    .o_action[data-model="simply.fleet.document"] .o_list_view {
+        display: none !important;
+    }
+    
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
+    .o_action[data-model="simply.fleet.document"] .o_kanban_view {
+        display: block !important;
+    }
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    .o_kanban_mobile .oe_kanban_global_click {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .o_kanban_mobile .text-dark {
+        color: #e2e8f0 !important;
+    }
+    
+    .o_kanban_mobile .text-muted {
+        color: #a0aec0 !important;
+    }
+}
+
+/* Force view for specific screen sizes - ULTIMATE FALLBACK */
+@media screen and (max-device-width: 991px) {
+    .o_action[data-model="simply.fleet.vehicle"] .o_list_view,
+    .o_action[data-model="simply.fleet.document"] .o_list_view {
+        display: none !important;
+    }
+    
+    .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
+    .o_action[data-model="simply.fleet.document"] .o_kanban_view {
+        display: block !important;
+    }
+}

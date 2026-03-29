@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Simplified security - use existing HR groups -->
+        <!-- No custom groups needed, just use standard HR permissions -->
+    </data>
+</odoo>

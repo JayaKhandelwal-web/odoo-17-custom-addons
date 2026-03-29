@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Form View with Custom Controller -->
+    <record id="view_myoperator_dashboard_form" model="ir.ui.view">
+        <field name="name">myoperator.dashboard.form</field>
+        <field name="model">myoperator.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="MyOperator Dashboard" class="o_myoperator_dashboard" js_class="myoperator_dashboard_form">
+                <header>
+                    <button name="action_refresh_dashboard" type="object" string="Refresh Data"
+                            class="btn-primary" icon="fa-refresh"/>
+                    <button name="action_export_report" type="object" string="Export Report"
+                            class="btn-secondary" icon="fa-download"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Date Range Filter -->
+                    <group>
+                        <group name="date_filters" string="Date Range">
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+
+                    <!-- Hidden fields for chart data -->
+                    <div invisible="1">
+                        <field name="call_type_chart_data"/>
+                        <field name="call_status_chart_data"/>
+                        <field name="daily_calls_chart_data"/>
+                        <field name="hourly_distribution_chart_data"/>
+                        <field name="top_callers_chart_data"/>
+                        <field name="conversation_status_chart_data"/>
+                        <field name="daily_messages_chart_data"/>
+                        <field name="message_types_chart_data"/>
+                        <field name="agent_performance_chart_data"/>
+                        <field name="communication_trend_chart_data"/>
+                        <field name="contact_engagement_chart_data"/>
+                    </div>
+
+                    <!-- KPI Cards Row 1 - Call Metrics -->
+                    <div class="row o_dashboard_kpis mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-primary">
+                                <div class="card-body">
+                                    <h2 class="text-primary mb-1">
+                                        <field name="total_calls" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Total Calls</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-success">
+                                <div class="card-body">
+                                    <h2 class="text-success mb-1">
+                                        <field name="answered_calls" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Answered Calls</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-danger">
+                                <div class="card-body">
+                                    <h2 class="text-danger mb-1">
+                                        <field name="missed_calls" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Missed Calls</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-info">
+                                <div class="card-body">
+                                    <h2 class="text-info mb-1">
+                                        <field name="answer_rate" readonly="1" widget="float" digits="[16,1]"/>%
+                                    </h2>
+                                    <p class="card-text text-muted">Answer Rate</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI Cards Row 2 - Chat Metrics -->
+                    <div class="row o_dashboard_kpis mb-3">
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-primary">
+                                <div class="card-body">
+                                    <h2 class="text-primary mb-1">
+                                        <field name="total_conversations" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Total Conversations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-warning">
+                                <div class="card-body">
+                                    <h2 class="text-warning mb-1">
+                                        <field name="active_conversations" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Active Conversations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-success">
+                                <div class="card-body">
+                                    <h2 class="text-success mb-1">
+                                        <field name="resolved_conversations" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Resolved Conversations</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
+                            <div class="card text-center h-100 border-info">
+                                <div class="card-body">
+                                    <h2 class="text-info mb-1">
+                                        <field name="total_messages" readonly="1"/>
+                                    </h2>
+                                    <p class="card-text text-muted">Total Messages</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <notebook>
+                        <!-- Call Analytics Tab -->
+                        <page name="call_analytics" string="📞 Call Analytics">
+                            <div class="row">
+                                <!-- Call Type Distribution -->
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Call Type Distribution</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 300px;">
+                                                <canvas id="callTypeChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Call Status Distribution -->
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Call Status Distribution</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 300px;">
+                                                <canvas id="callStatusChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Daily Calls Trend -->
+                                <div class="col-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Daily Calls Trend</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 400px;">
+                                                <canvas id="dailyCallsChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Hourly Distribution -->
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Hourly Call Distribution</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 350px;">
+                                                <canvas id="hourlyChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Top Callers -->
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Top Callers</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 350px;">
+                                                <canvas id="topCallersChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- Chat Analytics Tab -->
+                        <page name="chat_analytics" string="💬 Chat Analytics">
+                            <div class="row">
+                                <!-- Conversation Status -->
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Conversation Status Distribution</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 300px;">
+                                                <canvas id="conversationStatusChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Message Types -->
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Message Types Distribution</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 300px;">
+                                                <canvas id="messageTypesChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Daily Messages Trend -->
+                                <div class="col-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Daily Messages Trend</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 400px;">
+                                                <canvas id="dailyMessagesChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Agent Performance -->
+                                <div class="col-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Agent Performance</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 400px;">
+                                                <canvas id="agentPerformanceChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- Combined Analytics Tab -->
+                        <page name="combined_analytics" string="📊 Combined Analytics">
+                            <div class="row">
+                                <!-- Communication Trend -->
+                                <div class="col-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Communication Trend (Calls vs Messages)</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 400px;">
+                                                <canvas id="communicationTrendChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Contact Engagement -->
+                                <div class="col-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Contact Engagement Analysis</h5>
+                                            <small class="text-muted">Calls vs WhatsApp Conversations per Contact</small>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="o_chart_container" style="height: 400px;">
+                                                <canvas id="contactEngagementChart"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+
+                        <!-- Performance Metrics Tab -->
+                        <page name="performance_metrics" string="📈 Performance Metrics">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Call Performance</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-striped">
+                                                <tr>
+                                                    <td><strong>Total Call Time</strong></td>
+                                                    <td>
+                                                        <field name="total_call_time" readonly="1" widget="float" digits="[16,2]"/> hours
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Average Call Duration</strong></td>
+                                                    <td>
+                                                        <field name="average_call_duration" readonly="1" widget="float" digits="[16,2]"/> minutes
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Answer Rate</strong></td>
+                                                    <td>
+                                                        <field name="answer_rate" readonly="1" widget="float" digits="[16,1]"/>%
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Inbound vs Outbound</strong></td>
+                                                    <td>
+                                                        <field name="inbound_calls" readonly="1"/> : <field name="outbound_calls" readonly="1"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-md-12 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-light">
+                                            <h5 class="mb-0">Chat Performance</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <table class="table table-striped">
+                                                <tr>
+                                                    <td><strong>Resolution Rate</strong></td>
+                                                    <td>
+                                                        <field name="resolution_rate" readonly="1" widget="float" digits="[16,1]"/>%
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Average Response Time</strong></td>
+                                                    <td>
+                                                        <field name="avg_response_time" readonly="1" widget="float" digits="[16,1]"/> hours
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Incoming vs Outgoing Messages</strong></td>
+                                                    <td>
+                                                        <field name="incoming_messages" readonly="1"/> : <field name="outgoing_messages" readonly="1"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><strong>Active Conversations</strong></td>
+                                                    <td>
+                                                        <field name="active_conversations" readonly="1"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Custom CSS for Dashboard -->
+    <template id="dashboard_assets" name="Dashboard Assets">
+        <link rel="stylesheet" href="/myoperator_integration/static/src/css/dashboard.css"/>
+    </template>
+
+    <!-- Dashboard List View -->
+    <record id="view_myoperator_dashboard_tree" model="ir.ui.view">
+        <field name="name">myoperator.dashboard.tree</field>
+        <field name="model">myoperator.dashboard</field>
+        <field name="arch" type="xml">
+            <tree string="MyOperator Dashboards">
+                <field name="name"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="total_calls"/>
+                <field name="total_conversations"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_myoperator_dashboard" model="ir.actions.act_window">
+        <field name="name">MyOperator Dashboard</field>
+        <field name="res_model">myoperator.dashboard</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Welcome to MyOperator Analytics Dashboard!
+            </p>
+            <p>
+                This dashboard provides comprehensive insights into your call logs and WhatsApp conversations.
+                Create a new dashboard to start analyzing your data.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_myoperator_dashboard" name="Analytics Dashboard"
+              parent="menu_myoperator_root"
+              action="action_myoperator_dashboard" sequence="5"/>
+</odoo>

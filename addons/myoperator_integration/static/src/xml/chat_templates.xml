@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Chat Messages Widget Template -->
+        <template id="ChatMessagesWidget" name="Chat Messages Widget">
+            <div class="o_chat_messages_widget">
+                <div class="o_chat_messages_header d-flex justify-content-between mb-2">
+                    <button class="btn btn-sm btn-outline-primary o_chat_refresh_btn">
+                        <i class="fa fa-refresh"/> Refresh
+                    </button>
+                    <button class="btn btn-sm btn-primary o_chat_send_btn">
+                        <i class="fa fa-paper-plane"/> Send Message
+                    </button>
+                </div>
+
+                <div class="o_chat_messages_container border rounded p-2" style="height: 400px; overflow-y: auto;">
+                    <div class="o_chat_loading text-center p-3" style="display: none;">
+                        <i class="fa fa-spinner fa-spin"/> Loading messages...
+                    </div>
+
+                    <div class="o_chat_messages_list">
+                        <!-- Messages will be dynamically inserted here -->
+                    </div>
+
+                    <div class="o_chat_no_messages text-center text-muted p-4" style="display: none;">
+                        <i class="fa fa-comments fa-3x text-muted mb-3"/>
+                        <p>No messages yet</p>
+                    </div>
+                </div>
+
+                <!-- Quick Reply Options -->
+                <div class="o_chat_quick_replies mt-3">
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-sm btn-outline-secondary o_quick_reply_btn"
+                                data-message="Hello! How can I help you today?">
+                            👋 Hello
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary o_quick_reply_btn"
+                                data-message="Thank you for contacting us.">
+                            🙏 Thank you
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary o_quick_reply_btn"
+                                data-message="I will get back to you shortly.">
+                            ⏰ Will get back
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Single Message Template -->
+        <template id="ChatMessageBubble" name="Chat Message Bubble">
+            <div class="o_message_bubble mb-2" t-att-data-direction="message.direction">
+                <div class="o_message_content p-2 rounded shadow-sm">
+                    <t t-if="message.message_type == 'text'">
+                        <div class="o_message_text" t-esc="message.content"/>
+                    </t>
+                    <t t-else="">
+                        <div class="o_message_media d-flex align-items-center">
+                            <i class="fa fa-file me-2"/>
+                            <span class="text-uppercase small" t-esc="message.message_type"/> message
+                        </div>
+                    </t>
+                </div>
+                <div class="o_message_timestamp small text-muted mt-1">
+                    <span t-esc="message.formatted_timestamp"/>
+                    <t t-if="message.direction == 'outgoing'">
+                        <span class="o_message_status ms-1">
+                            <i t-if="message.read_status" class="fa fa-check-double text-primary"/>
+                            <i t-else="" class="fa fa-check text-muted"/>
+                        </span>
+                    </t>
+                </div>
+            </div>
+        </template>
+
+        <!-- Date Separator Template -->
+        <template id="ChatDateSeparator" name="Chat Date Separator">
+            <div class="o_chat_date_separator text-center my-2">
+                <small class="badge badge-secondary" t-esc="date_text"/>
+            </div>
+        </template>
+
+        <!-- Enhanced Phone Widget Template -->
+        <template id="EnhancedPhoneWidget" name="Enhanced Phone Widget">
+            <div class="o_enhanced_phone_widget d-flex align-items-center">
+                <span class="o_phone_number flex-grow-1 me-2" t-esc="phone_number"/>
+                <div class="o_phone_actions d-flex gap-1">
+                    <button class="btn btn-sm btn-outline-primary o_phone_call_btn"
+                            title="Make Call" t-att-data-phone="phone_number">
+                        <i class="fa fa-phone"/>
+                    </button>
+                    <button class="btn btn-sm btn-outline-success o_phone_whatsapp_btn"
+                            title="Send WhatsApp" t-att-data-phone="phone_number">
+                        <i class="fa fa-whatsapp"/>
+                    </button>
+                </div>
+            </div>
+        </template>
+    </data>
+</odoo>

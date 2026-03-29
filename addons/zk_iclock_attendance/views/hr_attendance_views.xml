@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_attendance_tree_zk" model="ir.ui.view">
+        <field name="name">hr.attendance.tree.zk</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_out']" position="after">
+                <field name="zk_device_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_filter_zk" model="ir.ui.view">
+        <field name="name">hr.attendance.search.zk</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter string="Today" name="filter_today" domain="[
+                    ('check_in', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')),
+                    ('check_in', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))
+                ]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance.hr_attendance_action" model="ir.actions.act_window">
+        <field name="context">{'search_default_filter_today': 1}</field>
+    </record>
+</odoo>

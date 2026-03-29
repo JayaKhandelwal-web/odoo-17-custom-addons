@@ -1,0 +1,272 @@
+/* =============================================
+   Attendance Kanban - Responsive, Edge-to-Edge Grid
+   Odoo 17 | Author: RAJA Kumar
+============================================= */
+
+/* ============================================
+   FLAT GRID - Remove grouped columns & Use Grid
+============================================= */
+.o_attendance_kanban .o_kanban_group {
+    display: contents !important;
+}
+
+.o_attendance_kanban .o_kanban_header,
+.o_attendance_kanban .o_column_title,
+.o_attendance_kanban .o_kanban_group_title {
+    display: none !important;
+}
+
+.o_attendance_kanban .o_kanban_renderer {
+    display: grid !important;
+    /* This automatically figures out how many cards fit, then stretches them to perfectly fill the right side */
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)) !important; 
+    gap: 8px !important;
+    padding: 10px !important;
+    align-items: start;
+}
+
+.o_attendance_kanban .o_kanban_record {
+    padding: 0 !important;
+    margin: 0 !important; 
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    width: 100% !important; /* Let Grid control the width */
+}
+
+/* ============================================
+   CARD - Fills Grid Cell Perfectly
+============================================= */
+.o_attn_card {
+    border-radius: 10px;
+    padding: 10px 11px;
+    box-shadow: 0 2px 7px rgba(0,0,0,0.09);
+    transition: box-shadow 0.2s, transform 0.15s;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100% !important; /* Forces card to fill the grid space */
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.o_attn_card:hover {
+    box-shadow: 0 5px 16px rgba(0,0,0,0.14);
+    transform: translateY(-2px);
+}
+
+.card_missing {
+    border-left: 4px solid #e74c3c;
+    background: linear-gradient(135deg, #fff8f8 0%, #fff 100%);
+}
+
+.card_complete {
+    border-left: 4px solid #27ae60;
+    background: linear-gradient(135deg, #f5fff8 0%, #fff 100%);
+}
+
+/* ============================================
+   TOP ROW: Avatar + Name + Badge
+============================================= */
+.o_attn_top {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-bottom: 8px;
+}
+
+.o_attn_avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #dee2e6;
+    flex-shrink: 0;
+}
+
+.o_attn_name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1a1a2e;
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+}
+
+.o_attn_badge {
+    font-size: 8px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.2px;
+}
+
+.badge_missing {
+    background: #fdecea;
+    color: #3fe52e;
+    border: 1px solid #33d61d;
+}
+
+.badge_done {
+    background: #eafaf1;
+    color: #1a7a40;
+    border: 1px solid #27ae60;
+}
+
+/* ============================================
+   TIME ROWS - VERTICAL STACK
+============================================= */
+.o_attn_times {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-top: 1px solid #f2f2f2;
+    padding: 7px 0;
+}
+
+.o_attn_time_item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.o_attn_time_item > .fa {
+    font-size: 12px;
+    flex-shrink: 0;
+    width: 13px;
+    text-align: center;
+}
+
+.o_attn_lbl {
+    font-size: 8.5px;
+    color: #a0aab4;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 52px;
+}
+
+.o_attn_val {
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.missing_value {
+    color: #e74c3c !important;
+    font-style: italic;
+    font-size: 10px;
+}
+
+/* ============================================
+   FOOTER: Work Hrs + Overtime
+============================================= */
+.o_attn_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #f2f2f2;
+    padding-top: 7px;
+    gap: 4px;
+}
+
+.o_attn_stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.o_attn_stat > .fa {
+    font-size: 10px;
+    color: #95a5a6;
+    width: 11px;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.o_attn_stat_sep {
+    width: 1px;
+    height: 18px;
+    background: #e8e8e8;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS (Fonts Only)
+============================================= */
+/* Note: Widths are now handled automatically by CSS Grid! We only adjust fonts and grid mins here. */
+
+/* Medium desktop 900px–1199px */
+@media (min-width: 900px) and (max-width: 1199px) {
+    .o_attendance_kanban .o_kanban_renderer {
+        grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)) !important; 
+    }
+    .o_attn_lbl { width: 46px; font-size: 8px; }
+    .o_attn_val { font-size: 10px; }
+}
+
+/* Tablets 600px–899px */
+@media (min-width: 600px) and (max-width: 899px) {
+    .o_attendance_kanban .o_kanban_renderer {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important; 
+    }
+    .o_attn_name { font-size: 10px; }
+    .o_attn_lbl { width: 42px; font-size: 8px; }
+    .o_attn_val { font-size: 10px; }
+}
+
+/* Small tablets / large phones 480px–599px */
+@media (min-width: 480px) and (max-width: 599px) {
+    .o_attendance_kanban .o_kanban_renderer {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important; 
+        gap: 6px !important;
+        padding: 8px !important;
+    }
+    .o_attn_name { font-size: 10px; }
+    .o_attn_lbl { width: 40px; font-size: 7.5px; }
+    .o_attn_val { font-size: 9.5px; }
+}
+
+/* Mobile < 480px */
+@media (max-width: 479px) {
+    .o_attendance_kanban .o_kanban_renderer {
+        grid-template-columns: 1fr !important; /* 1 column full width */
+        gap: 8px !important;
+        padding: 8px !important;
+    }
+    .o_attn_name { font-size: 13px; }
+    .o_attn_lbl { font-size: 9px; width: 56px; }
+    .o_attn_val { font-size: 11px; }
+    .o_attn_avatar { width: 36px; height: 36px; }
+}
+
+/* ============================================
+   TOUCH DEVICES
+============================================= */
+@media (hover: none) and (pointer: coarse) {
+    .o_attn_card { padding: 11px 13px; }
+    .o_attn_card:hover { transform: none; }
+    .o_attn_card:active {
+        transform: scale(0.97);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .o_attn_times { gap: 7px; }
+}

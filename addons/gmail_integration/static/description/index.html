@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gmail Integration for Odoo</title>
+    <style>
+        .gmail-description {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .gmail-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ea4335;
+            padding-bottom: 20px;
+        }
+        
+        .gmail-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+        }
+        
+        .gmail-title {
+            color: #ea4335;
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+            font-weight: 300;
+        }
+        
+        .gmail-subtitle {
+            color: #666;
+            font-size: 1.2em;
+            margin: 0;
+        }
+        
+        .gmail-section {
+            margin: 30px 0;
+        }
+        
+        .gmail-section h3 {
+            color: #ea4335;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            border-left: 4px solid #ea4335;
+            padding-left: 15px;
+        }
+        
+        .gmail-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .gmail-feature {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #34a853;
+        }
+        
+        .gmail-feature h4 {
+            color: #34a853;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+        
+        .gmail-feature ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .gmail-feature li {
+            margin: 5px 0;
+            color: #555;
+        }
+        
+        .gmail-requirements {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .gmail-requirements h4 {
+            color: #856404;
+            margin: 0 0 15px 0;
+        }
+        
+        .gmail-install-steps {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .gmail-install-steps h4 {
+            color: #0c5460;
+            margin: 0 0 15px 0;
+        }
+        
+        .gmail-step {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid #17a2b8;
+        }
+        
+        .gmail-warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            color: #721c24;
+        }
+        
+        .gmail-version-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        
+        .gmail-tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .gmail-tech-item {
+            background: #e9ecef;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <div class="gmail-description">
+        <div class="gmail-header">
+            <img src="/gmail_integration/static/description/icon.png" alt="Gmail Integration" class="gmail-logo">
+            <h1 class="gmail-title">Gmail Integration</h1>
+            <p class="gmail-subtitle">Complete Gmail Integration for Odoo <span class="gmail-version-badge">v17.0+</span></p>
+        </div>
+        
+        <div class="gmail-section">
+            <h3>🚀 Overview</h3>
+            <p>Transform your Odoo experience with seamless Gmail integration. Send, receive, and manage emails directly within Odoo while maintaining the power and reliability of Gmail's infrastructure.</p>
+        </div>
+        
+        <div class="gmail-section">
+            <h3>✨ Key Features</h3>
+            <div class="gmail-features">
+                <div class="gmail-feature">
+                    <h4>📧 Email Management</h4>
+                    <ul>
+                        <li>Send and receive emails via Gmail API</li>
+                        <li>Real-time email synchronization</li>
+                        <li>Email threading and conversations</li>
+                        <li>Attachment handling and preview</li>
+                        <li>Read/unread status tracking</li>
+                    </ul>
+                </div>
+                
+                <div class="gmail-feature">
+                    <h4>📝 Templates & Automation</h4>
+                    <ul>
+                        <li>Rich HTML email templates</li>
+                        <li>Variable substitution system</li>
+                        <li>Template categories and organization</li>
+                        <li>CC/BCC recipient management</li>
+                        <li>Auto-reply functionality</li>
+                    </ul>
+                </div>
+                
+                <div class="gmail-feature">
+                    <h4>📊 Mass Mailing</h4>
+                    <ul>
+                        <li>Bulk email campaigns</li>
+                        <li>Recipient segmentation</li>
+                        <li>Campaign analytics and tracking</li>
+                        <li>Delivery and open rate monitoring</li>
+                        <li>Scheduled sending</li>
+                    </ul>
+                </div>
+                
+                <div class="gmail-feature">
+                    <h4>🔄 Real-time Sync</h4>
+                    <ul>
+                        <li>Google Cloud Pub/Sub integration</li>
+                        <li>Webhook notifications</li>
+                        <li>Incremental synchronization</li>
+                        <li>Performance monitoring</li>
+                        <li>Error handling and retry logic</li>
+                    </ul>
+                </div>
+                
+                <div class="gmail-feature">
+                    <h4>🔐 Security & Access</h4>
+                    <ul>
+                        <li>OAuth 2.0 authentication</li>
+                        <li>Role-based access control</li>
+                        <li>Secure token management</li>
+                        <li>Multi-company support</li>
+                        <li>Audit trails and logging</li>
+                    </ul>
+                </div>
+                
+                <div class="gmail-feature">
+                    <h4>📈 Analytics & Reporting</h4>
+                    <ul>
+                        <li>Email performance metrics</li>
+                        <li>Campaign success tracking</li>
+                        <li>Sync status monitoring</li>
+                        <li>API quota management</li>
+                        <li>Health check reports</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="gmail-section">
+            <h3>🛠 Technical Stack</h3>
+            <div class="gmail-tech-stack">
+                <span class="gmail-tech-item">Gmail API v1</span>
+                <span class="gmail-tech-item">Google Cloud Pub/Sub</span>
+                <span class="gmail-tech-item">OAuth 2.0</span>
+                <span class="gmail-tech-item">Python 3.8+</span>
+                <span class="gmail-tech-item">Odoo 17.0+</span>
+                <span class="gmail-tech-item">PostgreSQL</span>
+                <span class="gmail-tech-item">HTML/CSS/JS</span>
+            </div>
+        </div>
+        
+        <div class="gmail-requirements">
+            <h4>📋 Requirements</h4>
+            <ul>
+                <li><strong>Odoo Version:</strong> 17.0 or higher</li>
+                <li><strong>Google Cloud Account:</strong> With Gmail API enabled</li>
+                <li><strong>Python Libraries:</strong> google-auth, google-api-python-client, google-cloud-pubsub</li>
+                <li><strong>Gmail Account:</strong> G Suite or regular Gmail account</li>
+                <li><strong>Internet Connection:</strong> For API communication</li>
+            </ul>
+        </div>
+        
+        <div class="gmail-install-steps">
+            <h4>🔧 Installation Steps</h4>
+            <div class="gmail-step">
+                <strong>1. Install Module:</strong> Upload and install the gmail_integration module in Odoo
+            </div>
+            <div class="gmail-step">
+                <strong>2. Google Cloud Setup:</strong> Create project, enable Gmail API, configure OAuth
+            </div>
+            <div class="gmail-step">
+                <strong>3. Configure Account:</strong> Add Gmail account with OAuth credentials
+            </div>
+            <div class="gmail-step">
+                <strong>4. Test Connection:</strong> Verify Gmail API connectivity
+            </div>
+            <div class="gmail-step">
+                <strong>5. Setup Webhooks:</strong> Configure real-time sync (optional)
+            </div>
+        </div>
+        
+        <div class="gmail-warning">
+            <strong>⚠️ Important Notes:</strong>
+            <ul>
+                <li>Gmail API has daily quota limits - monitor usage in the module</li>
+                <li>OAuth tokens need periodic refresh - automated by the module</li>
+                <li>Large mailboxes may take time for initial synchronization</li>
+                <li>Enable two-factor authentication on Gmail for enhanced security</li>
+            </ul>
+        </div>
+        
+        <div class="gmail-section">
+            <h3>📞 Support & Documentation</h3>
+            <p>For detailed setup instructions, troubleshooting guides, and API documentation, please refer to the module documentation or contact our support team.</p>
+            
+            <p><strong>Author:</strong> Your Company Name<br>
+            <strong>Version:</strong> 17.0.1.0.0<br>
+            <strong>License:</strong> LGPL-3</p>
+        </div>
+    </div>
+</body>
+</html>

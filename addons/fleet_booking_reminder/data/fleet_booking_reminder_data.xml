@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+=============================================================================
+  fleet_booking_reminder — Email Templates + Scheduled Cron
+  File   : data/fleet_booking_reminder_data.xml
+  Module : fleet_booking_reminder
+  Odoo   : 17.0
+=============================================================================
+
+  Records
+  ───────
+  ① email_template_fleet_booking_reminder_2day    Customer 2-day reminder
+  ② email_template_fleet_booking_reminder_1day    Customer 1-day reminder
+  ③ email_template_fleet_booking_manager_2day     Manager 2-day internal brief
+  ④ email_template_fleet_booking_manager_1day     Manager 1-day final alert
+  ⑤ ir_cron_fleet_booking_journey_reminder        Daily cron — 08:00 IST / 02:30 UTC
+
+=============================================================================
+-->
+<odoo>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  ①  CUSTOMER — 2-DAY REMINDER                                          -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<record id="email_template_fleet_booking_reminder_2day" model="mail.template">
+    <field name="name">Fleet Booking: Customer 2-Day Journey Reminder</field>
+    <field name="model_id" ref="fleet_booking.model_fleet_booking"/>
+    <field name="subject">🗓️ Your Journey is in 2 Days — Booking #{{ object.name }}</field>
+    <field name="email_from">{{ object.company_id.email or user.email }}</field>
+    <field name="email_to">{{ object.customer_email }}</field>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+<div style="font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f0;padding:30px 10px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#0f1e3c;padding:28px 32px;border-radius:10px 10px 0 0;">
+    <h1 style="margin:0;font-size:22px;color:#fff;font-weight:700;letter-spacing:1px;">{{ object.company_id.name or 'Annapurna Tour &amp; Travels' }}</h1>
+    <p style="margin:4px 0 0;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase;">Fleet Booking Services</p>
+  </td></tr>
+
+  <!-- BANNER -->
+  <tr><td style="background:#fff3cd;padding:14px 32px;border-left:4px solid #ffc107;">
+    <strong style="color:#856404;font-size:14px;">🗓️ &nbsp; Your Journey is 2 Days Away — Please Prepare!</strong>
+  </td></tr>
+
+  <!-- BODY -->
+  <tr><td style="background:#fff;padding:28px 32px;">
+    <p style="margin:0 0 8px;font-size:16px;font-weight:600;color:#0f1e3c;">Dear {{ object.customer_id.name or 'Valued Customer' }},</p>
+    <p style="margin:0 0 22px;font-size:14px;color:#4a5568;line-height:1.7;">
+      A friendly reminder from <strong>{{ object.company_id.name }}</strong> — your fleet booking
+      is scheduled <strong>2 days from today</strong>. Please review the details below.
+    </p>
+
+    <!-- BOOKING CARD -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2d9cc;border-radius:10px;overflow:hidden;margin-bottom:22px;">
+      <!-- card header -->
+      <tr><td style="background:#0f1e3c;padding:12px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="color:#fff;font-size:14px;font-weight:700;letter-spacing:1px;">Booking Ref: {{ object.name }}</td>
+          <td align="right"><span style="background:#c8963e;color:#0f1e3c;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;">{{ dict(object.fields_get(['state'],['selection'])['state']['selection'])[object.state] }}</span></td>
+        </tr></table>
+      </td></tr>
+      <!-- route -->
+      <tr><td style="background:#fdf8f0;padding:16px 18px;border-bottom:1px solid #e2d9cc;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td align="center" width="42%">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">From</div>
+            <div style="font-size:16px;font-weight:700;color:#0f1e3c;">{{ object.journey_start_location }}</div>
+          </td>
+          <td align="center" width="16%" style="font-size:22px;color:#c8963e;">✈</td>
+          <td align="center" width="42%">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">To</div>
+            <div style="font-size:16px;font-weight:700;color:#0f1e3c;">{{ object.journey_end_location }}</div>
+          </td>
+        </tr></table>
+      </td></tr>
+      <!-- details grid -->
+      <tr><td><table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;border-right:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Travel Date</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.journey_start_date | date('dd MMM yyyy') }}</div>
+          </td>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Departure Time</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.journey_start_time or 'As Scheduled' }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;border-right:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Vehicle</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">
+              {% if object.vehicle_id %}{{ object.vehicle_id.name }}
+              {% elif object.vehicle_type %}{{ dict(object.fields_get(['vehicle_type'],['selection'])['vehicle_type']['selection']).get(object.vehicle_type, '') }}
+              {% else %}To Be Assigned{% endif %}
+            </div>
+          </td>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Passengers</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.passenger_count or 1 }} Person(s)</div>
+          </td>
+        </tr>
+        <tr>
+          <td width="50%" style="padding:12px 18px;border-right:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Driver</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.driver_id.name if object.driver_id else 'To Be Assigned' }}</div>
+          </td>
+          <td width="50%" style="padding:12px 18px;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Total Amount</div>
+            <div style="font-size:14px;font-weight:700;color:#1a7a4a;">{{ object.currency_id.symbol }} {{ '{:,.2f}'.format(object.total_price or 0) }}</div>
+          </td>
+        </tr>
+      </table></td></tr>
+    </table>
+
+    {% if object.via_stops %}
+    <p style="background:#f5f0e8;padding:10px 14px;border-radius:8px;font-size:13px;color:#4a5568;margin-bottom:18px;">
+      <strong>Via:</strong> {{ object.via_stops }}
+    </p>
+    {% endif %}
+
+    <!-- CHECKLIST -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fffbea;border:1px solid #ffe58f;border-radius:10px;margin-bottom:22px;">
+      <tr><td style="padding:16px 20px;">
+        <strong style="font-size:13px;color:#7a5e00;display:block;margin-bottom:8px;">📋 2-Day Checklist — Please Ensure:</strong>
+        <ul style="margin:0;padding-left:18px;font-size:13px;color:#7a5e00;line-height:1.9;">
+          <li>Confirm pickup point and be ready <strong>15 minutes before</strong> departure</li>
+          <li>Carry valid Photo ID (Aadhaar / PAN / Passport)</li>
+          <li>Clear any pending payment before the travel date</li>
+          <li>Inform us of any changes to passenger count or route</li>
+        </ul>
+      </td></tr>
+    </table>
+
+    {% if object.invoice_url %}
+    <div style="text-align:center;margin-bottom:22px;">
+      <a href="{{ object.invoice_url }}" style="display:inline-block;background:#0f1e3c;color:#fff;text-decoration:none;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.5px;">
+        View Booking Invoice &nbsp;→
+      </a>
+    </div>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:10px;margin-bottom:22px;">
+      <tr><td style="padding:14px 20px;font-size:13px;color:#4a5568;">
+        📞 &nbsp; Need help?
+        {% if object.company_id.phone %}Call us at <a href="tel:{{ object.company_id.phone }}" style="color:#0f1e3c;font-weight:700;text-decoration:none;">{{ object.company_id.phone }}</a>{% endif %}
+        or reply to this email. We're available <strong>24/7</strong>.
+      </td></tr>
+    </table>
+
+    <p style="font-size:13px;color:#888;line-height:1.7;margin:0;">
+      Thank you for choosing <strong>{{ object.company_id.name }}</strong>. We look forward to a comfortable journey.
+    </p>
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#0f1e3c;padding:18px 32px;border-radius:0 0 10px 10px;text-align:center;">
+    <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.5);">
+      {{ object.company_id.name }}{% if object.company_id.city %} · {{ object.company_id.city }}{% endif %}
+    </p>
+    <p style="margin:8px 0 0;font-size:11px;color:rgba(255,255,255,0.35);">© {{ object.create_date.year }} {{ object.company_id.name }}. All rights reserved.</p>
+  </td></tr>
+
+</table>
+</div>
+    ]]></field>
+</record>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  ②  CUSTOMER — 1-DAY FINAL REMINDER                                    -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<record id="email_template_fleet_booking_reminder_1day" model="mail.template">
+    <field name="name">Fleet Booking: Customer 1-Day Journey Reminder (Final)</field>
+    <field name="model_id" ref="fleet_booking.model_fleet_booking"/>
+    <field name="subject">🚨 TOMORROW is Your Journey Day — Booking #{{ object.name }}</field>
+    <field name="email_from">{{ object.company_id.email or user.email }}</field>
+    <field name="email_to">{{ object.customer_email }}</field>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+<div style="font-family:'Segoe UI',Arial,sans-serif;background:#f0f0f0;padding:30px 10px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#0f1e3c;padding:28px 32px;border-radius:10px 10px 0 0;">
+    <h1 style="margin:0;font-size:22px;color:#fff;font-weight:700;letter-spacing:1px;">{{ object.company_id.name or 'Annapurna Tour &amp; Travels' }}</h1>
+    <p style="margin:4px 0 0;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:2px;text-transform:uppercase;">Fleet Booking Services</p>
+  </td></tr>
+
+  <!-- BANNER -->
+  <tr><td style="background:#f8d7da;padding:14px 32px;border-left:4px solid #dc3545;">
+    <strong style="color:#842029;font-size:14px;">🚨 &nbsp; Your Journey is TOMORROW — Final Reminder!</strong>
+  </td></tr>
+
+  <!-- BODY -->
+  <tr><td style="background:#fff;padding:28px 32px;">
+    <p style="margin:0 0 8px;font-size:16px;font-weight:600;color:#0f1e3c;">Dear {{ object.customer_id.name or 'Valued Customer' }},</p>
+    <p style="margin:0 0 22px;font-size:14px;color:#4a5568;line-height:1.7;">
+      <strong>Your journey is tomorrow!</strong> Final reminder from
+      <strong>{{ object.company_id.name }}</strong> — please be fully prepared for departure.
+    </p>
+
+    <!-- BOOKING CARD -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2d9cc;border-radius:10px;overflow:hidden;margin-bottom:22px;">
+      <tr><td style="background:#0f1e3c;padding:12px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="color:#fff;font-size:14px;font-weight:700;letter-spacing:1px;">Booking Ref: {{ object.name }}</td>
+          <td align="right"><span style="background:#c8963e;color:#0f1e3c;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;text-transform:uppercase;">{{ dict(object.fields_get(['state'],['selection'])['state']['selection'])[object.state] }}</span></td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="background:#fdf8f0;padding:16px 18px;border-bottom:1px solid #e2d9cc;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td align="center" width="42%">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">From</div>
+            <div style="font-size:16px;font-weight:700;color:#0f1e3c;">{{ object.journey_start_location }}</div>
+          </td>
+          <td align="center" width="16%" style="font-size:22px;color:#c8963e;">✈</td>
+          <td align="center" width="42%">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">To</div>
+            <div style="font-size:16px;font-weight:700;color:#0f1e3c;">{{ object.journey_end_location }}</div>
+          </td>
+        </tr></table>
+      </td></tr>
+      <tr><td><table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;border-right:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Travel Date</div>
+            <div style="font-size:14px;font-weight:700;color:#dc2626;">TOMORROW — {{ object.journey_start_date | date('dd MMM yyyy') }}</div>
+          </td>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Departure Time</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.journey_start_time or 'As Scheduled' }}</div>
+          </td>
+        </tr>
+        <tr>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;border-right:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Vehicle</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">
+              {% if object.vehicle_id %}{{ object.vehicle_id.name }}
+              {% elif object.vehicle_type %}{{ dict(object.fields_get(['vehicle_type'],['selection'])['vehicle_type']['selection']).get(object.vehicle_type, '') }}
+              {% else %}To Be Assigned{% endif %}
+            </div>
+          </td>
+          <td width="50%" style="padding:12px 18px;border-bottom:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Passengers</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.passenger_count or 1 }} Person(s)</div>
+          </td>
+        </tr>
+        <tr>
+          <td width="50%" style="padding:12px 18px;border-right:1px solid #e2d9cc;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Driver</div>
+            <div style="font-size:14px;font-weight:600;color:#0f1e3c;">{{ object.driver_id.name if object.driver_id else 'To Be Assigned' }}</div>
+          </td>
+          <td width="50%" style="padding:12px 18px;">
+            <div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Total Amount</div>
+            <div style="font-size:14px;font-weight:700;color:#1a7a4a;">{{ object.currency_id.symbol }} {{ '{:,.2f}'.format(object.total_price or 0) }}</div>
+          </td>
+        </tr>
+      </table></td></tr>
+    </table>
+
+    {% if object.via_stops %}
+    <p style="background:#f5f0e8;padding:10px 14px;border-radius:8px;font-size:13px;color:#4a5568;margin-bottom:18px;">
+      <strong>Via:</strong> {{ object.via_stops }}
+    </p>
+    {% endif %}
+
+    <!-- FINAL CHECKLIST -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff1f0;border:1px solid #ffccc7;border-radius:10px;margin-bottom:22px;">
+      <tr><td style="padding:16px 20px;">
+        <strong style="font-size:13px;color:#a8071a;display:block;margin-bottom:8px;">🚨 Final Day Checklist — IMPORTANT:</strong>
+        <ul style="margin:0;padding-left:18px;font-size:13px;color:#a8071a;line-height:1.9;">
+          <li>Be at pickup point <strong>15 minutes before</strong> departure</li>
+          <li>Carry valid Photo ID — this is <strong>mandatory</strong></li>
+          <li>Driver will contact you <strong>30 minutes before</strong> scheduled pickup</li>
+          <li>All outstanding payments must be cleared <strong>before boarding</strong></li>
+          <li>For last-minute changes, call us <strong>immediately</strong></li>
+        </ul>
+      </td></tr>
+    </table>
+
+    {% if object.invoice_url %}
+    <div style="text-align:center;margin-bottom:22px;">
+      <a href="{{ object.invoice_url }}" style="display:inline-block;background:#0f1e3c;color:#fff;text-decoration:none;padding:14px 36px;border-radius:50px;font-size:14px;font-weight:600;letter-spacing:0.5px;">
+        View Booking Invoice &nbsp;→
+      </a>
+    </div>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0e8;border-radius:10px;margin-bottom:22px;">
+      <tr><td style="padding:14px 20px;font-size:13px;color:#4a5568;">
+        📞 &nbsp; <strong>Last-minute help?</strong>
+        {% if object.company_id.phone %}<a href="tel:{{ object.company_id.phone }}" style="color:#0f1e3c;font-weight:700;text-decoration:none;">{{ object.company_id.phone }}</a>{% endif %}
+        — available round the clock.
+      </td></tr>
+    </table>
+
+    <p style="font-size:13px;color:#888;line-height:1.7;margin:0;">
+      Wishing you a safe journey. <strong>{{ object.company_id.name }}</strong> is committed to your comfort.
+    </p>
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#0f1e3c;padding:18px 32px;border-radius:0 0 10px 10px;text-align:center;">
+    <p style="margin:0;font-size:12px;color:rgba(255,255,255,0.5);">
+      {{ object.company_id.name }}{% if object.company_id.city %} · {{ object.company_id.city }}{% endif %}
+    </p>
+    <p style="margin:8px 0 0;font-size:11px;color:rgba(255,255,255,0.35);">© {{ object.create_date.year }} {{ object.company_id.name }}. All rights reserved.</p>
+  </td></tr>
+
+</table>
+</div>
+    ]]></field>
+</record>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  ③  MANAGER — 2-DAY INTERNAL PREPARATION BRIEF                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<record id="email_template_fleet_booking_manager_2day" model="mail.template">
+    <field name="name">Fleet Booking: Manager 2-Day Preparation Brief (Internal)</field>
+    <field name="model_id" ref="fleet_booking.model_fleet_booking"/>
+    <field name="subject">📋 [2-Day Prep] {{ object.name }} — {{ object.journey_start_location }} → {{ object.journey_end_location }} on {{ object.journey_start_date }}</field>
+    <field name="email_from">{{ object.company_id.email or user.email }}</field>
+    <field name="email_to">{{ object.user_id.email or object.company_id.email }}</field>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+<div style="font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;padding:28px 10px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:650px;margin:0 auto;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#1a2332;padding:0;border-radius:10px 10px 0 0;overflow:hidden;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:20px 28px 14px;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="font-family:monospace;color:#fff;font-size:15px;font-weight:700;">
+            ANP<span style="color:#58a6ff;">Fleet</span>
+            <span style="color:rgba(255,255,255,0.4);font-size:12px;font-weight:400;margin-left:8px;">/ Internal Briefing</span>
+          </td>
+          <td align="right"><span style="background:rgba(88,166,255,0.15);color:#58a6ff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;border:1px solid rgba(88,166,255,0.3);text-transform:uppercase;letter-spacing:1px;">Fleet Ops · Internal</span></td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="padding:13px 28px;background:rgba(210,153,34,0.15);border-left:3px solid #d29922;">
+        <strong style="color:#e3b341;font-size:14px;">📋 &nbsp; PREPARE NOW — Journey Departing in 2 Days</strong>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <!-- BODY -->
+  <tr><td style="background:#fff;padding:26px 28px;">
+    <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#1a2332;">Hello {{ object.user_id.name or 'Fleet Manager' }},</p>
+    <p style="margin:0 0 22px;font-size:13px;color:#4a5568;line-height:1.75;">
+      The booking below departs in <strong>2 days</strong>. Please complete all preparation items to ensure a smooth, on-time departure.
+    </p>
+
+    <!-- BOOKING CARD -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:18px;">
+      <tr><td style="background:#1a2332;padding:12px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="font-family:monospace;color:#fff;font-size:14px;font-weight:700;">{{ object.name }}</td>
+          <td align="right"><span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;">{{ dict(object.fields_get(['state'],['selection'])['state']['selection'])[object.state] }}</span></td>
+        </tr></table>
+      </td></tr>
+      <!-- route -->
+      <tr><td style="background:#eef2f7;padding:14px 18px;border-bottom:1px solid #e2e8f0;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td width="42%"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Origin</div><div style="font-size:15px;font-weight:700;color:#1a2332;">{{ object.journey_start_location }}</div></td>
+          <td width="8%" align="center" style="font-size:16px;color:#58a6ff;font-weight:700;">→</td>
+          <td width="42%"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Destination</div><div style="font-size:15px;font-weight:700;color:#1a2332;">{{ object.journey_end_location }}</div></td>
+          {% if object.via_stops %}<td width="8%" align="right"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Via</div><div style="font-size:11px;font-weight:600;color:#4a5568;">{{ object.via_stops }}</div></td>{% endif %}
+        </tr></table>
+      </td></tr>
+      <!-- details -->
+      <tr><td><table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="33%" style="padding:11px 16px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Travel Date</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.journey_start_date | date('dd MMM yyyy') }}</div></td>
+          <td width="33%" style="padding:11px 16px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Departure</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.journey_start_time or 'As Scheduled' }}</div></td>
+          <td width="34%" style="padding:11px 16px;border-bottom:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Customer / Phone</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.customer_id.name }}<br/><span style="font-size:12px;color:#4a5568;">{{ object.customer_phone or '—' }}</span></div></td>
+        </tr>
+        <tr>
+          <td width="33%" style="padding:11px 16px;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Vehicle</div>
+            {% if object.vehicle_id %}<div style="font-size:13px;font-weight:700;color:#16a34a;">✅ {{ object.vehicle_id.name }}</div>
+            {% elif object.vehicle_type %}<div style="font-size:13px;font-weight:700;color:#d97706;">⚠️ {{ dict(object.fields_get(['vehicle_type'],['selection'])['vehicle_type']['selection']).get(object.vehicle_type, '') }}</div>
+            {% else %}<div style="font-size:13px;font-weight:700;color:#dc2626;">❌ Not Assigned</div>{% endif %}
+          </td>
+          <td width="33%" style="padding:11px 16px;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Driver</div>
+            {% if object.driver_id %}<div style="font-size:13px;font-weight:700;color:#16a34a;">✅ {{ object.driver_id.name }}</div>
+            {% else %}<div style="font-size:13px;font-weight:700;color:#dc2626;">❌ Not Assigned</div>{% endif %}
+          </td>
+          <td width="34%" style="padding:11px 16px;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Passengers</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.passenger_count or 1 }}</div></td>
+        </tr>
+      </table></td></tr>
+    </table>
+
+    <!-- PAYMENT BOXES -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;"><tr>
+      <td width="33%" style="padding-right:5px;"><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Total Amount</div><div style="font-size:16px;font-weight:700;color:#1d4ed8;">{{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.total_price or 0) }}</div></div></td>
+      <td width="33%" style="padding:0 2px;"><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Amount Paid</div><div style="font-size:16px;font-weight:700;color:#15803d;">{{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.amount_paid or 0) }}</div></div></td>
+      <td width="34%" style="padding-left:5px;">
+        {% if (object.balance_amount or 0) > 0 %}
+        <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Balance Due ⚠️</div><div style="font-size:16px;font-weight:700;color:#b45309;">{{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.balance_amount or 0) }}</div></div>
+        {% else %}
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Balance Due</div><div style="font-size:16px;font-weight:700;color:#15803d;">Fully Paid ✅</div></div>
+        {% endif %}
+      </td>
+    </tr></table>
+
+    <!-- PREP CHECKLIST -->
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a2332;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0;">🔧 Pre-Departure Preparation Checklist</div>
+
+    {% if object.vehicle_id %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Vehicle Assigned:</strong> {{ object.vehicle_id.name }} — confirm fuel level, service status, and all documents</td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:13px;"><span style="color:#dc2626;margin-right:8px;">❌</span><strong style="color:#dc2626;">ACTION REQUIRED — No Vehicle Assigned. Open Odoo immediately.</strong></td></tr></table>
+    {% endif %}
+
+    {% if object.driver_id %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Driver Assigned:</strong> {{ object.driver_id.name }} — share route, departure time, and customer contact</td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:13px;"><span style="color:#dc2626;margin-right:8px;">❌</span><strong style="color:#dc2626;">ACTION REQUIRED — No Driver Assigned. Assign and brief immediately.</strong></td></tr></table>
+    {% endif %}
+
+    {% if (object.balance_amount or 0) > 0 %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Payment Pending:</strong> Balance {{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.balance_amount) }} — follow up with customer before travel date</td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Payment Complete:</strong> Full amount received — no collection required</td></tr></table>
+    {% endif %}
+
+    {% if object.return_journey_needed %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Return Journey:</strong> {{ object.return_journey_date | date('dd MMM yyyy') }} at {{ object.return_journey_time or 'TBD' }} — confirm vehicle &amp; driver availability</td></tr></table>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Vehicle Inspection:</strong> Pre-trip check — tyres, oil, water, insurance &amp; permit documents</td></tr></table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Route Briefing:</strong> Share full route map with driver — check for road closures on travel date</td></tr></table>
+
+    {% if object.reminder_2day_sent %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Customer Notified:</strong> 2-day reminder already sent to {{ object.customer_email }}</td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Customer Reminder:</strong> 2-day reminder not yet sent — check mail queue or resend manually</td></tr></table>
+    {% endif %}
+
+    {% if object.transport_notes or object.notes %}
+    <div style="background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:12px 16px;font-size:13px;color:#6b7280;line-height:1.65;margin:12px 0 18px;">
+      <strong style="color:#374151;display:block;margin-bottom:5px;font-size:11px;text-transform:uppercase;">Transport / Booking Notes</strong>
+      {{ object.transport_notes or object.notes }}
+    </div>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0 18px;"><tr>
+      <td width="48%" style="padding-right:6px;"><a href="/web#id={{ object.id }}&amp;model=fleet.booking&amp;view_type=form" style="display:block;background:#1a2332;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Open Booking in Odoo →</a></td>
+      {% if object.invoice_url %}<td width="30%" style="padding-left:3px;"><a href="{{ object.invoice_url }}" style="display:block;background:#f1f5f9;color:#1a2332;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #e2e8f0;">View Invoice</a></td>{% endif %}
+    </tr></table>
+    <p style="font-size:12px;color:#9ca3af;margin:0;">Automated internal notification — do not reply. Open the booking in Odoo to take action.</p>
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#1a2332;padding:16px 28px;border-radius:0 0 10px 10px;text-align:center;">
+    <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.4);">
+      {{ object.company_id.name }} · Fleet Operations · <span style="color:#58a6ff;">Internal Use Only</span>
+    </p>
+  </td></tr>
+
+</table>
+</div>
+    ]]></field>
+</record>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  ④  MANAGER — 1-DAY FINAL ALERT                                        -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<record id="email_template_fleet_booking_manager_1day" model="mail.template">
+    <field name="name">Fleet Booking: Manager 1-Day Final Alert (Internal)</field>
+    <field name="model_id" ref="fleet_booking.model_fleet_booking"/>
+    <field name="subject">🚨 [TOMORROW] Final Check — {{ object.name }} | {{ object.journey_start_location }} → {{ object.journey_end_location }}</field>
+    <field name="email_from">{{ object.company_id.email or user.email }}</field>
+    <field name="email_to">{{ object.user_id.email or object.company_id.email }}</field>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+<div style="font-family:'Segoe UI',Arial,sans-serif;background:#f0f2f5;padding:28px 10px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:650px;margin:0 auto;">
+
+  <!-- HEADER -->
+  <tr><td style="background:#1a2332;padding:0;border-radius:10px 10px 0 0;overflow:hidden;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr><td style="padding:20px 28px 14px;border-bottom:1px solid rgba(255,255,255,0.08);">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="font-family:monospace;color:#fff;font-size:15px;font-weight:700;">
+            ANP<span style="color:#f78166;">Fleet</span>
+            <span style="color:rgba(255,255,255,0.4);font-size:12px;font-weight:400;margin-left:8px;">/ URGENT Internal Alert</span>
+          </td>
+          <td align="right"><span style="background:rgba(247,129,102,0.15);color:#f78166;font-size:11px;font-weight:700;padding:3px 10px;border-radius:4px;border:1px solid rgba(247,129,102,0.3);text-transform:uppercase;letter-spacing:1px;">URGENT · Fleet Ops</span></td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="padding:13px 28px;background:rgba(247,129,102,0.15);border-left:3px solid #f78166;">
+        <strong style="color:#f78166;font-size:14px;">🚨 &nbsp; FINAL CHECK — Journey Departing TOMORROW — All Prep Must Be Done TODAY</strong>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <!-- BODY -->
+  <tr><td style="background:#fff;padding:26px 28px;">
+    <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#1a2332;">Hello {{ object.user_id.name or 'Fleet Manager' }},</p>
+    <p style="margin:0 0 22px;font-size:13px;color:#4a5568;line-height:1.75;">
+      <strong style="color:#dc2626;">This booking departs tomorrow.</strong>
+      All preparation must be completed <strong>today</strong>.
+      Items marked ❌ require <strong>immediate action</strong>.
+    </p>
+
+    <!-- BOOKING CARD -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:18px;">
+      <tr><td style="background:#1a2332;padding:12px 18px;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td style="font-family:monospace;color:#fff;font-size:14px;font-weight:700;">{{ object.name }}</td>
+          <td align="right"><span style="background:#fee2e2;color:#991b1b;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;text-transform:uppercase;">TOMORROW</span></td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="background:#eef2f7;padding:14px 18px;border-bottom:1px solid #e2e8f0;">
+        <table width="100%" cellpadding="0" cellspacing="0"><tr>
+          <td width="42%"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Origin</div><div style="font-size:15px;font-weight:700;color:#1a2332;">{{ object.journey_start_location }}</div></td>
+          <td width="8%" align="center" style="font-size:16px;color:#f78166;font-weight:700;">→</td>
+          <td width="50%"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Destination</div><div style="font-size:15px;font-weight:700;color:#1a2332;">{{ object.journey_end_location }}</div></td>
+        </tr></table>
+      </td></tr>
+      <tr><td><table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td width="33%" style="padding:11px 16px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">TRAVEL DATE</div><div style="font-size:13px;font-weight:700;color:#dc2626;">TOMORROW — {{ object.journey_start_date | date('dd MMM yyyy') }}</div></td>
+          <td width="33%" style="padding:11px 16px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Departure</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.journey_start_time or 'As Scheduled' }}</div></td>
+          <td width="34%" style="padding:11px 16px;border-bottom:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Customer / Phone</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.customer_id.name }}<br/><span style="font-size:12px;color:#4a5568;">{{ object.customer_phone or '—' }}</span></div></td>
+        </tr>
+        <tr>
+          <td width="33%" style="padding:11px 16px;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Vehicle</div>
+            {% if object.vehicle_id %}<div style="font-size:13px;font-weight:700;color:#16a34a;">✅ {{ object.vehicle_id.name }}</div>
+            {% else %}<div style="font-size:13px;font-weight:700;color:#dc2626;">❌ Not Assigned</div>{% endif %}
+          </td>
+          <td width="33%" style="padding:11px 16px;border-right:1px solid #e2e8f0;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Driver</div>
+            {% if object.driver_id %}<div style="font-size:13px;font-weight:700;color:#16a34a;">✅ {{ object.driver_id.name }}</div>
+            {% else %}<div style="font-size:13px;font-weight:700;color:#dc2626;">❌ Not Assigned</div>{% endif %}
+          </td>
+          <td width="34%" style="padding:11px 16px;"><div style="font-size:10px;color:#888;text-transform:uppercase;margin-bottom:3px;">Passengers</div><div style="font-size:13px;font-weight:700;color:#1a2332;">{{ object.passenger_count or 1 }}</div></td>
+        </tr>
+      </table></td></tr>
+    </table>
+
+    <!-- PAYMENT BOXES -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:18px;"><tr>
+      <td width="33%" style="padding-right:5px;"><div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Total Amount</div><div style="font-size:16px;font-weight:700;color:#1d4ed8;">{{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.total_price or 0) }}</div></div></td>
+      <td width="33%" style="padding:0 2px;"><div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Amount Paid</div><div style="font-size:16px;font-weight:700;color:#15803d;">{{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.amount_paid or 0) }}</div></div></td>
+      <td width="34%" style="padding-left:5px;">
+        {% if (object.balance_amount or 0) > 0 %}
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Balance Due ❌</div><div style="font-size:16px;font-weight:700;color:#dc2626;">{{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.balance_amount or 0) }}</div></div>
+        {% else %}
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px 14px;"><div style="font-size:10px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;">Balance Due</div><div style="font-size:16px;font-weight:700;color:#15803d;">Fully Paid ✅</div></div>
+        {% endif %}
+      </td>
+    </tr></table>
+
+    <!-- FINAL CHECKLIST -->
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#dc2626;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #fee2e2;">🚨 FINAL Day Checklist — Complete TODAY</div>
+
+    {% if not object.vehicle_id %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:13px;"><span style="color:#dc2626;margin-right:8px;">❌</span><strong style="color:#dc2626;">CRITICAL — Vehicle Not Assigned. Open Odoo NOW and assign immediately.</strong></td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Vehicle Ready:</strong> {{ object.vehicle_id.name }} — final inspection, fuel, and documents confirmed</td></tr></table>
+    {% endif %}
+
+    {% if not object.driver_id %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:13px;"><span style="color:#dc2626;margin-right:8px;">❌</span><strong style="color:#dc2626;">CRITICAL — Driver Not Assigned. Assign and brief immediately.</strong></td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Driver Confirmed:</strong> {{ object.driver_id.name }} — ensure they have customer contact, full route, and pickup address</td></tr></table>
+    {% endif %}
+
+    {% if (object.balance_amount or 0) > 0 %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px 14px;font-size:13px;"><span style="color:#dc2626;margin-right:8px;">❌</span><strong style="color:#dc2626;">Payment Outstanding:</strong><span style="color:#dc2626;"> {{ object.currency_id.symbol }} {{ '{:,.0f}'.format(object.balance_amount) }} — collect before boarding</span></td></tr></table>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Customer Call:</strong> Call customer to confirm pickup point, time, and any last-minute changes</td></tr></table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Backup Standby:</strong> Keep backup vehicle and driver available for emergencies</td></tr></table>
+
+    {% if object.reminder_1day_sent %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#16a34a;margin-right:8px;">✅</span><strong>Customer Notified:</strong> 1-day final reminder sent to {{ object.customer_email }}</td></tr></table>
+    {% else %}
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:6px;"><tr><td style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151;"><span style="color:#d97706;margin-right:8px;">⚠️</span><strong>Customer Reminder:</strong> 1-day reminder not sent — check mail queue or resend manually</td></tr></table>
+    {% endif %}
+
+    {% if object.transport_notes or object.notes %}
+    <div style="background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:12px 16px;font-size:13px;color:#6b7280;line-height:1.65;margin:12px 0 18px;">
+      <strong style="color:#374151;display:block;margin-bottom:5px;font-size:11px;text-transform:uppercase;">Transport / Booking Notes</strong>
+      {{ object.transport_notes or object.notes }}
+    </div>
+    {% endif %}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0 18px;"><tr>
+      <td width="48%" style="padding-right:6px;"><a href="/web#id={{ object.id }}&amp;model=fleet.booking&amp;view_type=form" style="display:block;background:#dc2626;color:#fff;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;">Open Booking NOW →</a></td>
+      {% if object.invoice_url %}<td width="30%" style="padding-left:3px;"><a href="{{ object.invoice_url }}" style="display:block;background:#f1f5f9;color:#1a2332;text-align:center;padding:12px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;border:1px solid #e2e8f0;">View Invoice</a></td>{% endif %}
+    </tr></table>
+    <p style="font-size:12px;color:#9ca3af;margin:0;">Automated internal notification — do not reply.</p>
+  </td></tr>
+
+  <!-- FOOTER -->
+  <tr><td style="background:#1a2332;padding:16px 28px;border-radius:0 0 10px 10px;text-align:center;">
+    <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.4);">
+      {{ object.company_id.name }} · Fleet Operations · <span style="color:#f78166;">Internal Use Only</span>
+    </p>
+  </td></tr>
+
+</table>
+</div>
+    ]]></field>
+</record>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  ⑤  SCHEDULED ACTION — Daily at 08:00 AM IST (02:30 UTC)               -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<record id="ir_cron_fleet_booking_journey_reminder" model="ir.cron">
+    <field name="name">Fleet Booking: Send Journey Reminder Emails (Customer + Manager)</field>
+    <field name="model_id" ref="fleet_booking.model_fleet_booking"/>
+    <field name="state">code</field>
+    <field name="code">model.action_send_journey_reminders()</field>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <!--
+        nextcall = tomorrow at 02:30 UTC = 08:00 AM IST
+        Adjust if your Odoo server is in a different timezone.
+    -->
+    <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).replace(hour=2, minute=30, second=0)"/>
+    <field name="numbercall">-1</field>
+    <field name="active" eval="True"/>
+    <field name="user_id" ref="base.user_root"/>
+</record>
+
+</odoo>

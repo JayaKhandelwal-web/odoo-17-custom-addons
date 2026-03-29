@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Gmail Notification Settings Form View -->
+    <record id="view_gmail_notification_settings_form" model="ir.ui.view">
+        <field name="name">gmail.notification.settings.form</field>
+        <field name="model">gmail.notification.settings</field>
+        <field name="arch" type="xml">
+            <form string="Gmail Notification Settings">
+                <header>
+                    <button name="action_test_notification" type="object" 
+                            string="Send Test Notification" class="btn-primary"
+                            invisible="not enable_notification_routing"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Gmail Notification Settings</h1>
+                        <p>Configure automatic routing of Odoo notifications through Gmail</p>
+                    </div>
+                    
+                    <group>
+                        <field name="enable_notification_routing"/>
+                    </group>
+                    
+                    <group string="Configuration" invisible="not enable_notification_routing">
+                        <group>
+                            <field name="notification_target_email" 
+                                   placeholder="your-email@gmail.com"
+                                   required="enable_notification_routing"/>
+                            <field name="notification_gmail_account_id" 
+                                   required="enable_notification_routing"/>
+                        </group>
+                    </group>
+                    
+                    <div class="alert alert-info" invisible="not enable_notification_routing">
+                        <h6><i class="fa fa-info-circle"></i> How it works:</h6>
+                        <ul>
+                            <li>All Odoo system notifications (fleet license expiry, HR reminders, etc.) will be automatically sent as emails</li>
+                            <li>Emails are sent FROM the selected Gmail account TO the target email address</li>
+                            <li>You can send emails to yourself (same Gmail account) or to a different email address</li>
+                            <li>Notifications will appear in Gmail mobile app, web interface, and Odoo Gmail module</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="alert alert-warning" invisible="enable_notification_routing">
+                        <h6><i class="fa fa-warning"></i> Gmail Notification Routing Disabled</h6>
+                        <p>Enable this feature to automatically receive Odoo system notifications in your Gmail.</p>
+                        <p><strong>Examples of notifications that will be sent:</strong></p>
+                        <ul>
+                            <li>Fleet: Driver license expiring, vehicle maintenance due</li>
+                            <li>HR: Employee contract expiring, leave requests</li>
+                            <li>Project: Task deadlines, project milestones</li>
+                            <li>CRM: Follow-up reminders, opportunity deadlines</li>
+                            <li>Sales: Quotation expiry, delivery delays</li>
+                            <li>Accounting: Payment reminders, invoice due dates</li>
+                        </ul>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Save" special="save" type="object" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Gmail Notification Settings Action -->
+    <record id="action_gmail_notification_settings" model="ir.actions.act_window">
+        <field name="name">Gmail Notification Settings</field>
+        <field name="res_model">gmail.notification.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_gmail_notification_settings_form"/>
+    </record>
+
+    <!-- Add to Gmail Menu -->
+    <menuitem id="menu_gmail_notification_settings" 
+              name="Notification Settings" 
+              parent="menu_gmail_config" 
+              action="action_gmail_notification_settings" 
+              sequence="20"/>
+
+</odoo>

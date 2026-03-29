@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Contact Page Template -->
+        <template id="contact_page" name="Annapurna Travels - Contact Us">
+            <t t-call="website.layout">
+                <t t-set="title">Contact Us - Annapurna Travels</t>
+                <t t-set="additional_title">Get in Touch</t>
+
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center">
+                                <h1 class="page-title">Contact Us</h1>
+                                <p class="page-subtitle">
+                                    We're here to help you plan your perfect journey. Get in touch with us today!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Contact Form & Info Section -->
+                <section class="contact-section py-5">
+                    <div class="container">
+                        <div class="row g-5">
+                            <!-- Contact Form -->
+                            <div class="col-lg-8">
+                                <div class="contact-form-wrapper">
+                                    <h3 class="fw-bold mb-4">Send us a Message</h3>
+
+                                    <!-- Error/Success Messages -->
+                                    <div t-if="error" class="alert alert-danger alert-dismissible fade show">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <t t-esc="error"/>
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                    </div>
+
+                                    <form id="contactForm" action="/contact/submit" method="post" class="needs-validation" novalidate="true">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="name" class="form-label">Full Name *</label>
+                                                <input type="text" class="form-control" id="name" name="name"
+                                                       t-att-value="form_data and form_data.get('name', '') or ''" required="true"/>
+                                                <div class="invalid-feedback">Please provide your name.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="email" class="form-label">Email Address *</label>
+                                                <input type="email" class="form-control" id="email" name="email"
+                                                       t-att-value="form_data and form_data.get('email', '') or ''" required="true"/>
+                                                <div class="invalid-feedback">Please provide a valid email address.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-3 mt-2">
+                                            <div class="col-md-6">
+                                                <label for="phone" class="form-label">Phone Number *</label>
+                                                <input type="tel" class="form-control" id="phone" name="phone"
+                                                       t-att-value="form_data and form_data.get('phone', '') or ''" required="true"/>
+                                                <div class="invalid-feedback">Please provide your phone number.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="subject" class="form-label">Subject *</label>
+                                                <select class="form-select" id="subject" name="subject" required="true">
+                                                    <option value="">Choose a subject...</option>
+                                                    <option value="booking" t-att-selected="form_data and form_data.get('subject') == 'booking' and 'selected' or None">
+                                                        New Booking Inquiry
+                                                    </option>
+                                                    <option value="modification" t-att-selected="form_data and form_data.get('subject') == 'modification' and 'selected' or None">
+                                                        Booking Modification
+                                                    </option>
+                                                    <option value="cancellation" t-att-selected="form_data and form_data.get('subject') == 'cancellation' and 'selected' or None">
+                                                        Cancellation Request
+                                                    </option>
+                                                    <option value="complaint" t-att-selected="form_data and form_data.get('subject') == 'complaint' and 'selected' or None">
+                                                        Complaint/Feedback
+                                                    </option>
+                                                    <option value="general" t-att-selected="form_data and form_data.get('subject') == 'general' and 'selected' or None">
+                                                        General Inquiry
+                                                    </option>
+                                                </select>
+                                                <div class="invalid-feedback">Please select a subject.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-3">
+                                            <label for="message" class="form-label">Message *</label>
+                                            <textarea class="form-control" id="message" name="message" rows="5"
+                                                      placeholder="Please provide details about your inquiry..."
+                                                      required="true"><t t-esc="form_data and form_data.get('message', '') or ''"/></textarea>
+                                            <div class="invalid-feedback">Please provide your message.</div>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="privacy" name="privacy" required="true"/>
+                                                <label class="form-check-label" for="privacy">
+                                                    I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a> and
+                                                    <a href="/terms-conditions" target="_blank">Terms &amp; Conditions</a> *
+                                                </label>
+                                                <div class="invalid-feedback">You must agree to our privacy policy.</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mt-4">
+                                            <button type="submit" class="btn btn-primary btn-lg rounded-pill px-4">
+                                                <i class="fas fa-paper-plane me-2"></i>Send Message
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="col-lg-4">
+                                <div class="contact-info-wrapper">
+                                    <h3 class="fw-bold mb-4">Get in Touch</h3>
+
+                                    <div class="contact-info-items">
+                                        <div class="contact-info-item d-flex align-items-start mb-4">
+                                            <div class="contact-icon me-3">
+                                                <i class="fas fa-map-marker-alt fa-lg text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-1">Office Address</h5>
+                                                <p class="text-muted mb-0">
+                                                    Annapurna Travels<br/>
+                                                    Bhopal, Madhya Pradesh<br/>
+                                                    India - 462001
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div class="contact-info-item d-flex align-items-start mb-4">
+                                            <div class="contact-icon me-3">
+                                                <i class="fas fa-phone fa-lg text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-1">Phone Numbers</h5>
+                                                <p class="mb-1">
+                                                    <a href="tel:+91XXXXXXXXXX" class="text-decoration-none">
+                                                        +91 XXX-XXX-XXXX
+                                                    </a>
+                                                </p>
+                                                <p class="text-muted mb-0">24/7 Customer Support</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="contact-info-item d-flex align-items-start mb-4">
+                                            <div class="contact-icon me-3">
+                                                <i class="fas fa-envelope fa-lg text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-1">Email Addresses</h5>
+                                                <p class="mb-1">
+                                                    <a href="mailto:info@annapurnatravels.com" class="text-decoration-none">
+                                                        info@annapurnatravels.com
+                                                    </a>
+                                                </p>
+                                                <p class="mb-1">
+                                                    <a href="mailto:booking@annapurnatravels.com" class="text-decoration-none">
+                                                        booking@annapurnatravels.com
+                                                    </a>
+                                                </p>
+                                                <p class="text-muted mb-0">For bookings and inquiries</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="contact-info-item d-flex align-items-start mb-4">
+                                            <div class="contact-icon me-3">
+                                                <i class="fas fa-clock fa-lg text-primary"></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="fw-bold mb-1">Business Hours</h5>
+                                                <p class="mb-1"><strong>Monday - Saturday:</strong> 9:00 AM - 8:00 PM</p>
+                                                <p class="mb-1"><strong>Sunday:</strong> 10:00 AM - 6:00 PM</p>
+                                                <p class="text-muted mb-0">Emergency support available 24/7</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Social Media Links -->
+                                    <div class="social-media-section mt-5">
+                                        <h5 class="fw-bold mb-3">Follow Us</h5>
+                                        <div class="social-links">
+                                            <a href="#" class="btn btn-outline-primary btn-sm rounded-circle me-2" style="width: 40px; height: 40px;">
+                                                <i class="fab fa-facebook-f"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-outline-primary btn-sm rounded-circle me-2" style="width: 40px; height: 40px;">
+                                                <i class="fab fa-twitter"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-outline-primary btn-sm rounded-circle me-2" style="width: 40px; height: 40px;">
+                                                <i class="fab fa-instagram"></i>
+                                            </a>
+                                            <a href="#" class="btn btn-outline-primary btn-sm rounded-circle" style="width: 40px; height: 40px;">
+                                                <i class="fab fa-whatsapp"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- FAQ Section -->
+                <section class="faq-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center mb-5">
+                                <h2 class="section-title display-6 fw-bold mb-3">Frequently Asked Questions</h2>
+                                <p class="section-subtitle text-muted">
+                                    Quick answers to common questions about our services
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center">
+                            <div class="col-lg-10">
+                                <div class="accordion" id="faqAccordion">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                                How do I book a bus with Annapurna Travels?
+                                            </button>
+                                        </h2>
+                                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                You can book a bus through our website, by calling our customer service team,
+                                                or by visiting our office. We recommend booking at least 24-48 hours in advance
+                                                for the best availability.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                                What is your cancellation policy?
+                                            </button>
+                                        </h2>
+                                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                Cancellations made 24 hours before departure receive a full refund.
+                                                Cancellations made 12-24 hours before receive 50% refund.
+                                                No refund for cancellations within 12 hours of departure.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                                Do you provide pickup and drop services?
+                                            </button>
+                                        </h2>
+                                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                Yes, we offer pickup and drop services within city limits.
+                                                Additional charges may apply for locations outside our standard service area.
+                                                Please mention your pickup/drop requirements when booking.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                                What amenities are included in your buses?
+                                            </button>
+                                        </h2>
+                                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                Our buses feature air conditioning, comfortable reclining seats,
+                                                entertainment systems, charging points, and clean restrooms.
+                                                Luxury coaches also include Wi-Fi, refreshments, and extra legroom.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                                Are your buses equipped with safety features?
+                                            </button>
+                                        </h2>
+                                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                Yes, all our buses are equipped with GPS tracking, emergency contact systems,
+                                                first aid kits, and fire extinguishers. Our drivers are trained in safety protocols
+                                                and emergency procedures.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                                Do you offer corporate packages?
+                                            </button>
+                                        </h2>
+                                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                            <div class="accordion-body">
+                                                Yes, we offer special corporate packages for employee transportation, company events,
+                                                and business travel. We provide customized solutions with flexible billing options
+                                                for corporate clients.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Map Section (Placeholder) -->
+                <section class="map-section py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 text-center mb-4">
+                                <h2 class="section-title display-6 fw-bold mb-3">Find Us</h2>
+                                <p class="section-subtitle text-muted">
+                                    Visit our office for in-person consultations and bookings
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="map-placeholder bg-light rounded-4 p-5 shadow-sm text-center">
+                                    <i class="fas fa-map-marked-alt fa-4x text-primary mb-3"></i>
+                                    <h4 class="text-muted mb-2">Interactive Map</h4>
+                                    <p class="text-muted">Annapurna Travels Office Location</p>
+                                    <p class="text-muted"><strong>Bhopal, Madhya Pradesh, India</strong></p>
+                                    <div class="mt-4">
+                                        <a href="https://maps.google.com" target="_blank" class="btn btn-primary rounded-pill px-4">
+                                            <i class="fas fa-directions me-2"></i>Get Directions
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Emergency Contact Section -->
+                <section class="emergency-contact-section py-5 bg-danger text-white">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h3 class="display-6 fw-bold mb-3">
+                                    <i class="fas fa-exclamation-triangle me-3"></i>Emergency Contact
+                                </h3>
+                                <p class="lead mb-0">
+                                    For emergency assistance during travel, road-side support, or urgent bookings,
+                                    our emergency helpline is available 24/7.
+                                </p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end mt-4 mt-lg-0">
+                                <div class="emergency-actions">
+                                    <a href="tel:+91XXXXXXXXXX" class="btn btn-light btn-lg rounded-pill px-4">
+                                        <i class="fas fa-phone me-2"></i>Emergency: +91 XXX-XXX-XXXX
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </t>
+        </template>
+
+        <!-- Contact Success Page -->
+        <template id="contact_success" name="Contact Success">
+            <t t-call="website.layout">
+                <t t-set="title">Message Sent - Annapurna Travels</t>
+
+                <section class="contact-success-section py-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 text-center">
+                                <div class="success-icon mb-4">
+                                    <i class="fas fa-check-circle fa-5x text-success"></i>
+                                </div>
+                                <h1 class="display-4 fw-bold text-success mb-3">Message Sent Successfully!</h1>
+                                <p class="lead mb-4">
+                                    Thank you for contacting Annapurna Travels. We have received your message and
+                                    will get back to you within 24 hours.
+                                </p>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>What's Next?</strong> Our customer service team will review your message and contact you soon.
+                                    For urgent matters, please call us directly at +91 XXX-XXX-XXXX.
+                                </div>
+
+                                <div class="success-actions mt-4">
+                                    <a href="/" class="btn btn-primary btn-lg rounded-pill px-4 me-3">
+                                        <i class="fas fa-home me-2"></i>Back to Home
+                                    </a>
+                                    <a href="/booking" class="btn btn-outline-primary btn-lg rounded-pill px-4">
+                                        <i class="fas fa-calendar-check me-2"></i>Book a Trip
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
+    </data>
+</odoo>

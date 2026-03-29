@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vehicle Form View -->
+    <record id="view_transport_vehicle_form" model="ir.ui.view">
+        <field name="name">transport.vehicle.form</field>
+        <field name="model">transport.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Vehicle Number"/>
+                        <field name="vehicle_type"/>
+                        <field name="simply_fleet_vehicle_id" options="{'no_create': True}"/>
+                    </group>
+                    <notebook>
+                        <page string="Logbook Entries">
+                            <field name="logbook_entry_ids" readonly="1">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="company_id"/>
+                                    <field name="pickup_location"/>
+                                    <field name="drop_location"/>
+                                    <field name="distance"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_trips" widget="statinfo"/>
+                                <field name="total_distance" widget="statinfo"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Extend SimplyFleet Vehicle Form -->
+    <record id="view_simply_fleet_vehicle_form_extension" model="ir.ui.view">
+        <field name="name">simply.fleet.vehicle.form.extension</field>
+        <field name="model">simply.fleet.vehicle</field>
+        <field name="inherit_id" ref="simply_fleet.view_simply_fleet_vehicle_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_create_transport_vehicle" type="object" 
+                        class="oe_stat_button" icon="fa-calendar">
+                    <span>Create Logbook Vehicle</span>
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <!-- Vehicle Tree View -->
+    <record id="view_transport_vehicle_tree" model="ir.ui.view">
+        <field name="name">transport.vehicle.tree</field>
+        <field name="model">transport.vehicle</field>
+        <field name="arch" type="xml">
+            <tree string="Vehicles">
+                <field name="name"/>
+                <field name="vehicle_type"/>
+                <field name="simply_fleet_vehicle_id"/>
+                <field name="total_trips"/>
+                <field name="total_distance"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_transport_vehicle_search" model="ir.ui.view">
+        <field name="name">transport.vehicle.search</field>
+        <field name="model">transport.vehicle</field>
+        <field name="arch" type="xml">
+            <search string="Search Vehicles">
+                <field name="name"/>
+                <filter string="Bus" name="bus" domain="[('vehicle_type','=','bus')]"/>
+                <filter string="Cab" name="cab" domain="[('vehicle_type','=','cab')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Vehicle Type" name="vehicle_type" context="{'group_by':'vehicle_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vehicle Action -->
+    <record id="action_transport_vehicle" model="ir.actions.act_window">
+        <field name="name">Vehicles</field>
+        <field name="res_model">transport.vehicle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first vehicle
+            </p>
+        </field>
+    </record>
+    
+    <!-- Action to Sync Vehicles -->
+    <record id="action_sync_vehicles" model="ir.actions.server">
+        <field name="name">Sync from SimplyFleet</field>
+        <field name="model_id" ref="model_transport_vehicle"/>
+        <field name="binding_model_id" ref="model_transport_vehicle"/>
+        <field name="state">code</field>
+        <field name="code">action = model.sync_from_simply_fleet()</field>
+    </record>
+</odoo>

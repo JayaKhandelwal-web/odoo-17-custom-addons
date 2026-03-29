@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- FleetX Configuration Tree View -->
+        <record id="view_fleetx_config_tree" model="ir.ui.view">
+            <field name="name">fleetx.config.tree</field>
+            <field name="model">fleetx.config</field>
+            <field name="arch" type="xml">
+                <tree string="FleetX Configurations" decoration-success="sync_status=='success'" decoration-danger="sync_status=='error'">
+                    <field name="name"/>
+                    <field name="base_url"/>
+                    <field name="company_id"/>
+                    <field name="active"/>
+                    <field name="sync_status"/>
+                    <field name="last_sync"/>
+                    <field name="total_vehicles"/>
+                    <field name="running_vehicles"/>
+                    <field name="idle_vehicles"/>
+                    <field name="parked_vehicles"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- FleetX Configuration Form View -->
+        <record id="view_fleetx_config_form" model="ir.ui.view">
+            <field name="name">fleetx.config.form</field>
+            <field name="model">fleetx.config</field>
+            <field name="arch" type="xml">
+                <form string="FleetX Configuration">
+                    <header>
+                        <button name="test_connection" string="Test Connection" type="object" class="btn-primary"/>
+                        <button name="action_manual_sync" string="Manual Sync" type="object" class="btn-secondary"/>
+                        <field name="sync_status" widget="badge" decoration-success="sync_status=='success'" decoration-danger="sync_status=='error'" decoration-warning="sync_status=='pending'"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="sync_vehicles" icon="fa-refresh">
+                                <field string="Sync Now" name="last_sync" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="base_url"/>
+                                <field name="access_token" password="True" required="active"/>
+                                <field name="company_id"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="sync_interval"/>
+                                <field name="last_sync"/>
+                                <field name="error_message" invisible="not error_message"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Statistics" name="statistics">
+                                <group>
+                                    <group string="Vehicle Statistics">
+                                        <field name="total_vehicles"/>
+                                        <field name="running_vehicles"/>
+                                        <field name="idle_vehicles"/>
+                                        <field name="parked_vehicles"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- FleetX Configuration Search View -->
+        <record id="view_fleetx_config_search" model="ir.ui.view">
+            <field name="name">fleetx.config.search</field>
+            <field name="model">fleetx.config</field>
+            <field name="arch" type="xml">
+                <search string="FleetX Configurations">
+                    <field name="name"/>
+                    <field name="base_url"/>
+                    <field name="company_id"/>
+                    <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                    <filter string="Inactive" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter string="Sync Success" name="sync_success" domain="[('sync_status', '=', 'success')]"/>
+                    <filter string="Sync Error" name="sync_error" domain="[('sync_status', '=', 'error')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Company" name="group_company" context="{'group_by': 'company_id'}"/>
+                        <filter string="Sync Status" name="group_sync_status" context="{'group_by': 'sync_status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- FleetX Configuration Action -->
+        <record id="action_fleetx_config_tree" model="ir.actions.act_window">
+            <field name="name">FleetX Configurations</field>
+            <field name="res_model">fleetx.config</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_fleetx_config_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first FleetX configuration!
+                </p>
+                <p>
+                    Configure your FleetX API connection to start tracking vehicles.
+                </p>
+            </field>
+        </record>
+
+        <!-- Sync Wizard Views -->
+        <record id="view_fleetx_sync_wizard_form" model="ir.ui.view">
+            <field name="name">fleetx.sync.wizard.form</field>
+            <field name="model">fleetx.sync.wizard</field>
+            <field name="arch" type="xml">
+                <form string="FleetX Data Synchronization">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="sync_type" readonly="1" invisible="not sync_completed"/>
+                                <span invisible="sync_completed">FleetX Data Synchronization</span>
+                            </h1>
+                        </div>
+                        
+                        <group invisible="sync_completed">
+                            <group>
+                                <field name="config_id"/>
+                                <field name="sync_type"/>
+                            </group>
+                            <group>
+                                <field name="test_connection"/>
+                                <field name="force_update"/>
+                                <field name="clear_existing"/>
+                            </group>
+                        </group>
+
+                        <group invisible="not sync_completed">
+                            <group string="Sync Results">
+                                <field name="vehicles_created"/>
+                                <field name="vehicles_updated"/>
+                                <field name="analytics_created"/>
+                            </group>
+                        </group>
+
+                        <field name="sync_log" widget="text" invisible="not sync_log"/>
+                        <field name="error_message" widget="text" invisible="not error_message"/>
+                        
+                        <field name="sync_completed" invisible="1"/>
+                    </sheet>
+                    <footer>
+                        <button string="Start Sync" name="action_start_sync" type="object" class="btn-primary" invisible="sync_completed"/>
+                        <button string="Test Connection" name="action_test_connection" type="object" class="btn-secondary" invisible="sync_completed"/>
+                        <button string="View Vehicles" name="action_view_vehicles" type="object" class="btn-secondary" invisible="not sync_completed"/>
+                        <button string="View Analytics" name="action_view_analytics" type="object" class="btn-secondary" invisible="not sync_completed"/>
+                        <button string="Close" name="action_close" type="object" class="btn-default"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_fleetx_sync_wizard" model="ir.actions.act_window">
+            <field name="name">FleetX Data Synchronization</field>
+            <field name="res_model">fleetx.sync.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

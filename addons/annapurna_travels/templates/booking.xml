@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Booking Page Template -->
+        <template id="booking_page" name="Annapurna Travels - Book Now">
+            <t t-call="website.layout">
+                <t t-set="title">Book Now - Annapurna Travels</t>
+                <t t-set="additional_title">Easy Online Booking</t>
+
+                <!-- Page Header -->
+                <section class="page-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center">
+                                <h1 class="page-title">Book Your Journey</h1>
+                                <p class="page-subtitle">
+                                    Quick and easy online booking with instant confirmation
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Error/Success Messages -->
+                <div class="container mt-4" t-if="error">
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <t t-esc="error"/>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
+
+                <!-- Booking Form Section -->
+                <section class="booking-form-section py-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <form id="bookingForm" action="/booking/submit" method="post" class="booking-form needs-validation" novalidate="true">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                                    <!-- Step 1: Customer Information -->
+                                    <div class="form-step active" id="step1">
+                                        <h3 class="form-step-title mb-4">
+                                            <i class="fas fa-user me-2"></i>Customer Information
+                                        </h3>
+
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="service_type_id" class="form-label">Service Type *</label>
+                                                <select class="form-select" id="service_type_id" name="service_type_id" required="true">
+                                                    <option value="">Select Service Type</option>
+                                                    <t t-foreach="services" t-as="service">
+                                                        <option t-att-value="service.id"
+                                                                t-att-selected="form_data.get('service_type_id') == str(service.id)">
+                                                            <t t-esc="service.name"/>
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                                <div class="invalid-feedback">Please select a service type.</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="customer_address" class="form-label">Address</label>
+                                                <textarea class="form-control" id="customer_address" name="customer_address" rows="2"
+                                                          t-att-value="form_data.get('customer_address', '')"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-step-actions mt-4 text-end">
+                                            <button type="button" class="btn btn-primary btn-lg px-4" onclick="nextStep(2)">
+                                                Next <i class="fas fa-arrow-right ms-2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 2: Journey Details -->
+                                    <div class="form-step" id="step2">
+                                        <h3 class="form-step-title mb-4">
+                                            <i class="fas fa-route me-2"></i>Journey Details
+                                        </h3>
+
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label for="pickup_location" class="form-label">Pickup Location *</label>
+                                                <input type="text" class="form-control" id="pickup_location" name="pickup_location"
+                                                       t-att-value="form_data.get('pickup_location', '')" required="true"/>
+                                                <div class="invalid-feedback">Please provide pickup location.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="drop_location" class="form-label">Drop Location</label>
+                                                <input type="text" class="form-control" id="drop_location" name="drop_location"
+                                                       t-att-value="form_data.get('drop_location', '')"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="pickup_date" class="form-label">Pickup Date &amp; Time *</label>
+                                                <input type="datetime-local" class="form-control" id="pickup_date" name="pickup_date"
+                                                       t-att-value="form_data.get('pickup_date', '')" required="true"/>
+                                                <div class="invalid-feedback">Please select pickup date and time.</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="is_round_trip" name="is_round_trip"
+                                                           t-att-checked="form_data.get('is_round_trip')"/>
+                                                    <label class="form-check-label" for="is_round_trip">
+                                                        Round Trip
+                                                    </label>
+                                                </div>
+                                                <input type="datetime-local" class="form-control" id="return_date" name="return_date"
+                                                       t-att-value="form_data.get('return_date', '')" style="display: none;"/>
+                                                <label for="return_date" class="form-label" style="display: none;">Return Date &amp; Time</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="distance_km" class="form-label">Approximate Distance (KM)</label>
+                                                <input type="number" class="form-control" id="distance_km" name="distance_km"
+                                                       t-att-value="form_data.get('distance_km', '')" min="0"/>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="passenger_count" class="form-label">Number of Passengers *</label>
+                                                <input type="number" class="form-control" id="passenger_count" name="passenger_count"
+                                                       t-att-value="form_data.get('passenger_count', '1')" min="1" max="50" required="true"/>
+                                                <div class="invalid-feedback">Please specify number of passengers.</div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Bus Availability Display -->
+                                        <div id="bus_availability" class="mt-4"></div>
+
+                                        <div class="form-step-actions mt-4 d-flex justify-content-between">
+                                            <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="prevStep(1)">
+                                                <i class="fas fa-arrow-left me-2"></i>Previous
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-lg px-4" onclick="nextStep(3)">
+                                                Next <i class="fas fa-arrow-right ms-2"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Step 3: Additional Details -->
+                                    <div class="form-step" id="step3">
+                                        <h3 class="form-step-title mb-4">
+                                            <i class="fas fa-info-circle me-2"></i>Additional Details
+                                        </h3>
+
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label for="passenger_details" class="form-label">Passenger Details</label>
+                                                <textarea class="form-control" id="passenger_details" name="passenger_details" rows="3"
+                                                          placeholder="Names of passengers, age groups, etc."
+                                                          t-att-value="form_data.get('passenger_details', '')"></textarea>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="special_requirements" class="form-label">Special Requirements</label>
+                                                <textarea class="form-control" id="special_requirements" name="special_requirements" rows="3"
+                                                          placeholder="Any special requirements, wheelchair accessibility, medical needs, etc."
+                                                          t-att-value="form_data.get('special_requirements', '')"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-step-actions mt-4 d-flex justify-content-between">
+                                            <button type="button" class="btn btn-outline-secondary btn-lg px-4" onclick="prevStep(2)">
+                                                <i class="fas fa-arrow-left me-2"></i>Previous
+                                            </button>
+                                            <button type="submit" class="btn btn-success btn-lg px-4">
+                                                <i class="fas fa-check me-2"></i>Submit Booking
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Booking Summary Sidebar -->
+                            <div class="col-lg-4">
+                                <div class="booking-summary sticky-top">
+                                    <h4 class="fw-bold mb-3">
+                                        <i class="fas fa-receipt me-2"></i>Booking Summary
+                                    </h4>
+
+                                    <div class="summary-section">
+                                        <h6 class="fw-bold">Service Information</h6>
+                                        <div class="summary-item d-flex justify-content-between">
+                                            <span>Service Type:</span>
+                                            <span id="summary_service">Not selected</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-section">
+                                        <h6 class="fw-bold">Journey Details</h6>
+                                        <div class="summary-item">
+                                            <small class="text-muted">From:</small>
+                                            <div id="summary_pickup">Not specified</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <small class="text-muted">To:</small>
+                                            <div id="summary_drop">Not specified</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <small class="text-muted">Date &amp; Time:</small>
+                                            <div id="summary_date">Not selected</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <small class="text-muted">Passengers:</small>
+                                            <div id="summary_passengers">1</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-section">
+                                        <h6 class="fw-bold">Contact Information</h6>
+                                        <div class="contact-info">
+                                            <p class="mb-2">
+                                                <i class="fas fa-phone text-primary me-2"></i>
+                                                <strong>+91 XXX-XXX-XXXX</strong>
+                                            </p>
+                                            <p class="mb-2">
+                                                <i class="fas fa-envelope text-primary me-2"></i>
+                                                info@annapurnatravels.co.in
+                                            </p>
+                                            <p class="mb-0">
+                                                <i class="fas fa-clock text-primary me-2"></i>
+                                                24/7 Customer Support
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div class="summary-section">
+                                        <div class="alert alert-info">
+                                            <i class="fas fa-info-circle me-2"></i>
+                                            <strong>Note:</strong> Final pricing will be calculated based on your journey details and confirmed after submission.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- How It Works Section -->
+                <section class="how-it-works-section py-5 bg-light">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 mx-auto text-center mb-5">
+                                <h2 class="section-title display-6 fw-bold mb-3">How It Works</h2>
+                                <p class="section-subtitle text-muted">
+                                    Simple steps to book your comfortable journey
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="how-it-works-item">
+                                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                                        1
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Fill Details</h5>
+                                    <p class="text-muted">Provide your journey and contact information</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="how-it-works-item">
+                                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                                        2
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Get Confirmation</h5>
+                                    <p class="text-muted">Receive instant booking confirmation</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="how-it-works-item">
+                                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                                        3
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Make Payment</h5>
+                                    <p class="text-muted">Secure payment options available</p>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 text-center">
+                                <div class="how-it-works-item">
+                                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                                        4
+                                    </div>
+                                    <h5 class="fw-bold mb-2">Enjoy Journey</h5>
+                                    <p class="text-muted">Comfortable and safe travel experience</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </t>
+        </template>
+
+        <!-- Booking Success Page -->
+        <template id="booking_success" name="Booking Success">
+            <t t-call="website.layout">
+                <t t-set="title">Booking Confirmed - Annapurna Travels</t>
+
+                <section class="booking-success-section py-5">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 text-center">
+                                <div class="success-icon mb-4">
+                                    <i class="fas fa-check-circle fa-5x text-success"></i>
+                                </div>
+                                <h1 class="display-4 fw-bold text-success mb-3">Booking Confirmed!</h1>
+                                <p class="lead mb-4">
+                                    Thank you for choosing Annapurna Travels. Your booking has been successfully submitted.
+                                </p>
+
+                                <div class="booking-details bg-light rounded-4 p-4 mb-4 text-start">
+                                    <h4 class="fw-bold mb-3">Booking Details</h4>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <strong>Booking Reference:</strong><br/>
+                                            <span class="text-primary h5" t-esc="booking.name"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Customer Name:</strong><br/>
+                                            <t t-esc="booking.customer_name"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Service Type:</strong><br/>
+                                            <t t-esc="booking.service_type_id.name"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Pickup Date:</strong><br/>
+                                            <t t-esc="booking.pickup_date.strftime('%d %B %Y at %I:%M %p')"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Pickup Location:</strong><br/>
+                                            <t t-esc="booking.pickup_location"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Passengers:</strong><br/>
+                                            <t t-esc="booking.passenger_count"/> person(s)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <strong>What's Next?</strong> Our team will contact you shortly to confirm the details and provide the final quotation.
+                                </div>
+
+                                <div class="success-actions mt-4">
+                                    <a href="/" class="btn btn-primary btn-lg rounded-pill px-4 me-3">
+                                        <i class="fas fa-home me-2"></i>Back to Home
+                                    </a>
+                                    <a href="/contact" class="btn btn-outline-primary btn-lg rounded-pill px-4">
+                                        <i class="fas fa-phone me-2"></i>Contact Us
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t>
+        </template>
+
+        <!-- JavaScript for Multi-Step Form -->
+        <template id="booking_form_script" name="Booking Form JavaScript">
+            <script>
+                let currentStep = 1;
+                const totalSteps = 3;
+
+                function showStep(step) {
+                    // Hide all steps
+                    document.querySelectorAll('.form-step').forEach(el => {
+                        el.classList.remove('active');
+                    });
+
+                    // Show current step
+                    document.getElementById('step' + step).classList.add('active');
+                    currentStep = step;
+
+                    // Update summary
+                    updateSummary();
+                }
+
+                function nextStep(step) {
+                    if (validateCurrentStep()) {
+                        showStep(step);
+                    }
+                }
+
+                function prevStep(step) {
+                    showStep(step);
+                }
+
+                function validateCurrentStep() {
+                    const currentStepEl = document.getElementById('step' + currentStep);
+                    const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+                    let isValid = true;
+
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            input.classList.add('is-invalid');
+                            isValid = false;
+                        } else {
+                            input.classList.remove('is-invalid');
+                        }
+                    });
+
+                    return isValid;
+                }
+
+                function updateSummary() {
+                    // Update service type
+                    const serviceSelect = document.getElementById('service_type_id');
+                    const summaryService = document.getElementById('summary_service');
+                    if (serviceSelect.value) {
+                        summaryService.textContent = serviceSelect.options[serviceSelect.selectedIndex].text;
+                    }
+
+                    // Update pickup location
+                    const pickupInput = document.getElementById('pickup_location');
+                    const summaryPickup = document.getElementById('summary_pickup');
+                    summaryPickup.textContent = pickupInput.value || 'Not specified';
+
+                    // Update drop location
+                    const dropInput = document.getElementById('drop_location');
+                    const summaryDrop = document.getElementById('summary_drop');
+                    summaryDrop.textContent = dropInput.value || 'Not specified';
+
+                    // Update date
+                    const dateInput = document.getElementById('pickup_date');
+                    const summaryDate = document.getElementById('summary_date');
+                    if (dateInput.value) {
+                        const date = new Date(dateInput.value);
+                        summaryDate.textContent = date.toLocaleDateString() + ' at ' + date.toLocaleTimeString();
+                    }
+
+                    // Update passengers
+                    const passengersInput = document.getElementById('passenger_count');
+                    const summaryPassengers = document.getElementById('summary_passengers');
+                    summaryPassengers.textContent = passengersInput.value || '1';
+                }
+
+                // Initialize form
+                document.addEventListener('DOMContentLoaded', function() {
+                    showStep(1);
+
+                    // Add event listeners for real-time summary updates
+                    ['service_type_id', 'pickup_location', 'drop_location', 'pickup_date', 'passenger_count'].forEach(id => {
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.addEventListener('change', updateSummary);
+                        }
+                    });
+                });
+            </script>
+        </template>
+
+    </data>
+</odoo>

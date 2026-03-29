@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- FleetX Settings View -->
+        <record id="view_fleetx_settings_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form.inherit.fleetx</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <app name="fleetx_integration" string="FleetX Integration" groups="base.group_system">
+                        <h2>FleetX Integration</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_fleetx_integration"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_fleetx_integration"/>
+                                    <div class="text-muted">
+                                        Enable FleetX API integration for vehicle tracking
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div invisible="not module_fleetx_integration">
+                            <h3>API Configuration</h3>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_base_url" string="API Base URL"/>
+                                        <field name="fleetx_base_url" placeholder="https://api.fleetx.io/api/v1"/>
+                                        <div class="text-muted">
+                                            FleetX API base URL endpoint
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_access_token" string="Access Token"/>
+                                        <field name="fleetx_access_token" password="True"/>
+                                        <div class="text-muted">
+                                            Your FleetX API access token
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Synchronization Settings</h3>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <field name="fleetx_auto_sync"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_auto_sync"/>
+                                        <div class="text-muted">
+                                            Automatically synchronize data with FleetX API
+                                        </div>
+                                        <div class="content-group" invisible="not fleetx_auto_sync">
+                                            <div class="mt16">
+                                                <label for="fleetx_sync_interval" class="o_light_label" string="Sync Interval"/>
+                                                <field name="fleetx_sync_interval"/>
+                                                <span> minutes</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_log_level" string="Log Level"/>
+                                        <field name="fleetx_log_level"/>
+                                        <div class="text-muted">
+                                            Set logging level for FleetX integration
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Dashboard Settings</h3>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_dashboard_refresh" string="Dashboard Auto Refresh Interval"/>
+                                        <field name="fleetx_dashboard_refresh"/>
+                                        <span> seconds</span>
+                                        <div class="text-muted">
+                                            Dashboard auto refresh interval
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_map_default_zoom" string="Default Map Zoom"/>
+                                        <field name="fleetx_map_default_zoom"/>
+                                        <div class="text-muted">
+                                            Default zoom level for map views
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Notifications</h3>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-12 col-lg-6 o_setting_box">
+                                    <div class="o_setting_left_pane">
+                                        <field name="fleetx_enable_notifications"/>
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="fleetx_enable_notifications"/>
+                                        <div class="text-muted">
+                                            Enable system notifications for FleetX events
+                                        </div>
+                                        <div class="content-group" invisible="not fleetx_enable_notifications">
+                                            <div class="mt16">
+                                                <label for="fleetx_notification_types" class="o_light_label" string="Notification Types"/>
+                                                <field name="fleetx_notification_types"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h3>Actions</h3>
+                            <div class="row mt16 o_settings_container">
+                                <div class="col-12 o_setting_box">
+                                    <div class="o_setting_right_pane">
+                                        <button name="action_test_fleetx_connection" string="Test API Connection" type="object" class="btn-secondary"/>
+                                        <button name="action_sync_fleetx_data" string="Manual Sync" type="object" class="btn-secondary ml8"/>
+                                        <button name="action_open_fleetx_dashboard" string="Open Dashboard" type="object" class="btn-primary ml8"/>
+                                        <div class="text-muted mt8">
+                                            Test connection and sync vehicle data from FleetX API
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </app>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Settings Action -->
+        <record id="action_fleetx_settings" model="ir.actions.act_window">
+            <field name="name">FleetX Settings</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+            <field name="context">{'module': 'fleetx_integration'}</field>
+        </record>
+
+    </data>
+</odoo>
