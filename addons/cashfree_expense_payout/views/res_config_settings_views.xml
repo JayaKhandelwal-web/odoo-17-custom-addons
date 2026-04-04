@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_cashfree" model="ir.ui.view">
+        <field name="name">res.config.settings.cashfree.payout</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Cashfree Payout" string="Cashfree Payout"
+                     data-key="cashfree_expense_payout" id="cashfree_payout_settings">
+
+                    <h2>Cashfree Expense Payout</h2>
+                    <p class="text-muted">
+                        Configure Cashfree Payouts API credentials for automatic
+                        employee expense reimbursements.
+                    </p>
+
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Environment</span>
+                                <div class="text-muted">
+                                    Use Sandbox for testing, Production for live transfers.
+                                </div>
+                                <div class="content-group mt8">
+                                    <field name="cashfree_environment" widget="radio"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Client ID</span>
+                                <div class="text-muted">
+                                    x-client-id from Cashfree Merchant Dashboard.
+                                </div>
+                                <div class="content-group mt8">
+                                    <field name="cashfree_client_id" placeholder="CF_XXXXXXXXXXXXXX"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Client Secret</span>
+                                <div class="text-muted">
+                                    x-client-secret from Cashfree Merchant Dashboard.
+                                </div>
+                                <div class="content-group mt8">
+                                    <field name="cashfree_client_secret"
+                                           password="True"
+                                           placeholder="••••••••••••••••"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Failure Notification Email</span>
+                                <div class="text-muted">
+                                    Email to alert when a payout transfer fails (optional).
+                                </div>
+                                <div class="content-group mt8">
+                                    <field name="cashfree_payout_notify_email"
+                                           placeholder="accounts@annapurnatravels.in"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt8">
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                <strong>Webhook URL:</strong>
+                                Configure this in your Cashfree Merchant Dashboard → Payouts → Webhooks:<br/>
+                                <code>https://&lt;your-odoo-domain&gt;/cashfree/payout/webhook</code>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
