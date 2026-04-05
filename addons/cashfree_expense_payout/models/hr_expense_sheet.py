@@ -59,27 +59,22 @@ class HrExpenseSheet(models.Model):
         help='Bank UTR number after successful transfer.',
     )
 
-    # ── Bank Account Verification fields ─────────────────────────────────────
+    # ── Bank Account Verification fields (computed from bank account) ─────────
     cashfree_bank_verified = fields.Selection(
-        selection=[
-            ('not_verified', 'Not Verified'),
-            ('verified', 'Verified'),
-            ('failed', 'Verification Failed'),
-        ],
+        related='employee_id.bank_account_id.cashfree_bank_verified',
         string='Bank Verification Status',
-        default='not_verified',
-        readonly=True, copy=False,
-        help='Status of bank account verification via Cashfree.',
+        readonly=True,
+        help='Verification status stored on the employee bank account. Persists across all expense reports.',
     )
     cashfree_verified_name = fields.Char(
+        related='employee_id.bank_account_id.cashfree_verified_name',
         string='Verified Account Holder Name',
-        readonly=True, copy=False,
-        help='Name returned by Cashfree after successful bank verification.',
+        readonly=True,
     )
     cashfree_verify_message = fields.Char(
+        related='employee_id.bank_account_id.cashfree_verify_message',
         string='Verification Message',
-        readonly=True, copy=False,
-        help='Message returned by Cashfree verification API.',
+        readonly=True,
     )
 
     # ── Helpers ───────────────────────────────────────────────────────────────
@@ -128,6 +123,19 @@ class HrExpenseSheet(models.Model):
                 'Employee "%s" has no bank account configured.\n'
                 'Add one under Employee \u2192 Private Information \u2192 Private Banking.'
             ) % employee.name)
+
+        # ── Skip if already verified on this bank account ──
+        if bank_account.cashfree_bank_verified == 'verified':
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': _('Already Verified'),
+                    'message': _('Bank account for %s is already verified (Holder: %s). No re-verification needed.') % (
+                        employee.name, bank_account.cashfree_verified_name or 'N/A'),
+                    'type': 'success', 'sticky': False,
+                },
+            }
 
         acc_number = re.sub(r'[^a-zA-Z0-9]', '', bank_account.acc_number or '')
         bank = bank_account.bank_id
@@ -201,7 +209,7 @@ class HrExpenseSheet(models.Model):
             msg = resp_data.get('account_status_code', '')
 
             if account_status == 'VALID':
-                self.write({
+                bank_account.write({
                     'cashfree_bank_verified': 'verified',
                     'cashfree_verified_name': name_at_bank,
                     'cashfree_verify_message': msg or 'Verified successfully.',
@@ -222,7 +230,7 @@ class HrExpenseSheet(models.Model):
                 }
             else:
                 reason = resp_data.get('account_status_code') or resp_data.get('message') or 'Account could not be verified.'
-                self.write({
+                bank_account.write({
                     'cashfree_bank_verified': 'failed',
                     'cashfree_verified_name': name_at_bank or '',
                     'cashfree_verify_message': reason,
@@ -482,10 +490,10 @@ class HrExpenseSheet(models.Model):
         config = self._get_cashfree_config()
         resp_data = self._cashfree_get_transfer_status(config)
 
-        cf_status = resp_data.get('transfer_status', '').upper()
+        cf_status = (resp_data.get('transfer_status') or resp_data.get('status') or '').upper()
         odoo_state = TRANSFER_STATE_LABELS.get(cf_status, 'pending')
         utr = resp_data.get('bank_account_utr') or resp_data.get('utr', '')
-        failure_reason = resp_data.get('reason') or resp_data.get('failure_reason', '')
+        failure_reason = resp_data.get('reason') or resp_data.get('failure_reason', '') or resp_data.get('message', '')
 
         vals = {
             'cashfree_payout_state': odoo_state,

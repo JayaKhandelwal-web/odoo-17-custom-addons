@@ -20,7 +20,7 @@ class CashfreePayoutWebhook(http.Controller):
 
     @http.route(
         '/cashfree/payout/webhook',
-        type='json',
+        type='http',
         auth='public',
         methods=['POST'],
         csrf=False,
@@ -62,7 +62,7 @@ class CashfreePayoutWebhook(http.Controller):
 
         if not transfer_id:
             _logger.warning('Cashfree webhook: No transfer_id in payload.')
-            return {'status': 'ignored', 'reason': 'no transfer_id'}
+            return request.make_response('Ignored: No transfer_id', headers={'Content-Type': 'text/plain'})
 
         # ── Find matching expense sheet ──
         sheet = request.env['hr.expense.sheet'].sudo().search(
@@ -73,7 +73,7 @@ class CashfreePayoutWebhook(http.Controller):
             _logger.warning(
                 'Cashfree webhook: No expense sheet found for transfer_id %s', transfer_id
             )
-            return {'status': 'not_found'}
+            return request.make_response('Not Found', headers={'Content-Type': 'text/plain'})
 
         odoo_state = TRANSFER_STATE_LABELS.get(cf_status, 'pending')
         vals = {
@@ -107,4 +107,4 @@ class CashfreePayoutWebhook(http.Controller):
         _logger.info(
             'Cashfree webhook processed: sheet=%s, status=%s', sheet.name, odoo_state
         )
-        return {'status': 'ok'}
+        return request.make_response('OK', headers={'Content-Type': 'text/plain'})
