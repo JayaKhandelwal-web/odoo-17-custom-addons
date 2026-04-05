@@ -63,7 +63,7 @@
             </xpath>
 
             <!-- ── Status Banners ── -->
-            <xpath expr="//sheet" position="before">
+            <xpath expr="//div[@name='button_box']" position="after">
                 <!-- Bank Verification Banners -->
                 <div class="alert alert-success mb-0" role="alert"
                      invisible="cashfree_bank_verified != 'verified'">
