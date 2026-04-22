@@ -1,1 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cashfree_expense_sheet_user,cashfree.expense.sheet.user,hr_expense.model_hr_expense_sheet,cashfree_expense_payout.group_cashfree_payout_user,1,0,0,0
+access_cashfree_expense_sheet_manager,cashfree.expense.sheet.manager,hr_expense.model_hr_expense_sheet,cashfree_expense_payout.group_cashfree_payout_manager,1,1,1,0
+access_cashfree_partner_bank_user,cashfree.partner.bank.user,base.model_res_partner_bank,cashfree_expense_payout.group_cashfree_payout_user,1,0,0,0
+access_cashfree_partner_bank_manager,cashfree.partner.bank.manager,base.model_res_partner_bank,cashfree_expense_payout.group_cashfree_payout_manager,1,1,1,0

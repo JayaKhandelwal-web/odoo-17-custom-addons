@@ -30,6 +30,7 @@
                     string="Verify Bank Account"
                     icon="fa-university"
                     class="oe_stat_button"
+                    groups="cashfree_expense_payout.group_cashfree_payout_manager"
                     invisible="cashfree_bank_verified == 'verified'"
                     confirm="This will verify the employee bank account details via Cashfree. Proceed?"
                 />
@@ -40,6 +41,7 @@
                     string="Re-verify Bank"
                     icon="fa-check-circle"
                     class="oe_stat_button"
+                    groups="cashfree_expense_payout.group_cashfree_payout_manager"
                     invisible="cashfree_bank_verified != 'verified'"
                 />
                 <!-- Pay via Cashfree Button -->
@@ -49,6 +51,7 @@
                     string="Pay via Cashfree"
                     icon="fa-money"
                     class="oe_stat_button"
+                    groups="cashfree_expense_payout.group_cashfree_payout_manager"
                     invisible="state != 'post' or cashfree_payout_state in ('success', 'pending')"
                     confirm="Are you sure you want to initiate Cashfree payout for this expense sheet?"
                 />
@@ -58,6 +61,7 @@
                     string="Refresh Payout Status"
                     icon="fa-refresh"
                     class="oe_stat_button"
+                    groups="cashfree_expense_payout.group_cashfree_payout_manager"
                     invisible="cashfree_payout_state != 'pending' or state == 'done'"
                 />
             </xpath>

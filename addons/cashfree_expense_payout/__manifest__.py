@@ -16,6 +16,7 @@
     'website': 'https://www.aligntogether.in',
     'depends': ['hr_expense', 'mail'],
     'data': [
+        'security/cashfree_security.xml',
         'security/ir.model.access.csv',
         'data/ir_config_parameter.xml',
         'views/res_config_settings_views.xml',

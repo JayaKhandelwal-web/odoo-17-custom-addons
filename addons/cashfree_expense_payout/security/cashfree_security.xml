@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══ Cashfree Payout Security Groups ═══════════════════════════════════ -->
+
+    <!-- Category for grouping in Settings > Users & Companies -->
+    <record id="module_cashfree_payout_category" model="ir.module.category">
+        <field name="name">Cashfree Payout</field>
+        <field name="description">Manage access rights for Cashfree Expense Payout features.</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- Group 1: Cashfree Payout User — can view payout info only -->
+    <record id="group_cashfree_payout_user" model="res.groups">
+        <field name="name">Cashfree Payout User</field>
+        <field name="category_id" ref="module_cashfree_payout_category"/>
+        <field name="comment">Users in this group can view Cashfree payout status and bank verification details on expense sheets, but cannot initiate payments.</field>
+    </record>
+
+    <!-- Group 2: Cashfree Payout Manager — can initiate payments and verify bank accounts -->
+    <record id="group_cashfree_payout_manager" model="res.groups">
+        <field name="name">Cashfree Payout Manager</field>
+        <field name="category_id" ref="module_cashfree_payout_category"/>
+        <field name="implied_ids" eval="[(4, ref('group_cashfree_payout_user'))]"/>
+        <field name="comment">Users in this group can initiate Cashfree payouts, verify employee bank accounts, and refresh payment statuses. Assign this group to Finance/HR Managers who are authorized to disburse expense payments.</field>
+        <!-- Auto-assign Odoo Administrators -->
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>

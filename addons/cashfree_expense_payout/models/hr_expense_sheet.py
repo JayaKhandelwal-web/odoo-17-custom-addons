@@ -115,6 +115,8 @@ class HrExpenseSheet(models.Model):
     def action_verify_bank_account(self):
         """Verify employee bank account via Cashfree Payouts API."""
         self.ensure_one()
+        # ── Security check ──
+        self._check_cashfree_payout_access()
         employee = self.employee_id
         bank_account = employee.bank_account_id
 
@@ -421,13 +423,26 @@ class HrExpenseSheet(models.Model):
 
     # ── Main action: Pay via Cashfree ─────────────────────────────────────────
 
+    def _check_cashfree_payout_access(self):
+        """Raise AccessError if current user is not a Cashfree Payout Manager."""
+        if not self.env.user.has_group('cashfree_expense_payout.group_cashfree_payout_manager'):
+            raise UserError(_(
+                'Access Denied: You do not have permission to perform Cashfree payout operations.\n'
+                'Please contact your administrator to be added to the "Cashfree Payout Manager" group.'
+            ))
+
     def action_cashfree_pay(self):
         """
         Button action: Pay employee via Cashfree Payouts.
         - Only allowed on validated (post) expense sheets
+        - Only allowed for users in the Cashfree Payout Manager group
+        - Minimum payment amount is ₹800
         - Skips if already successfully paid
         """
         self.ensure_one()
+
+        # ── Security check: only Cashfree Payout Managers can initiate payment ──
+        self._check_cashfree_payout_access()
 
         # ── Guard checks ──
         if self.state != 'post':
@@ -439,6 +454,14 @@ class HrExpenseSheet(models.Model):
             raise UserError(_('This expense sheet has already been successfully paid via Cashfree.'))
         if self.total_amount <= 0:
             raise UserError(_('Total amount must be greater than zero.'))
+
+        # ── Minimum amount validation: ₹800 ──
+        MINIMUM_PAYOUT_AMOUNT = 800.0
+        if self.total_amount < MINIMUM_PAYOUT_AMOUNT:
+            raise UserError(_(
+                'Payment amount ₹%.2f is below the minimum allowed payout amount of ₹%.2f.\n'
+                'Please ensure the expense total is at least ₹800 before initiating a Cashfree payout.'
+            ) % (self.total_amount, MINIMUM_PAYOUT_AMOUNT))
 
         config = self._get_cashfree_config()
 
@@ -484,6 +507,8 @@ class HrExpenseSheet(models.Model):
     def action_cashfree_refresh_status(self):
         """Manual button to refresh transfer status from Cashfree."""
         self.ensure_one()
+        # ── Security check ──
+        self._check_cashfree_payout_access()
         if self.cashfree_payout_state not in ('pending',):
             raise UserError(_('Status refresh is only applicable for pending transfers.'))
 
