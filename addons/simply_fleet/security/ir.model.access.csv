@@ -3,7 +3,7 @@ access_simply_fleet_vehicle_user,simply.fleet.vehicle.user,model_simply_fleet_ve
 access_simply_fleet_vehicle_manager,simply.fleet.vehicle.manager,model_simply_fleet_vehicle,simply_fleet.group_simply_fleet_manager,1,1,1,1
 access_simply_fleet_document_user,simply.fleet.document.user,model_simply_fleet_document,simply_fleet.group_simply_fleet_user,1,1,1,0
 access_simply_fleet_document_manager,simply.fleet.document.manager,model_simply_fleet_document,simply_fleet.group_simply_fleet_manager,1,1,1,1
-access_simply_fleet_fuel_log_user,simply.fleet.fuel.log.user,model_simply_fleet_fuel_log,simply_fleet.group_simply_fleet_user,1,1,1,0
+access_simply_fleet_fuel_log_user,simply.fleet.fuel.log.user,model_simply_fleet_fuel_log,simply_fleet.group_simply_fleet_user,1,0,1,0
 access_simply_fleet_fuel_log_manager,simply.fleet.fuel.log.manager,model_simply_fleet_fuel_log,simply_fleet.group_simply_fleet_manager,1,1,1,1
 access_simply_fleet_transaction_type_user,simply.fleet.transaction.type.user,model_simply_fleet_transaction_type,base.group_user,1,0,0,0
 access_simply_fleet_transaction_type_manager,simply.fleet.transaction.type.manager,model_simply_fleet_transaction_type,base.group_system,1,1,1,1
