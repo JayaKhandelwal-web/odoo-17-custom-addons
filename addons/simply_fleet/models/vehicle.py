@@ -197,6 +197,14 @@ class Vehicle(models.Model):
         tracking=True,
         help='Initial odometer reading when the vehicle was added to the fleet'
     )
+    fuel_type = fields.Selection([
+        ('petrol', 'Petrol'),
+        ('diesel', 'Diesel'),
+        ('electric', 'Electric'),
+        ('hybrid', 'Hybrid'),
+        ('cng', 'CNG'),
+        ('lpg', 'LPG'),
+    ], string='Fuel Type', tracking=True, help='Type of fuel used by this vehicle')
     average_mileage = fields.Float(
         string='Set the mileage',
         help='Average mileage value in km/l or MPG',
