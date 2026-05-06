@@ -151,7 +151,6 @@
                                 <group>
                                     <field name="fuel_tank_capacity"/>
                                     <field name="initial_odometer"/>
-                                    <field name="fuel_type"/>
                                     <separator string="Set the mileage" colspan="2"/>
                                     <field name="min_mileage"/>
                                     <field name="max_mileage"/>
