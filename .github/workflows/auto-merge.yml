@@ -1,0 +1,48 @@
+name: Auto Merge Clean PRs
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check conflicts and merge
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo  = context.repo.repo;
+            const pull_number = context.payload.pull_request.number;
+
+            // GitHub computes mergeability async — poll up to 30s
+            let mergeable = null;
+            for (let i = 0; i < 6; i++) {
+              await new Promise(r => setTimeout(r, 5000));
+              const { data } = await github.rest.pulls.get({ owner, repo, pull_number });
+              mergeable = data.mergeable;
+              if (mergeable !== null) break;
+            }
+
+            if (mergeable === true) {
+              await github.rest.pulls.merge({
+                owner, repo, pull_number,
+                merge_method: 'merge',
+              });
+              core.info('✅ PR merged successfully — no conflicts found.');
+            } else if (mergeable === false) {
+              await github.rest.issues.createComment({
+                owner, repo,
+                issue_number: pull_number,
+                body: '⚠️ **Auto-merge blocked**: This PR has merge conflicts with the base branch. Please resolve the conflicts and push again.',
+              });
+              core.info('❌ PR has conflicts — skipped merge, commented on PR.');
+            } else {
+              core.warning('⚠️ Could not determine mergeability after 30s — skipping.');
+            }
