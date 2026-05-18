@@ -1,6 +1,10 @@
 name: Auto Merge Clean PRs
 
 on:
+  push:
+    branches-ignore:
+      - 'claude/awesome-bartik-2ea7dc'
+      - 'claude/**'
   pull_request:
     types: [opened, synchronize, reopened]
 
@@ -12,14 +16,45 @@ jobs:
   auto-merge:
     runs-on: ubuntu-latest
     steps:
-      - name: Check conflicts and merge
+      - name: Create PR if needed and auto-merge
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const owner = context.repo.owner;
             const repo  = context.repo.repo;
-            const pull_number = context.payload.pull_request.number;
+            const base  = 'claude/awesome-bartik-2ea7dc';
+
+            let pull_number;
+
+            if (context.eventName === 'push') {
+              const branch = context.ref.replace('refs/heads/', '');
+
+              // Check if a PR already exists for this branch
+              const { data: existing } = await github.rest.pulls.list({
+                owner, repo,
+                head: `${owner}:${branch}`,
+                state: 'open',
+              });
+
+              if (existing.length > 0) {
+                pull_number = existing[0].number;
+                core.info(`Using existing PR #${pull_number}`);
+              } else {
+                // Auto-create a PR
+                const { data: pr } = await github.rest.pulls.create({
+                  owner, repo,
+                  title: `Auto: ${branch}`,
+                  head: branch,
+                  base,
+                  body: `Auto-created PR from push to \`${branch}\`.`,
+                });
+                pull_number = pr.number;
+                core.info(`Created PR #${pull_number}`);
+              }
+            } else {
+              pull_number = context.payload.pull_request.number;
+            }
 
             // GitHub computes mergeability async — poll up to 30s
             let mergeable = null;
@@ -40,9 +75,9 @@ jobs:
               await github.rest.issues.createComment({
                 owner, repo,
                 issue_number: pull_number,
-                body: '⚠️ **Auto-merge blocked**: This PR has merge conflicts with the base branch. Please resolve the conflicts and push again.',
+                body: '⚠️ **Auto-merge blocked**: This branch has merge conflicts. Please resolve them and push again.',
               });
-              core.info('❌ PR has conflicts — skipped merge, commented on PR.');
+              core.info('❌ Conflicts found — commented on PR.');
             } else {
               core.warning('⚠️ Could not determine mergeability after 30s — skipping.');
             }
