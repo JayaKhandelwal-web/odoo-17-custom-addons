@@ -2,7 +2,7 @@
 # Auto-deploy: pulls latest code and restarts Odoo if new commits exist on main branch
 
 REPO_DIR="/Users/naman/Desktop/Odoo-17-Docker"
-BRANCH="claude/awesome-bartik-2ea7dc"
+BRANCH="base"
 LOG_FILE="$REPO_DIR/auto-deploy.log"
 
 cd "$REPO_DIR" || exit 1
