@@ -58,12 +58,12 @@
         # Main Views
         'views/simply_fleet_views.xml',
         'views/vehicle_mobile_views.xml',          # ← Mobile vehicle views
+        'views/fuel_log_mobile_views.xml',         # ← Must load before fuel_log_action_views (defines simply_fleet_fuel_log_kanban)
         'views/simply_fleet_menus.xml',
         'views/fuel_log_action_views.xml',
         'views/vehicle_group_views.xml',
         'views/hr_views.xml',
         'views/fleet_manager_assignment_views.xml',
-        'views/fuel_log_mobile_views.xml',
         'views/battery_views.xml',
         'views/tyre_views.xml',
         'views/vehicle_image_views.xml',

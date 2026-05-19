@@ -19,6 +19,7 @@
             'dark_mode_knk/static/src/js/dark_mode_button.js',
             'dark_mode_knk/static/src/scss/night_mode.scss',
             'dark_mode_knk/static/src/xml/dark_mode_button.xml',
+            'dark_mode_knk/static/src/css/control_buttons.css',
         ],
     },
     'images': ['static/description/banner.gif'],

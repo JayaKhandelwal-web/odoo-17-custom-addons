@@ -29,15 +29,9 @@ def post_init_hook(env_or_cr, registry=None):
                 if not TransactionType.search([('name', '=', type_data['name'])]):
                     TransactionType.create(type_data)
 
-        # Fix: Remove group restriction on last_attendance_id so that
-        # the Driver field dropdown works on mobile for non-attendance-officer users
-        field = env['ir.model.fields'].sudo().search([
-            ('model', '=', 'hr.employee'),
-            ('name', '=', 'last_attendance_id')
-        ], limit=1)
-        if field:
-            field.write({'groups': ''})
-            _logger.info("Simply Fleet: Cleared group restriction on hr.employee.last_attendance_id")
+        # NOTE: Clearing group restrictions on base fields via ir.model.fields.write()
+        # is not allowed in Odoo 17. Override the field in Python model instead.
+        _logger.info("Simply Fleet: Skipping group restriction change on hr.employee.last_attendance_id (not supported in Odoo 17)")
         
         cr.commit()
     except Exception as e:

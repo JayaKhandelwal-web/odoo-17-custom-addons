@@ -1,0 +1,244 @@
+/* ============================================================
+   Global Control Panel Buttons — All Odoo Modules
+   Icons only — colored hover circle with glow effect
+   Save     → Green bookmark icon
+   Discard  → Red X icon  (top-right)
+   Settings → Gray gear icon
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   0. BUTTON ROW ORDER
+   ---------------------------------------------------------- */
+.o_form_buttons_edit {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.o_form_buttons_edit .o_form_button_save {
+    order: 1 !important;
+}
+.o_form_buttons_edit .o_form_button_cancel,
+.o_form_buttons_edit .o_form_button_discard {
+    order: 2 !important;
+}
+
+/* ----------------------------------------------------------
+   1. BASE RESET
+   ---------------------------------------------------------- */
+.o_form_button_save,
+.o_form_button_discard,
+.o_form_button_cancel,
+.o_cp_action_menus .btn,
+.o_cp_action_menus > button {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    padding: 0 !important;
+    margin: 0 3px !important;
+    border-radius: 50% !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    vertical-align: middle !important;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
+    /* Hide raw text nodes (button label text) */
+    font-size: 0 !important;
+    color: transparent !important;
+}
+
+/* ----------------------------------------------------------
+   2. SAVE BUTTON — green bookmark, green circle on hover
+   ---------------------------------------------------------- */
+.o_form_button_save i,
+.o_form_button_save .fa,
+.o_form_button_save svg,
+.o_form_button_save span {
+    display: none !important;
+}
+
+.o_form_button_save::after {
+    content: "\f02e" !important;
+    font-family: "FontAwesome", "Font Awesome 5 Free", "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-size: 28px !important;
+    color: #2E7D32 !important;
+    pointer-events: none !important;
+    -webkit-font-smoothing: antialiased !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+}
+
+/* HOVER — green circle fills in, icon turns white, glow */
+.o_form_button_save:hover {
+    background: #43A047 !important;
+    box-shadow: 0 4px 16px rgba(67, 160, 71, 0.55) !important;
+    transform: scale(1.12) !important;
+}
+.o_form_button_save:hover::after {
+    color: #ffffff !important;
+}
+
+/* Tooltip */
+.o_form_button_save:hover::before {
+    content: "Save" !important;
+    position: absolute !important;
+    bottom: -30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #1B5E20 !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    font-family: sans-serif !important;
+    padding: 3px 10px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    z-index: 9999 !important;
+}
+
+/* Active press */
+.o_form_button_save:active {
+    transform: scale(0.90) !important;
+    box-shadow: 0 2px 6px rgba(67, 160, 71, 0.30) !important;
+}
+
+/* ----------------------------------------------------------
+   3. DISCARD BUTTON — red X, red circle on hover
+   ---------------------------------------------------------- */
+.o_form_button_discard i,
+.o_form_button_discard .fa,
+.o_form_button_discard svg,
+.o_form_button_discard span,
+.o_form_button_cancel i,
+.o_form_button_cancel .fa,
+.o_form_button_cancel svg,
+.o_form_button_cancel span {
+    display: none !important;
+}
+
+.o_form_button_discard::after,
+.o_form_button_cancel::after {
+    content: "\00D7" !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+    font-weight: 900 !important;
+    font-style: normal !important;
+    font-size: 44px !important;
+    line-height: 1 !important;
+    color: #E53935 !important;
+    pointer-events: none !important;
+    -webkit-font-smoothing: antialiased !important;
+    transition: color 0.2s ease !important;
+}
+
+/* HOVER — red circle fills in, icon turns white, glow */
+.o_form_button_discard:hover,
+.o_form_button_cancel:hover {
+    background: #E53935 !important;
+    box-shadow: 0 4px 16px rgba(229, 57, 53, 0.55) !important;
+    transform: scale(1.12) !important;
+}
+.o_form_button_discard:hover::after,
+.o_form_button_cancel:hover::after {
+    color: #ffffff !important;
+}
+
+/* Tooltip */
+.o_form_button_discard:hover::before,
+.o_form_button_cancel:hover::before {
+    content: "Discard Changes" !important;
+    position: absolute !important;
+    bottom: -30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #B71C1C !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    font-family: sans-serif !important;
+    padding: 3px 10px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    z-index: 9999 !important;
+}
+
+/* Active press */
+.o_form_button_discard:active,
+.o_form_button_cancel:active {
+    transform: scale(0.90) !important;
+    box-shadow: 0 2px 6px rgba(229, 57, 53, 0.30) !important;
+}
+
+/* ----------------------------------------------------------
+   4. SETTINGS / GEAR — gray icon, dark circle on hover
+   ---------------------------------------------------------- */
+.o_cp_action_menus .btn i,
+.o_cp_action_menus .btn .fa,
+.o_cp_action_menus > button i,
+.o_cp_action_menus > button .fa {
+    color: #757575 !important;
+    font-size: 26px !important;
+    transition: color 0.2s ease !important;
+}
+
+.o_cp_action_menus .btn svg,
+.o_cp_action_menus > button svg {
+    fill: #757575 !important;
+    width: 26px !important;
+    height: 26px !important;
+    transition: fill 0.2s ease !important;
+}
+
+/* HOVER — dark gray circle, icon turns white, shadow */
+.o_cp_action_menus .btn:hover,
+.o_cp_action_menus > button:hover {
+    background: #616161 !important;
+    box-shadow: 0 4px 16px rgba(97, 97, 97, 0.45) !important;
+    transform: scale(1.12) !important;
+}
+.o_cp_action_menus .btn:hover i,
+.o_cp_action_menus .btn:hover .fa,
+.o_cp_action_menus > button:hover i,
+.o_cp_action_menus > button:hover .fa {
+    color: #ffffff !important;
+}
+.o_cp_action_menus .btn:hover svg,
+.o_cp_action_menus > button:hover svg {
+    fill: #ffffff !important;
+}
+
+/* Tooltip */
+.o_cp_action_menus .btn:hover::before,
+.o_cp_action_menus > button:hover::before {
+    content: "Settings" !important;
+    position: absolute !important;
+    bottom: -30px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: #424242 !important;
+    color: #fff !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    font-family: sans-serif !important;
+    padding: 3px 10px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    pointer-events: none !important;
+    z-index: 9999 !important;
+}
+
+/* Active press */
+.o_cp_action_menus .btn:active,
+.o_cp_action_menus > button:active {
+    transform: scale(0.90) !important;
+    box-shadow: 0 2px 6px rgba(97, 97, 97, 0.25) !important;
+}
