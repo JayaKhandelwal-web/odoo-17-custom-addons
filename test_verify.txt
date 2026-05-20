@@ -1,0 +1,15 @@
+===================================
+  PUSH VERIFICATION TEST FILE
+===================================
+
+Created by : naman7077-dev
+Date       : 2026-05-20
+Purpose    : Verify that recent changes are successfully pushed to GitHub
+
+Status     : ✅ If you can see this file on GitHub (main branch),
+             the push was successful.
+
+Branch     : main
+Repo       : https://github.com/naman7077-dev/odoo-17-custom-addons
+
+===================================
