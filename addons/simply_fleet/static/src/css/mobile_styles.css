@@ -518,83 +518,9 @@ body.mobile-detected .o_action[data-model="simply.fleet.document"] .o_kanban_vie
     .o_action[data-model="simply.fleet.document"] .o_list_view {
         display: none !important;
     }
-
+    
     .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
     .o_action[data-model="simply.fleet.document"] .o_kanban_view {
         display: block !important;
     }
-}
-
-/* Vehicle Form - Save, Settings, Discard styled as proper buttons */
-
-/* Control panel as positioning context for the absolute discard button */
-.o_action[data-model="simply.fleet.vehicle"] .o_control_panel {
-    position: relative !important;
-}
-
-/* -- Save button: green filled -- */
-.o_action[data-model="simply.fleet.vehicle"] .o_form_button_save {
-    background-color: #28a745 !important;
-    color: #fff !important;
-    border: 1px solid #28a745 !important;
-    border-radius: 5px !important;
-    padding: 5px 12px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_form_button_save i {
-    color: #fff !important;
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_form_button_save:hover {
-    background-color: #218838 !important;
-    border-color: #1e7e34 !important;
-}
-
-/* -- Settings / CogMenu button: neutral outlined -- */
-.o_action[data-model="simply.fleet.vehicle"] .o_cp_action_menus .btn {
-    background-color: #f8f9fa !important;
-    color: #495057 !important;
-    border: 1px solid #ced4da !important;
-    border-radius: 5px !important;
-    padding: 5px 10px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_cp_action_menus .btn:hover {
-    background-color: #e2e6ea !important;
-    border-color: #adb5bd !important;
-}
-
-/* -- Discard button: red outlined, fixed to TOP-RIGHT of the control panel -- */
-.o_action[data-model="simply.fleet.vehicle"] .o_form_button_cancel {
-    background-color: #fff !important;
-    color: #dc3545 !important;
-    border: 1px solid #dc3545 !important;
-    border-radius: 5px !important;
-    padding: 5px 14px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    position: absolute !important;
-    right: 12px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    z-index: 100 !important;
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_form_button_cancel i {
-    color: inherit !important;
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_form_button_cancel:hover {
-    background-color: #dc3545 !important;
-    color: #fff !important;
-}
-
-/* Add text labels next to icons on the icon-only status-indicator buttons */
-.o_action[data-model="simply.fleet.vehicle"] .o_form_status_indicator .o_form_button_save::after {
-    content: " Save";
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_form_status_indicator .o_form_button_cancel::after {
-    content: " Discard";
-}
-.o_action[data-model="simply.fleet.vehicle"] .o_cp_action_menus .btn::after {
-    content: " Settings";
 }
