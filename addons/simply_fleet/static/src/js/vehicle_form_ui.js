@@ -46,8 +46,26 @@
             lineHeight:   '1.5',
         });
 
-        btn.addEventListener('mouseenter', () => { btn.style.background = '#c82333'; });
-        btn.addEventListener('mouseleave', () => { btn.style.background = '#dc3545'; });
+        btn.addEventListener('mouseenter', () => {
+            btn.style.background    = '#c82333';
+            btn.style.boxShadow     = '0 4px 14px rgba(220,53,69,0.65)';
+            btn.style.transform     = 'scale(1.08)';
+            btn.style.transition    = 'all 0.2s ease';
+        });
+        btn.addEventListener('mouseleave', () => {
+            btn.style.background    = '#dc3545';
+            btn.style.boxShadow     = '0 1px 4px rgba(0,0,0,.3)';
+            btn.style.transform     = 'scale(1)';
+        });
+        btn.addEventListener('mousedown', () => {
+            btn.style.transform     = 'scale(0.92)';
+            btn.style.background    = '#a71d2a';
+            btn.style.boxShadow     = '0 2px 6px rgba(220,53,69,0.35)';
+        });
+        btn.addEventListener('mouseup', () => {
+            btn.style.transform     = 'scale(1.08)';
+            btn.style.background    = '#c82333';
+        });
         btn.addEventListener('click', () => {
             const real = document.querySelector(REAL_SEL);
             if (real) real.dispatchEvent(
