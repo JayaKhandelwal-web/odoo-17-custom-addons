@@ -70,16 +70,16 @@
     font-weight: 900 !important;
     font-style: normal !important;
     font-size: 28px !important;
-    color: #2E7D32 !important;
+    color: #1B5E20 !important;
     pointer-events: none !important;
     -webkit-font-smoothing: antialiased !important;
     transition: color 0.2s ease, transform 0.2s ease !important;
 }
 
-/* HOVER — green circle fills in, icon turns white, glow */
+/* HOVER — dark green circle fills in, icon turns white, glow */
 .o_form_button_save:hover {
-    background: #43A047 !important;
-    box-shadow: 0 4px 16px rgba(67, 160, 71, 0.55) !important;
+    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%) !important;
+    box-shadow: 0 4px 16px rgba(27, 94, 32, 0.60) !important;
     transform: scale(1.12) !important;
 }
 .o_form_button_save:hover::after {
@@ -108,7 +108,8 @@
 /* Active press */
 .o_form_button_save:active {
     transform: scale(0.90) !important;
-    box-shadow: 0 2px 6px rgba(67, 160, 71, 0.30) !important;
+    background: #1B5E20 !important;
+    box-shadow: 0 2px 6px rgba(27, 94, 32, 0.35) !important;
 }
 
 /* ----------------------------------------------------------
