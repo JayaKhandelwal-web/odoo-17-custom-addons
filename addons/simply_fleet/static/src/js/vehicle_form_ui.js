@@ -76,7 +76,7 @@
         applyShift();
     }
 
-    /* ── shift save + gear 1.5cm right, same gap ──────────────────────── */
+    /* ── shift save + gear, inject icon+label to match Discard style ──── */
     function applyShift() {
         const gear = document.querySelector(GEAR_SEL);
         if (gear) {
@@ -86,6 +86,12 @@
         const save = document.querySelector(SAVE_SEL);
         if (save) {
             save.style.setProperty('margin-left', SAVE_SHIFT, 'important');
+            /* Inject bookmark icon + label if not already done */
+            if (!save.querySelector('.sf-save-icon')) {
+                save.innerHTML =
+                    '<i class="fa fa-bookmark sf-save-icon" style="margin-right:5px;font-size:13px;color:#fff;"></i>' +
+                    '<span style="font-size:13px;color:#fff;font-weight:500;">Save</span>';
+            }
         }
     }
 

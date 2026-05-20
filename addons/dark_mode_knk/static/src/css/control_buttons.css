@@ -1,9 +1,9 @@
 /* ============================================================
    Global Control Panel Buttons — All Odoo Modules
-   Icons only — colored hover circle with glow effect
-   Save     → Green bookmark icon
-   Discard  → Red X icon  (top-right)
-   Settings → Gray gear icon
+   Style: rectangular pill (same format as Discard button)
+   Save     → Dark green  | bookmark icon + "Save"
+   Settings → Gray        | cog icon + "Settings"
+   Discard  → Red (proxy) | undo icon  + "Discard"
    ============================================================ */
 
 /* ----------------------------------------------------------
@@ -13,7 +13,7 @@
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    gap: 6px !important;
+    gap: 8px !important;
 }
 
 .o_form_buttons_edit .o_form_button_save {
@@ -24,286 +24,139 @@
     order: 2 !important;
 }
 
-/* Save + Gear positions managed by vehicle_form_ui.js via position:fixed */
-.o_form_button_save {
-    margin-left: 0 !important;
-}
-
 /* ----------------------------------------------------------
-   1. BASE RESET
+   1. BASE RESET — rectangular, no circle
    ---------------------------------------------------------- */
 .o_form_button_save,
 .o_form_button_discard,
 .o_form_button_cancel,
 .o_cp_action_menus .btn,
 .o_cp_action_menus > button {
-    background: transparent !important;
     border: none !important;
     outline: none !important;
-    box-shadow: none !important;
     cursor: pointer !important;
-    width: 50px !important;
-    height: 50px !important;
-    min-width: 50px !important;
-    padding: 0 !important;
-    margin: 0 3px !important;
-    border-radius: 50% !important;
+    border-radius: 5px !important;
+    padding: 5px 14px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
+    gap: 5px !important;
     position: relative !important;
     vertical-align: middle !important;
-    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease !important;
-    /* Hide raw text nodes (button label text) */
-    font-size: 0 !important;
-    color: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    min-width: auto !important;
+    min-height: auto !important;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.25) !important;
 }
 
 /* ----------------------------------------------------------
-   2. SAVE BUTTON — green bookmark, green circle on hover
+   2. SAVE BUTTON — dark green, bookmark icon + "Save"
    ---------------------------------------------------------- */
+.o_form_button_save {
+    background: #1B5E20 !important;
+    color: #ffffff !important;
+    margin-left: -7px !important;
+}
+
+/* Show native icon and span */
 .o_form_button_save i,
-.o_form_button_save .fa,
-.o_form_button_save svg,
+.o_form_button_save .fa {
+    display: inline-flex !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+}
+
 .o_form_button_save span {
+    display: inline !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
+}
+
+.o_form_button_save svg {
     display: none !important;
 }
 
+/* Remove old pseudo-element icon */
 .o_form_button_save::after {
-    content: "\f02e" !important;
-    font-family: "FontAwesome", "Font Awesome 5 Free", "Font Awesome 6 Free" !important;
-    font-weight: 900 !important;
-    font-style: normal !important;
-    font-size: 28px !important;
-    color: #1B5E20 !important;
-    pointer-events: none !important;
-    -webkit-font-smoothing: antialiased !important;
-    transition: color 0.2s ease, transform 0.2s ease !important;
+    display: none !important;
+    content: none !important;
 }
 
-/* HOVER — dark green circle fills in, icon turns white, glow */
+.o_form_button_save::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* HOVER */
 .o_form_button_save:hover {
-    background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%) !important;
-    box-shadow: 0 4px 16px rgba(27, 94, 32, 0.60) !important;
-    transform: scale(1.12) !important;
-}
-.o_form_button_save:hover::after {
-    color: #ffffff !important;
+    background: #2E7D32 !important;
+    box-shadow: 0 3px 10px rgba(27, 94, 32, 0.50) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Tooltip */
-.o_form_button_save:hover::before {
-    content: "Save" !important;
-    position: absolute !important;
-    bottom: -30px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    background: #1B5E20 !important;
-    color: #fff !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    font-family: sans-serif !important;
-    padding: 3px 10px !important;
-    border-radius: 4px !important;
-    white-space: nowrap !important;
-    pointer-events: none !important;
-    z-index: 9999 !important;
-}
-
-/* Active press */
+/* CLICK */
 .o_form_button_save:active {
-    transform: scale(0.90) !important;
     background: #1B5E20 !important;
-    box-shadow: 0 2px 6px rgba(27, 94, 32, 0.35) !important;
+    transform: scale(0.96) !important;
+    box-shadow: 0 1px 4px rgba(27, 94, 32, 0.30) !important;
 }
 
 /* ----------------------------------------------------------
-   3. DISCARD BUTTON — red X, animated hover with ring + shake
+   3. DISCARD BUTTON — hidden (JS proxy handles display)
    ---------------------------------------------------------- */
-
-/* Shake animation for the × icon on hover */
-@keyframes discard-shake {
-    0%   { transform: rotate(0deg)   scale(1.15); }
-    20%  { transform: rotate(-12deg) scale(1.15); }
-    40%  { transform: rotate(12deg)  scale(1.15); }
-    60%  { transform: rotate(-8deg)  scale(1.15); }
-    80%  { transform: rotate(8deg)   scale(1.15); }
-    100% { transform: rotate(0deg)   scale(1.15); }
-}
-
-/* Pulsing ring that expands out from the button */
-@keyframes discard-ring-pulse {
-    0%   { box-shadow: 0 0 0 0   rgba(229, 57, 53, 0.60),
-                       0 4px 20px rgba(229, 57, 53, 0.50); }
-    60%  { box-shadow: 0 0 0 10px rgba(229, 57, 53, 0),
-                       0 4px 20px rgba(229, 57, 53, 0.50); }
-    100% { box-shadow: 0 0 0 0   rgba(229, 57, 53, 0),
-                       0 4px 20px rgba(229, 57, 53, 0.50); }
-}
-
-/* Color flash on click — red → orange → back */
-@keyframes discard-click-flash {
-    0%   { background: linear-gradient(135deg, #EF5350 0%, #B71C1C 100%); }
-    30%  { background: linear-gradient(135deg, #FF6F00 0%, #E65100 100%); }
-    60%  { background: linear-gradient(135deg, #FF8F00 0%, #F57C00 100%); }
-    100% { background: linear-gradient(135deg, #D32F2F 0%, #7F0000 100%); }
-}
-
-/* × icon spin on click */
-@keyframes discard-click-spin {
-    0%   { transform: rotate(0deg)   scale(0.85); color: #fff; }
-    40%  { transform: rotate(180deg) scale(0.75); color: #FFE082; }
-    100% { transform: rotate(360deg) scale(0.85); color: #fff; }
-}
-
-/* Tooltip fade-in */
-@keyframes discard-tooltip-in {
-    from { opacity: 0; transform: translateX(-50%) translateY(4px); }
-    to   { opacity: 1; transform: translateX(-50%) translateY(0);   }
-}
-
-.o_form_button_discard i,
-.o_form_button_discard .fa,
-.o_form_button_discard svg,
-.o_form_button_discard span,
-.o_form_button_cancel i,
-.o_form_button_cancel .fa,
-.o_form_button_cancel svg,
-.o_form_button_cancel span {
+.o_form_button_discard,
+.o_form_button_cancel {
     display: none !important;
 }
 
-.o_form_button_discard::after,
-.o_form_button_cancel::after {
-    content: "\00D7" !important;
-    font-family: Arial, Helvetica, sans-serif !important;
-    font-weight: 900 !important;
-    font-style: normal !important;
-    font-size: 44px !important;
-    line-height: 1 !important;
-    color: #E53935 !important;
-    pointer-events: none !important;
-    -webkit-font-smoothing: antialiased !important;
-    transition: color 0.2s ease, transform 0.2s ease !important;
-    display: inline-block !important;
-}
-
-/* HOVER — gradient fill, pulsing ring, shake icon */
-.o_form_button_discard:hover,
-.o_form_button_cancel:hover {
-    background: linear-gradient(135deg, #EF5350 0%, #B71C1C 100%) !important;
-    animation: discard-ring-pulse 1s ease-out infinite !important;
-    transform: scale(1.14) !important;
-    border: 2px solid rgba(255, 255, 255, 0.25) !important;
-}
-
-.o_form_button_discard:hover::after,
-.o_form_button_cancel:hover::after {
-    color: #ffffff !important;
-    animation: discard-shake 0.45s ease-in-out !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.30) !important;
-}
-
-/* Tooltip — animated fade-in slide-up */
-.o_form_button_discard:hover::before,
-.o_form_button_cancel:hover::before {
-    content: "Discard Changes" !important;
-    position: absolute !important;
-    bottom: -34px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    background: linear-gradient(135deg, #C62828, #B71C1C) !important;
-    color: #fff !important;
-    font-size: 11px !important;
-    font-weight: 700 !important;
-    font-family: sans-serif !important;
-    letter-spacing: 0.4px !important;
-    padding: 4px 12px !important;
-    border-radius: 5px !important;
-    white-space: nowrap !important;
-    pointer-events: none !important;
-    z-index: 9999 !important;
-    box-shadow: 0 2px 8px rgba(183, 28, 28, 0.45) !important;
-    animation: discard-tooltip-in 0.18s ease-out forwards !important;
-}
-
-/* CLICK (active) — color shifts orange→deep red, icon spins */
-.o_form_button_discard:active,
-.o_form_button_cancel:active {
-    transform: scale(0.88) !important;
-    animation: discard-click-flash 0.35s ease-out forwards !important;
-    box-shadow: 0 0 0 4px rgba(255, 111, 0, 0.40),
-                0 2px 10px rgba(229, 57, 53, 0.50) !important;
-    border: 2px solid rgba(255, 200, 100, 0.50) !important;
-}
-
-.o_form_button_discard:active::after,
-.o_form_button_cancel:active::after {
-    animation: discard-click-spin 0.35s ease-out forwards !important;
-    text-shadow: 0 0 8px rgba(255, 224, 130, 0.80) !important;
-}
-
 /* ----------------------------------------------------------
-   4. SETTINGS / GEAR — gray icon, dark circle on hover
+   4. SETTINGS / GEAR — gray, cog icon + "Settings"
    ---------------------------------------------------------- */
+.o_cp_action_menus .btn,
+.o_cp_action_menus > button {
+    background: #546e7a !important;
+    color: #ffffff !important;
+}
+
 .o_cp_action_menus .btn i,
 .o_cp_action_menus .btn .fa,
 .o_cp_action_menus > button i,
 .o_cp_action_menus > button .fa {
-    color: #757575 !important;
-    font-size: 26px !important;
-    transition: color 0.2s ease !important;
+    display: inline-flex !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
 }
 
 .o_cp_action_menus .btn svg,
 .o_cp_action_menus > button svg {
-    fill: #757575 !important;
-    width: 26px !important;
-    height: 26px !important;
-    transition: fill 0.2s ease !important;
+    fill: #ffffff !important;
+    width: 14px !important;
+    height: 14px !important;
 }
 
-/* HOVER — dark gray circle, icon turns white, shadow */
+.o_cp_action_menus .btn::before,
+.o_cp_action_menus > button::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* HOVER */
 .o_cp_action_menus .btn:hover,
 .o_cp_action_menus > button:hover {
-    background: #616161 !important;
-    box-shadow: 0 4px 16px rgba(97, 97, 97, 0.45) !important;
-    transform: scale(1.12) !important;
-}
-.o_cp_action_menus .btn:hover i,
-.o_cp_action_menus .btn:hover .fa,
-.o_cp_action_menus > button:hover i,
-.o_cp_action_menus > button:hover .fa {
-    color: #ffffff !important;
-}
-.o_cp_action_menus .btn:hover svg,
-.o_cp_action_menus > button:hover svg {
-    fill: #ffffff !important;
+    background: #37474f !important;
+    box-shadow: 0 3px 10px rgba(55, 71, 79, 0.50) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Tooltip */
-.o_cp_action_menus .btn:hover::before,
-.o_cp_action_menus > button:hover::before {
-    content: "Settings" !important;
-    position: absolute !important;
-    bottom: -30px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    background: #424242 !important;
-    color: #fff !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    font-family: sans-serif !important;
-    padding: 3px 10px !important;
-    border-radius: 4px !important;
-    white-space: nowrap !important;
-    pointer-events: none !important;
-    z-index: 9999 !important;
-}
-
-/* Active press */
+/* CLICK */
 .o_cp_action_menus .btn:active,
 .o_cp_action_menus > button:active {
-    transform: scale(0.90) !important;
-    box-shadow: 0 2px 6px rgba(97, 97, 97, 0.25) !important;
+    background: #263238 !important;
+    transform: scale(0.96) !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,.20) !important;
 }
