@@ -112,8 +112,35 @@
 }
 
 /* ----------------------------------------------------------
-   3. DISCARD BUTTON — red X, red circle on hover
+   3. DISCARD BUTTON — red X, animated hover with ring + shake
    ---------------------------------------------------------- */
+
+/* Shake animation for the × icon on hover */
+@keyframes discard-shake {
+    0%   { transform: rotate(0deg)   scale(1.15); }
+    20%  { transform: rotate(-12deg) scale(1.15); }
+    40%  { transform: rotate(12deg)  scale(1.15); }
+    60%  { transform: rotate(-8deg)  scale(1.15); }
+    80%  { transform: rotate(8deg)   scale(1.15); }
+    100% { transform: rotate(0deg)   scale(1.15); }
+}
+
+/* Pulsing ring that expands out from the button */
+@keyframes discard-ring-pulse {
+    0%   { box-shadow: 0 0 0 0   rgba(229, 57, 53, 0.60),
+                       0 4px 20px rgba(229, 57, 53, 0.50); }
+    60%  { box-shadow: 0 0 0 10px rgba(229, 57, 53, 0),
+                       0 4px 20px rgba(229, 57, 53, 0.50); }
+    100% { box-shadow: 0 0 0 0   rgba(229, 57, 53, 0),
+                       0 4px 20px rgba(229, 57, 53, 0.50); }
+}
+
+/* Tooltip fade-in */
+@keyframes discard-tooltip-in {
+    from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0);   }
+}
+
 .o_form_button_discard i,
 .o_form_button_discard .fa,
 .o_form_button_discard svg,
@@ -136,46 +163,56 @@
     color: #E53935 !important;
     pointer-events: none !important;
     -webkit-font-smoothing: antialiased !important;
-    transition: color 0.2s ease !important;
+    transition: color 0.2s ease, transform 0.2s ease !important;
+    display: inline-block !important;
 }
 
-/* HOVER — red circle fills in, icon turns white, glow */
+/* HOVER — gradient fill, pulsing ring, shake icon */
 .o_form_button_discard:hover,
 .o_form_button_cancel:hover {
-    background: #E53935 !important;
-    box-shadow: 0 4px 16px rgba(229, 57, 53, 0.55) !important;
-    transform: scale(1.12) !important;
+    background: linear-gradient(135deg, #EF5350 0%, #B71C1C 100%) !important;
+    animation: discard-ring-pulse 1s ease-out infinite !important;
+    transform: scale(1.14) !important;
+    border: 2px solid rgba(255, 255, 255, 0.25) !important;
 }
+
 .o_form_button_discard:hover::after,
 .o_form_button_cancel:hover::after {
     color: #ffffff !important;
+    animation: discard-shake 0.45s ease-in-out !important;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.30) !important;
 }
 
-/* Tooltip */
+/* Tooltip — animated fade-in slide-up */
 .o_form_button_discard:hover::before,
 .o_form_button_cancel:hover::before {
     content: "Discard Changes" !important;
     position: absolute !important;
-    bottom: -30px !important;
+    bottom: -34px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: #B71C1C !important;
+    background: linear-gradient(135deg, #C62828, #B71C1C) !important;
     color: #fff !important;
     font-size: 11px !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     font-family: sans-serif !important;
-    padding: 3px 10px !important;
-    border-radius: 4px !important;
+    letter-spacing: 0.4px !important;
+    padding: 4px 12px !important;
+    border-radius: 5px !important;
     white-space: nowrap !important;
     pointer-events: none !important;
     z-index: 9999 !important;
+    box-shadow: 0 2px 8px rgba(183, 28, 28, 0.45) !important;
+    animation: discard-tooltip-in 0.18s ease-out forwards !important;
 }
 
-/* Active press */
+/* Active press — sink down */
 .o_form_button_discard:active,
 .o_form_button_cancel:active {
-    transform: scale(0.90) !important;
-    box-shadow: 0 2px 6px rgba(229, 57, 53, 0.30) !important;
+    transform: scale(0.88) !important;
+    background: #C62828 !important;
+    box-shadow: 0 2px 6px rgba(229, 57, 53, 0.35) !important;
+    animation: none !important;
 }
 
 /* ----------------------------------------------------------
