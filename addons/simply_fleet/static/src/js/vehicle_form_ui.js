@@ -1,11 +1,9 @@
 /** Simply Fleet – Global button relocator
  *
- *  1. Discard button: hidden from its native position, re-created as a
- *     fixed-position proxy at the far-right of the control-panel row.
- *  2. Save + Gear buttons: repositioned via position:fixed to the right
- *     side of the same control-panel row, just left of the Discard button.
- *
- *  Works across ALL Odoo 17 form views — no model restriction.
+ *  1. Discard: hidden from native position, re-created as a fixed proxy
+ *     at the far-right of the control-panel row.
+ *  2. Save + Gear: shifted 1.5cm (57px) to the right via inline style,
+ *     same gap kept between them, functionality unchanged.
  */
 (function () {
     'use strict';
@@ -15,9 +13,10 @@
     const STATUS_SEL = '.o_form_status_indicator_buttons';
     const SAVE_SEL   = '.o_form_button_save';
     const GEAR_SEL   = '.o_cp_action_menus';
+    const SHIFT      = '57px';   /* 1.5 cm ≈ 57 px at 96 dpi */
     let   debounce   = null;
 
-    /* ── build / reuse the discard proxy button ───────────────────────── */
+    /* ── discard proxy ────────────────────────────────────────────────── */
     function getProxy() {
         let btn = document.getElementById(PROXY_ID);
         if (btn) return btn;
@@ -48,7 +47,6 @@
 
         btn.addEventListener('mouseenter', () => { btn.style.background = '#c82333'; });
         btn.addEventListener('mouseleave', () => { btn.style.background = '#dc3545'; });
-
         btn.addEventListener('click', () => {
             const real = document.querySelector(REAL_SEL);
             if (real) real.dispatchEvent(
@@ -60,92 +58,51 @@
         return btn;
     }
 
-    /* ── position the discard proxy ───────────────────────────────────── */
     function syncProxy() {
         const proxy     = getProxy();
         const real      = document.querySelector(REAL_SEL);
         const statusDiv = document.querySelector(STATUS_SEL);
 
-        if (!real || !statusDiv) {
-            proxy.style.display = 'none';
-            resetSaveGear();
-            return;
-        }
+        if (!real || !statusDiv) { proxy.style.display = 'none'; resetShift(); return; }
 
         const rect = statusDiv.getBoundingClientRect();
-        if (rect.height === 0) {
-            setTimeout(syncProxy, 150);
-            return;
-        }
+        if (rect.height === 0) { setTimeout(syncProxy, 150); return; }
 
-        const proxyH = 30;
-        proxy.style.top     = Math.round(rect.top + (rect.height - proxyH) / 2) + 'px';
+        proxy.style.top     = Math.round(rect.top + (rect.height - 30) / 2) + 'px';
         proxy.style.right   = '16px';
         proxy.style.display = 'flex';
 
-        syncSaveGear(rect);
+        applyShift();
     }
 
-    /* ── move save + gear to the right side of the same row ──────────── */
-    function syncSaveGear(rect) {
-        if (!rect) {
-            const statusDiv = document.querySelector(STATUS_SEL);
-            if (!statusDiv) return;
-            rect = statusDiv.getBoundingClientRect();
-            if (rect.height === 0) return;
-        }
-
-        const btnH   = 50;   // circular button height
-        const top    = Math.round(rect.top + (rect.height - btnH) / 2);
-
-        // Save button — 56px left of discard (50px btn + 6px gap)
-        const saveBtn = document.querySelector(SAVE_SEL);
-        if (saveBtn) {
-            saveBtn.style.setProperty('position', 'fixed', 'important');
-            saveBtn.style.setProperty('top',      top + 'px', 'important');
-            saveBtn.style.setProperty('right',    '130px', 'important');
-            saveBtn.style.setProperty('left',     'auto', 'important');
-            saveBtn.style.setProperty('z-index',  '9999', 'important');
-        }
-
-        // Gear container — 56px left of save (50px btn + 6px gap)
+    /* ── shift save + gear 1.5cm right, same gap ──────────────────────── */
+    function applyShift() {
         const gear = document.querySelector(GEAR_SEL);
         if (gear) {
-            gear.style.setProperty('position', 'fixed', 'important');
-            gear.style.setProperty('top',      top + 'px', 'important');
-            gear.style.setProperty('right',    '188px', 'important');
-            gear.style.setProperty('left',     'auto', 'important');
-            gear.style.setProperty('z-index',  '9999', 'important');
+            gear.style.setProperty('margin-left', SHIFT, 'important');
+        }
+
+        const save = document.querySelector(SAVE_SEL);
+        if (save) {
+            save.style.setProperty('margin-left', SHIFT, 'important');
         }
     }
 
-    /* ── reset save + gear when form is not in edit mode ─────────────── */
-    function resetSaveGear() {
-        const saveBtn = document.querySelector(SAVE_SEL);
-        if (saveBtn) {
-            saveBtn.style.removeProperty('position');
-            saveBtn.style.removeProperty('top');
-            saveBtn.style.removeProperty('right');
-            saveBtn.style.removeProperty('left');
-            saveBtn.style.removeProperty('z-index');
-        }
+    function resetShift() {
         const gear = document.querySelector(GEAR_SEL);
-        if (gear) {
-            gear.style.removeProperty('position');
-            gear.style.removeProperty('top');
-            gear.style.removeProperty('right');
-            gear.style.removeProperty('left');
-            gear.style.removeProperty('z-index');
-        }
+        if (gear) gear.style.removeProperty('margin-left');
+
+        const save = document.querySelector(SAVE_SEL);
+        if (save) save.style.removeProperty('margin-left');
     }
 
     function hideProxy() {
         const p = document.getElementById(PROXY_ID);
         if (p) p.style.display = 'none';
-        resetSaveGear();
+        resetShift();
     }
 
-    /* ── debounced trigger ────────────────────────────────────────────── */
+    /* ── debounce + observe ───────────────────────────────────────────── */
     function schedule() {
         clearTimeout(debounce);
         debounce = setTimeout(() => {
@@ -156,27 +113,15 @@
     window.addEventListener('resize', schedule);
     window.addEventListener('scroll', schedule, true);
 
-    /* ── observe + boot ───────────────────────────────────────────────── */
     function init() {
-        if (document.body) {
+        const boot = () => {
             new MutationObserver(schedule).observe(document.body, {
-                childList:       true,
-                subtree:         true,
-                attributes:      true,
-                attributeFilter: ['class', 'style'],
+                childList: true, subtree: true,
+                attributes: true, attributeFilter: ['class', 'style'],
             });
             setTimeout(schedule, 500);
-        } else {
-            document.addEventListener('DOMContentLoaded', () => {
-                new MutationObserver(schedule).observe(document.body, {
-                    childList:       true,
-                    subtree:         true,
-                    attributes:      true,
-                    attributeFilter: ['class', 'style'],
-                });
-                setTimeout(schedule, 500);
-            });
-        }
+        };
+        document.body ? boot() : document.addEventListener('DOMContentLoaded', boot);
     }
 
     init();
