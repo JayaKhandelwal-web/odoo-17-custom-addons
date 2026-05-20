@@ -3,7 +3,6 @@
     <template id="assets_backend" name="simply_fleet assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <link rel="stylesheet" href="/simply_fleet/static/src/css/mobile_styles.css"/>
-            <script type="text/javascript" src="/simply_fleet/static/src/js/vehicle_form_ui.js"></script>
         </xpath>
     </template>
 </odoo>
