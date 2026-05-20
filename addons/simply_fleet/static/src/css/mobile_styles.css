@@ -566,7 +566,28 @@ body.mobile-detected .o_action[data-model="simply.fleet.document"] .o_kanban_vie
     content: " Settings";
 }
 
-/* -- Discard (X) button: permanently hidden on vehicle form -- */
+/* -- Discard button: CSS fallback positioning + hover
+     JS (vehicle_form_ui.js) overrides top/right with exact coords once DOM is ready.
+     --o-navbar-height is a CSS variable Odoo exports from its navbar SCSS (default 46px).   -- */
 .o_action[data-model="simply.fleet.vehicle"] .o_form_button_cancel {
-    display: none !important;
+    /* Fallback: fixed to top-right of viewport, aligned to control panel row */
+    position: fixed !important;
+    right: 16px !important;
+    top: calc(var(--o-navbar-height, 46px) + 13px) !important;
+    transform: translateY(0) !important;
+    z-index: 9999 !important;
+    /* Button appearance */
+    background-color: #ffffff !important;
+    color: #dc3545 !important;
+    border: 1px solid #dc3545 !important;
+    border-radius: 5px !important;
+    padding: 5px 14px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+    cursor: pointer !important;
+}
+.o_action[data-model="simply.fleet.vehicle"] .o_form_button_cancel:hover {
+    background-color: #dc3545 !important;
+    color: #fff !important;
 }
