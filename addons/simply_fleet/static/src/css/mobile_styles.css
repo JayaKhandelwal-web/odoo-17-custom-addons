@@ -525,10 +525,48 @@ body.mobile-detected .o_action[data-model="simply.fleet.document"] .o_kanban_vie
     }
 }
 
-/* ── Global: hide the native Discard (×) button from the control panel ──
-   The JS proxy (#sf-global-discard-btn) shows a styled replacement pinned
-   to the far-right of the same row across ALL Odoo form views.           */
-.o_control_panel .o_form_button_cancel,
-.o_form_status_indicator .o_form_button_cancel {
+/* Vehicle Form - Save and Settings styled as proper buttons (Discard handled by JS) */
+
+/* -- Save button: green filled -- */
+.o_action[data-model="simply.fleet.vehicle"] .o_form_button_save {
+    background-color: #28a745 !important;
+    color: #fff !important;
+    border: 1px solid #28a745 !important;
+    border-radius: 5px !important;
+    padding: 5px 12px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+.o_action[data-model="simply.fleet.vehicle"] .o_form_button_save i {
+    color: #fff !important;
+}
+.o_action[data-model="simply.fleet.vehicle"] .o_form_button_save:hover {
+    background-color: #218838 !important;
+    border-color: #1e7e34 !important;
+}
+.o_action[data-model="simply.fleet.vehicle"] .o_form_status_indicator .o_form_button_save::after {
+    content: " Save";
+}
+
+/* -- Settings / CogMenu button: neutral outlined -- */
+.o_action[data-model="simply.fleet.vehicle"] .o_cp_action_menus .btn {
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+    border: 1px solid #ced4da !important;
+    border-radius: 5px !important;
+    padding: 5px 10px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+}
+.o_action[data-model="simply.fleet.vehicle"] .o_cp_action_menus .btn:hover {
+    background-color: #e2e6ea !important;
+    border-color: #adb5bd !important;
+}
+.o_action[data-model="simply.fleet.vehicle"] .o_cp_action_menus .btn::after {
+    content: " Settings";
+}
+
+/* -- Discard (X) button: permanently hidden on vehicle form -- */
+.o_action[data-model="simply.fleet.vehicle"] .o_form_button_cancel {
     display: none !important;
 }
