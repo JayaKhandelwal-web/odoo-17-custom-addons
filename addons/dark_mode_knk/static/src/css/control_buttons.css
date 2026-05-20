@@ -24,12 +24,13 @@
     order: 2 !important;
 }
 
-/* Shift Save + Settings gear 1.5cm to the right, same gap between */
+/* Shift both gear and save 1.5cm right, same gap maintained */
 .o_cp_action_menus {
-    margin-left: 1.5cm !important;
+    transform: translateX(1.5cm) !important;
 }
 
 .o_form_button_save {
+    transform: translateX(1.5cm) !important;
     margin-left: 0 !important;
 }
 
