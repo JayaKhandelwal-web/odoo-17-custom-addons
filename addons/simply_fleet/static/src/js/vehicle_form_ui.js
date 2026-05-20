@@ -14,7 +14,7 @@
     const SAVE_SEL   = '.o_form_button_save';
     const GEAR_SEL   = '.o_cp_action_menus';
     const GEAR_SHIFT = '57px';   /* 1.5 cm ≈ 57 px at 96 dpi */
-    const SAVE_SHIFT = '31px';   /* 1.5cm - 0.7cm = 0.8cm ≈ 31 px */
+    const SAVE_SHIFT = '20px';   /* 0.8cm - 0.3cm = 0.5cm ≈ 20 px */
     let   debounce   = null;
 
     /* ── discard proxy ────────────────────────────────────────────────── */
