@@ -518,9 +518,17 @@ body.mobile-detected .o_action[data-model="simply.fleet.document"] .o_kanban_vie
     .o_action[data-model="simply.fleet.document"] .o_list_view {
         display: none !important;
     }
-    
+
     .o_action[data-model="simply.fleet.vehicle"] .o_kanban_view,
     .o_action[data-model="simply.fleet.document"] .o_kanban_view {
         display: block !important;
     }
+}
+
+/* ── Global: hide native Discard button from its default position ──────
+   The JS proxy (#sf-global-discard-btn) renders a styled red Discard
+   button pinned to the far-right of the same control-panel row.
+   Works across ALL Odoo form views (no model restriction).            */
+.o_form_status_indicator_buttons .o_form_button_cancel {
+    display: none !important;
 }
