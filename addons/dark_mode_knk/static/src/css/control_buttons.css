@@ -24,22 +24,8 @@
     order: 2 !important;
 }
 
-/* Shift gear + save 1.5cm right — allow overflow so shift is visible */
-.o_control_panel,
-.o_control_panel_breadcrumbs,
-.o_cp_bottom,
-.o_cp_bottom_left {
-    overflow: visible !important;
-}
-
-.o_cp_action_menus {
-    position: relative !important;
-    left: 57px !important;   /* 1.5cm ≈ 57px */
-}
-
+/* Save + Gear positions managed by vehicle_form_ui.js via position:fixed */
 .o_form_button_save {
-    position: relative !important;
-    left: 57px !important;
     margin-left: 0 !important;
 }
 

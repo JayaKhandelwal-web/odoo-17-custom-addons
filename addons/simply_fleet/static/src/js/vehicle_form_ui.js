@@ -1,11 +1,9 @@
-/** Simply Fleet – Global Discard-button relocator
+/** Simply Fleet – Global button relocator
  *
- *  The native Discard button (.o_form_button_cancel inside
- *  .o_form_status_indicator_buttons) is hidden via CSS (mobile_styles.css).
- *  This script creates a red "Discard" proxy button pinned with
- *  position:fixed to the far-right end of the control-panel row.
- *  It forwards clicks to the real (hidden) button and auto-repositions
- *  on every OWL re-render and window resize.
+ *  1. Discard button: hidden from its native position, re-created as a
+ *     fixed-position proxy at the far-right of the control-panel row.
+ *  2. Save + Gear buttons: repositioned via position:fixed to the right
+ *     side of the same control-panel row, just left of the Discard button.
  *
  *  Works across ALL Odoo 17 form views — no model restriction.
  */
@@ -15,9 +13,11 @@
     const PROXY_ID   = 'sf-global-discard-btn';
     const REAL_SEL   = '.o_form_status_indicator_buttons .o_form_button_cancel';
     const STATUS_SEL = '.o_form_status_indicator_buttons';
+    const SAVE_SEL   = '.o_form_button_save';
+    const GEAR_SEL   = '.o_cp_action_menus';
     let   debounce   = null;
 
-    /* ── build / reuse the proxy button ──────────────────────────────── */
+    /* ── build / reuse the discard proxy button ───────────────────────── */
     function getProxy() {
         let btn = document.getElementById(PROXY_ID);
         if (btn) return btn;
@@ -60,7 +60,7 @@
         return btn;
     }
 
-    /* ── position the proxy over the far-right of the control panel ───── */
+    /* ── position the discard proxy ───────────────────────────────────── */
     function syncProxy() {
         const proxy     = getProxy();
         const real      = document.querySelector(REAL_SEL);
@@ -68,27 +68,84 @@
 
         if (!real || !statusDiv) {
             proxy.style.display = 'none';
+            resetSaveGear();
             return;
         }
 
         const rect = statusDiv.getBoundingClientRect();
-        if (rect.height === 0) {           // DOM not painted yet — retry
+        if (rect.height === 0) {
             setTimeout(syncProxy, 150);
             return;
         }
 
-        const proxyH = 30;                 // approx button height in px
+        const proxyH = 30;
         proxy.style.top     = Math.round(rect.top + (rect.height - proxyH) / 2) + 'px';
         proxy.style.right   = '16px';
         proxy.style.display = 'flex';
+
+        syncSaveGear(rect);
+    }
+
+    /* ── move save + gear to the right side of the same row ──────────── */
+    function syncSaveGear(rect) {
+        if (!rect) {
+            const statusDiv = document.querySelector(STATUS_SEL);
+            if (!statusDiv) return;
+            rect = statusDiv.getBoundingClientRect();
+            if (rect.height === 0) return;
+        }
+
+        const btnH   = 50;   // circular button height
+        const top    = Math.round(rect.top + (rect.height - btnH) / 2);
+
+        // Save button — 56px left of discard (50px btn + 6px gap)
+        const saveBtn = document.querySelector(SAVE_SEL);
+        if (saveBtn) {
+            saveBtn.style.setProperty('position', 'fixed', 'important');
+            saveBtn.style.setProperty('top',      top + 'px', 'important');
+            saveBtn.style.setProperty('right',    '130px', 'important');
+            saveBtn.style.setProperty('left',     'auto', 'important');
+            saveBtn.style.setProperty('z-index',  '9999', 'important');
+        }
+
+        // Gear container — 56px left of save (50px btn + 6px gap)
+        const gear = document.querySelector(GEAR_SEL);
+        if (gear) {
+            gear.style.setProperty('position', 'fixed', 'important');
+            gear.style.setProperty('top',      top + 'px', 'important');
+            gear.style.setProperty('right',    '188px', 'important');
+            gear.style.setProperty('left',     'auto', 'important');
+            gear.style.setProperty('z-index',  '9999', 'important');
+        }
+    }
+
+    /* ── reset save + gear when form is not in edit mode ─────────────── */
+    function resetSaveGear() {
+        const saveBtn = document.querySelector(SAVE_SEL);
+        if (saveBtn) {
+            saveBtn.style.removeProperty('position');
+            saveBtn.style.removeProperty('top');
+            saveBtn.style.removeProperty('right');
+            saveBtn.style.removeProperty('left');
+            saveBtn.style.removeProperty('z-index');
+        }
+        const gear = document.querySelector(GEAR_SEL);
+        if (gear) {
+            gear.style.removeProperty('position');
+            gear.style.removeProperty('top');
+            gear.style.removeProperty('right');
+            gear.style.removeProperty('left');
+            gear.style.removeProperty('z-index');
+        }
     }
 
     function hideProxy() {
         const p = document.getElementById(PROXY_ID);
         if (p) p.style.display = 'none';
+        resetSaveGear();
     }
 
-    /* ── debounced trigger (OWL re-renders can fire many mutations) ───── */
+    /* ── debounced trigger ────────────────────────────────────────────── */
     function schedule() {
         clearTimeout(debounce);
         debounce = setTimeout(() => {
@@ -97,9 +154,9 @@
     }
 
     window.addEventListener('resize', schedule);
-    window.addEventListener('scroll', schedule, true);   // capture scroll
+    window.addEventListener('scroll', schedule, true);
 
-    /* ── observe + boot (safe: wait for body to exist) ───────────────── */
+    /* ── observe + boot ───────────────────────────────────────────────── */
     function init() {
         if (document.body) {
             new MutationObserver(schedule).observe(document.body, {
@@ -110,7 +167,6 @@
             });
             setTimeout(schedule, 500);
         } else {
-            // body not ready yet — wait for DOMContentLoaded
             document.addEventListener('DOMContentLoaded', () => {
                 new MutationObserver(schedule).observe(document.body, {
                     childList:       true,
