@@ -81,6 +81,7 @@
         const gear = document.querySelector(GEAR_SEL);
         if (gear) {
             gear.style.setProperty('margin-left', GEAR_SHIFT, 'important');
+            gear.style.setProperty('margin-right', '8px', 'important');
             /* Inject cog icon + label to match Save/Discard size */
             const gearBtn = gear.querySelector('button, .btn');
             if (gearBtn && !gearBtn.querySelector('.sf-gear-icon')) {
