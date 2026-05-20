@@ -25,7 +25,7 @@
 }
 
 /* ----------------------------------------------------------
-   1. BASE RESET — rectangular, no circle
+   1. BASE RESET — compact icon button (no text)
    ---------------------------------------------------------- */
 .o_form_button_save,
 .o_form_button_discard,
@@ -35,23 +35,19 @@
     border: none !important;
     outline: none !important;
     cursor: pointer !important;
-    border-radius: 5px !important;
-    padding: 5px 14px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    line-height: 1.5 !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 5px !important;
     position: relative !important;
     vertical-align: middle !important;
-    width: auto !important;
-    height: auto !important;
-    min-width: auto !important;
-    min-height: auto !important;
     transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease !important;
-    box-shadow: 0 1px 4px rgba(0,0,0,.25) !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25) !important;
 }
 
 /* ----------------------------------------------------------
@@ -121,13 +117,6 @@
 .o_cp_action_menus > button {
     background: #546e7a !important;
     color: #ffffff !important;
-    padding: 5px 14px !important;
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    border-radius: 5px !important;
-    min-width: auto !important;
-    width: auto !important;
-    height: auto !important;
 }
 
 .o_cp_action_menus .btn i,

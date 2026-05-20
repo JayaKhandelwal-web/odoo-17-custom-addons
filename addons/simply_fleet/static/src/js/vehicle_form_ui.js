@@ -82,27 +82,21 @@
         if (gear) {
             gear.style.setProperty('margin-left', GEAR_SHIFT, 'important');
             gear.style.setProperty('margin-right', '8px', 'important');
-            /* Inject cog icon + label to match Save/Discard size */
+            /* Icon-only — compact logo form for mobile */
             const gearBtn = gear.querySelector('button, .btn');
             if (gearBtn && !gearBtn.querySelector('.sf-gear-icon')) {
-                const originalContent = gearBtn.innerHTML;
                 gearBtn.innerHTML =
-                    '<i class="fa fa-cog sf-gear-icon" style="margin-right:5px;font-size:13px;color:#fff;"></i>' +
-                    '<span style="font-size:13px;color:#fff;font-weight:500;">Settings</span>' +
-                    '<span class="sf-gear-caret" style="margin-left:4px;font-size:10px;color:#fff;">▾</span>';
-                /* Preserve dropdown toggle behaviour */
-                gearBtn._sfOriginalContent = originalContent;
+                    '<i class="fa fa-cog sf-gear-icon" style="font-size:16px;color:#fff;"></i>';
             }
         }
 
         const save = document.querySelector(SAVE_SEL);
         if (save) {
             save.style.setProperty('margin-left', SAVE_SHIFT, 'important');
-            /* Inject bookmark icon + label if not already done */
+            /* Icon-only — compact logo form for mobile */
             if (!save.querySelector('.sf-save-icon')) {
                 save.innerHTML =
-                    '<i class="fa fa-bookmark sf-save-icon" style="margin-right:5px;font-size:13px;color:#fff;"></i>' +
-                    '<span style="font-size:13px;color:#fff;font-weight:500;">Save</span>';
+                    '<i class="fa fa-bookmark sf-save-icon" style="font-size:16px;color:#fff;"></i>';
             }
         }
     }
