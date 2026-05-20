@@ -24,6 +24,15 @@
     order: 2 !important;
 }
 
+/* Shift Save + Settings gear 1cm to the right together */
+.o_cp_action_menus {
+    margin-left: 1cm !important;
+}
+
+.o_form_button_save {
+    margin-left: 0 !important;
+}
+
 /* ----------------------------------------------------------
    1. BASE RESET
    ---------------------------------------------------------- */
