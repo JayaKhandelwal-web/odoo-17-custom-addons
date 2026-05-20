@@ -24,9 +24,9 @@
     order: 2 !important;
 }
 
-/* Shift Save + Settings gear 1cm to the right together */
+/* Shift Save + Settings gear 10cm to the right together */
 .o_cp_action_menus {
-    margin-left: 1cm !important;
+    margin-left: 10cm !important;
 }
 
 .o_form_button_save {
