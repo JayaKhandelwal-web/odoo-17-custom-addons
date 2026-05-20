@@ -24,13 +24,22 @@
     order: 2 !important;
 }
 
-/* Shift both gear and save 1.5cm right, same gap maintained */
+/* Shift gear + save 1.5cm right — allow overflow so shift is visible */
+.o_control_panel,
+.o_control_panel_breadcrumbs,
+.o_cp_bottom,
+.o_cp_bottom_left {
+    overflow: visible !important;
+}
+
 .o_cp_action_menus {
-    transform: translateX(1.5cm) !important;
+    position: relative !important;
+    left: 57px !important;   /* 1.5cm ≈ 57px */
 }
 
 .o_form_button_save {
-    transform: translateX(1.5cm) !important;
+    position: relative !important;
+    left: 57px !important;
     margin-left: 0 !important;
 }
 
