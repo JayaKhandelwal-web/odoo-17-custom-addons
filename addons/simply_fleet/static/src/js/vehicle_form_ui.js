@@ -13,7 +13,8 @@
     const STATUS_SEL = '.o_form_status_indicator_buttons';
     const SAVE_SEL   = '.o_form_button_save';
     const GEAR_SEL   = '.o_cp_action_menus';
-    const SHIFT      = '57px';   /* 1.5 cm ≈ 57 px at 96 dpi */
+    const GEAR_SHIFT = '57px';   /* 1.5 cm ≈ 57 px at 96 dpi */
+    const SAVE_SHIFT = '31px';   /* 1.5cm - 0.7cm = 0.8cm ≈ 31 px */
     let   debounce   = null;
 
     /* ── discard proxy ────────────────────────────────────────────────── */
@@ -79,12 +80,12 @@
     function applyShift() {
         const gear = document.querySelector(GEAR_SEL);
         if (gear) {
-            gear.style.setProperty('margin-left', SHIFT, 'important');
+            gear.style.setProperty('margin-left', GEAR_SHIFT, 'important');
         }
 
         const save = document.querySelector(SAVE_SEL);
         if (save) {
-            save.style.setProperty('margin-left', SHIFT, 'important');
+            save.style.setProperty('margin-left', SAVE_SHIFT, 'important');
         }
     }
 
