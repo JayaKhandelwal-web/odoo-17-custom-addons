@@ -81,6 +81,17 @@
         const gear = document.querySelector(GEAR_SEL);
         if (gear) {
             gear.style.setProperty('margin-left', GEAR_SHIFT, 'important');
+            /* Inject cog icon + label to match Save/Discard size */
+            const gearBtn = gear.querySelector('button, .btn');
+            if (gearBtn && !gearBtn.querySelector('.sf-gear-icon')) {
+                const originalContent = gearBtn.innerHTML;
+                gearBtn.innerHTML =
+                    '<i class="fa fa-cog sf-gear-icon" style="margin-right:5px;font-size:13px;color:#fff;"></i>' +
+                    '<span style="font-size:13px;color:#fff;font-weight:500;">Settings</span>' +
+                    '<span class="sf-gear-caret" style="margin-left:4px;font-size:10px;color:#fff;">▾</span>';
+                /* Preserve dropdown toggle behaviour */
+                gearBtn._sfOriginalContent = originalContent;
+            }
         }
 
         const save = document.querySelector(SAVE_SEL);
