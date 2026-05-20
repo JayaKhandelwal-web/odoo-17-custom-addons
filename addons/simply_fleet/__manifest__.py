@@ -80,7 +80,8 @@
             '/simply_fleet/static/src/css/mobile_styles.css',      # ← Mobile styles
             '/simply_fleet/static/src/js/barcode_handler.js',
             '/simply_fleet/static/src/css/vehicle_kanban.css',     # ← Vehicle kanban styles
-            '/simply_fleet/static/src/css/inspection_kanban.css',  
+            '/simply_fleet/static/src/css/inspection_kanban.css',
+            '/simply_fleet/static/src/js/vehicle_form_ui.js',      # ← Discard button relocator
         ],
     },
     'demo': [],
